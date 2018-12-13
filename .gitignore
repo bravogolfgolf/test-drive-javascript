@@ -3,3 +3,6 @@
 
 # WebStorm
 .idea/workspace.xml
+
+# nmp
+node_modules/**/.bin/
