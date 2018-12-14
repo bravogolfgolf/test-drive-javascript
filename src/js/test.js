@@ -1,14 +1,17 @@
 (function () {
     "use strict";
 
-    var chai = require("chai").assert;
-
-
     describe("Arithmetic", function () {
         it("adds two numbers", function () {
-            assert.equal(add(3, 4), 7);
+            assertEquals(add(3, 4), 7);
         });
     });
+
+    function assertEquals(actual, expected) {
+        if (actual !== expected) throws
+        new Error("Actual was" + actual + ", but expected: " + expected);
+
+    }
 
     function add(a, b) {
         return a + b;
