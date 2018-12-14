@@ -1,12 +1,18 @@
-/* globals desc:false, task:false, complete:false, fail:false */
+/* globals jake:false, desc:false, task:false, complete:false, fail:false */
 (function () {
     "use strict";
 
     var semver = require("semver");
     var jshint = require("simplebuild-jshint");
 
+    desc("Run a local http server");
+    task("run" ,function () {
+        console.log("Running local http server");
+        jake.exec("node node_modules/http-server/bin/http-server src/html", {interactive: true}, complete);
+    }, {async: true});
+
     desc("Integrate");
-    task("integrate", ["default"], function() {
+    task("integrate", ["default"], function () {
         console.log("1. Make sure 'git status' is clean.");
         console.log("2. Build on the integration box.");
         console.log("   a. Walk over to integration box.");
