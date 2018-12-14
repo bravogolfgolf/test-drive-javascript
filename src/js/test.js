@@ -8,8 +8,7 @@
     });
 
     function assertEquals(actual, expected) {
-        if (actual !== expected) throws
-        new Error("Actual was" + actual + ", but expected: " + expected);
+        if (actual !== expected) throw new Error("Actual was" + actual + ", but expected: " + expected);
 
     }
 

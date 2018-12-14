@@ -5,6 +5,11 @@
     var semver = require("semver");
     var jshint = require("simplebuild-jshint");
 
+    desc("Start karma server");
+    task("karma", function () {
+       console.log("Running karma server")
+    });
+
     desc("Run a local http server");
     task("run" ,function () {
         console.log("Running local http server");
