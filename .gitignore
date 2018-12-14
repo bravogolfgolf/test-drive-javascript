@@ -6,3 +6,16 @@
 
 # nmp
 node_modules/**/.bin/
+
+# karma
+node_modules/fsevents/build/Release/.deps/Users/briangibson/
+node_modules/fsevents/build/config.gypi
+node_modules/fsevents/lib/binding/Release/node-v67-darwin-x64/
+node_modules/fsevents/build/Makefile
+node_modules/fsevents/build/Release/.deps/Release/obj.target/fse/fsevents.o.d
+node_modules/fsevents/build/Release/.node
+node_modules/fsevents/build/Release/fse.node
+node_modules/fsevents/build/Release/obj.target/fse/fsevents.o
+node_modules/fsevents/build/action_after_build.target.mk
+node_modules/fsevents/build/fse.target.mk
+node_modules/fsevents/build/
