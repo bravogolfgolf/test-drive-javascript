@@ -7,6 +7,9 @@
 # nmp
 node_modules/**/.bin/
 
+# generated
+generated/
+
 # karma
 node_modules/fsevents/build/Release/.deps/Users/briangibson/
 node_modules/fsevents/build/config.gypi
