@@ -1,4 +1,4 @@
-/* globals jake:false, desc:false, task:false, complete:false, fail:false */
+/* globals jake:false, desc:false, task:false, complete:false, fail:false, directory:false */
 
 (function () {
 
@@ -8,6 +8,7 @@
     var jshint = require("simplebuild-jshint");
     var karma = require("simplebuild-karma");
 
+    var GENERATED = "generated";
     var KARMA_CONF_JS = "karma.conf.js";
     var EXPECTED_BROWSWERS = [
         "Safari 12.0.2 (Mac OS X 10.14.2)",
@@ -18,7 +19,6 @@
         "Chrome Mobile 69.0.3497 (Android 0.0.0)"];
 
     desc("Start karma server");
-
     task("karma", function () {
         console.log("Running karma server");
         karma.start({
@@ -26,14 +26,21 @@
 
         }, complete, fail);
     }, {async: true});
+
     desc("Run a local http server");
-
-    task("run", function () {
+    task("run", ["build"], function () {
         console.log("Running local http server");
-        jake.exec("node node_modules/http-server/bin/http-server src/html", {interactive: true}, complete);
+        jake.exec("node node_modules/http-server/bin/http-server " + GENERATED, {interactive: true}, complete);
     }, {async: true});
-    desc("Integrate");
 
+    desc("Build distribution files");
+    task("build", [GENERATED], function () {
+        console.log("Building distribution files:");
+    });
+
+    directory(GENERATED);
+
+    desc("Integrate");
     task("integrate", ["default"], function () {
         console.log("1. Make sure 'git status' is clean.");
         console.log("2. Build on the integration box.");
@@ -45,13 +52,13 @@
         console.log("4. git merge master --no-ff --log");
         console.log("5. git checkout master");
     });
-    desc("Build and test");
 
+    desc("Build and test");
     task("default", ["version", "lint", "test"], function () {
         console.log("\n\nBUILD OK");
     });
-    desc("Check node version");
 
+    desc("Check node version");
     task("version", function () {
         console.log("Checking node version: .");
 
@@ -61,8 +68,8 @@
         if (semver.neq(actualVersion, EXPECTED_VERSION))
             fail("Incorrect Node version: expected " + EXPECTED_VERSION + ", but was " + actualVersion);
     });
-    desc("Lint JavaScript");
 
+    desc("Lint JavaScript");
     task("lint", function () {
         process.stdout.write("Linting JavaScript: ");
 
@@ -72,6 +79,7 @@
             globals: lintingGlobals()
         }, complete, fail);
     }, {async: true});
+
     desc("Run test");
     task("test", function () {
         console.log("Testing JavaScript:");
