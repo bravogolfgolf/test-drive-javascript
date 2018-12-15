@@ -7,6 +7,7 @@
     var semver = require("semver");
     var jshint = require("simplebuild-jshint");
     var karma = require("simplebuild-karma");
+    var shell = require("shelljs");
 
     var GENERATED = "generated";
     var KARMA_CONF_JS = "karma.conf.js";
@@ -34,8 +35,14 @@
     }, {async: true});
 
     desc("Build distribution files");
-    task("build", [GENERATED], function () {
+    task("build", [ "clean", GENERATED], function () {
         console.log("Building distribution files:");
+    });
+
+    desc("Cleans generated directory");
+    task("clean", function () {
+        console.log("Cleaning generated directory:")
+        shell.rm("-rf", GENERATED);
     });
 
     directory(GENERATED);
