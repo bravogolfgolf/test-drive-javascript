@@ -21,27 +21,31 @@
 
     desc("Start karma server");
     task("karma", function () {
-        console.log("Running karma server");
+        console.log("Running karma server:");
         karma.start({
             configFile: KARMA_CONF_JS
-
         }, complete, fail);
     }, {async: true});
 
     desc("Run a local http server");
     task("run", ["build"], function () {
-        console.log("Running local http server");
+        console.log("Running local http server:");
         jake.exec("node node_modules/http-server/bin/http-server " + GENERATED, {interactive: true}, complete);
     }, {async: true});
 
     desc("Build distribution files");
-    task("build", [ "clean", GENERATED], function () {
+    task("build", ["clean", GENERATED], function () {
         console.log("Building distribution files:");
-    });
+        shell.cp("src/html/index.html", GENERATED);
+        jake.exec(
+            "node node_modules/browserify/bin/cmd.js src/js/app.js -o " + GENERATED + "/bundle.js",
+            {interactive: true},
+            complete);
+    }, {aysnc: true});
 
     desc("Cleans generated directory");
     task("clean", function () {
-        console.log("Cleaning generated directory:")
+        console.log("Cleaning generated directory:");
         shell.rm("-rf", GENERATED);
     });
 
@@ -67,7 +71,7 @@
 
     desc("Check node version");
     task("version", function () {
-        console.log("Checking node version: .");
+        console.log("Checking node version:");
 
         var packageJson = require("./package.json");
         var EXPECTED_VERSION = packageJson.engines.node;
@@ -81,7 +85,7 @@
         process.stdout.write("Linting JavaScript: ");
 
         jshint.checkFiles({
-            files: ["Jakefile.js", "src/**/*.js"],
+            files: ["Jakefile.js", "src/js/**/*.js"],
             options: lintingOptions(),
             globals: lintingGlobals()
         }, complete, fail);
