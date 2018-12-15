@@ -1,9 +1,11 @@
 (function () {
     "use strict";
 
+    var arithmetic = require("./arithmetic.js");
+
     describe("Arithmetic", function () {
         it("adds two numbers", function () {
-            assertEquals(add(3, 4), 7);
+            assertEquals(arithmetic.add(3, 4), 7);
         });
     });
 
@@ -11,9 +13,4 @@
         if (actual !== expected) throw new Error("Actual was" + actual + ", but expected: " + expected);
 
     }
-
-    function add(a, b) {
-        return a + b;
-    }
-
 }());
