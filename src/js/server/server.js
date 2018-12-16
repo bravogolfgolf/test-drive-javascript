@@ -4,14 +4,14 @@
     var http = require("http");
     var server;
 
-    exports.start = function (port) {
+    exports.start = function (portNumber) {
         server = http.createServer();
 
         server.on("request", function (request, response) {
-            response.end();
+            response.end("Test data");
         });
 
-        server.listen(port);
+        server.listen(portNumber);
     };
 
     exports.stop = function () {

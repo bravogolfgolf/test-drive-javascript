@@ -19,10 +19,23 @@
             done();
         });
 
-        it('respond to get request', function (done) {
-            http.get({protocol: "http:", host: "localhost", port: PORT}, function (response) {
+        it('respond successfully to proper GET request with status code 200 and data', function (done) {
+            var result = http.get({protocol: "http:", host: "localhost", port: PORT});
+
+            result.on("response", function (response) {
                 assert.equal(response.statusCode, 200);
-                done();
+
+                var dataReceived = false;
+                response.setEncoding("utf8");
+                response.on("data", function (chunk) {
+                    dataReceived = true;
+                    assert.equal("Test data", chunk);
+                });
+
+                response.on("end", function () {
+                    assert.ok(dataReceived);
+                    done();
+                });
             });
         });
     });
