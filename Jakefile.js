@@ -65,7 +65,7 @@
     });
 
     desc("Build and test");
-    task("default", ["version", "lint", "test"], function () {
+    task("default", ["version", "lint", "textClient"], function () {
         console.log("\n\nBUILD OK");
     });
 
@@ -90,10 +90,15 @@
             globals: lintingGlobals()
         }, complete, fail);
     }, {async: true});
+    
+    desc("Run server tests");
+    task("testServer",function () {
+        console.log("Testing server JavaScript:");
+    });
 
-    desc("Run test");
-    task("test", function () {
-        console.log("Testing JavaScript:");
+    desc("Run client tests in browsers");
+    task("textClient", function () {
+        console.log("Testing client JavaScript in browsers:");
         karma.run({
             configFile: KARMA_CONF_JS,
             expectedBrowsers: EXPECTED_BROWSWERS,
