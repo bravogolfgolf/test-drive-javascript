@@ -5,11 +5,12 @@
     var server = require("./server.js");
     var http = require("http");
 
+    var PORT = 8080;
 
     describe('Server should', function () {
 
         beforeEach(function (done) {
-            server.start();
+            server.start(PORT);
             done();
         });
 
@@ -19,7 +20,7 @@
         });
 
         it('respond to get request', function (done) {
-            http.get({protocol: "http:", host: "localhost", port: 8080}, function (response) {
+            http.get({protocol: "http:", host: "localhost", port: PORT}, function (response) {
                 assert.equal(response.statusCode, 200);
                 done();
             });
