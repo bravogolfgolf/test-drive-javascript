@@ -2,7 +2,7 @@
     "use strict";
 
     var arithmetic = require("./arithmetic.js");
-    var assert = require("./assert.js");
+    var assert = require("../shared/assert.js");
 
     describe("Arithmetic", function () {
         it("adds two numbers", function () {
