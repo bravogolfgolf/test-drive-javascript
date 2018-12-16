@@ -8,6 +8,11 @@
     var jshint = require("simplebuild-jshint");
     var karma = require("simplebuild-karma");
     var shell = require("shelljs");
+    var Mocha = require("mocha");
+    var mocha = new Mocha({
+        ui: "bdd",
+        reporter: "dot"
+    });
 
     var GENERATED = "generated";
     var KARMA_CONF_JS = "karma.conf.js";
@@ -65,7 +70,7 @@
     });
 
     desc("Build and test");
-    task("default", ["version", "lint", "textClient"], function () {
+    task("default", ["version", "lint", "testServer", "testClient"], function () {
         console.log("\n\nBUILD OK");
     });
 
@@ -90,14 +95,19 @@
             globals: lintingGlobals()
         }, complete, fail);
     }, {async: true});
-    
+
     desc("Run server tests");
-    task("testServer",function () {
+    task("testServer", function () {
         console.log("Testing server JavaScript:");
-    });
+        mocha.addFile("src/js/server/server_test.js");
+        mocha.run(function (failures) {
+            if(failures) return fail("Server tests failed");
+            else return complete();
+        });
+    }, {async: true});
 
     desc("Run client tests in browsers");
-    task("textClient", function () {
+    task("testClient", function () {
         console.log("Testing client JavaScript in browsers:");
         karma.run({
             configFile: KARMA_CONF_JS,
