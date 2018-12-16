@@ -38,7 +38,7 @@
         console.log("Building distribution files:");
         shell.cp("src/html/index.html", GENERATED);
         jake.exec(
-            "node node_modules/browserify/bin/cmd.js src/js/app.js -o " + GENERATED + "/bundle.js",
+            "node node_modules/browserify/bin/cmd.js src/js/client/app.js -o " + GENERATED + "/bundle.js",
             {interactive: true},
             complete);
     }, {aysnc: true});
