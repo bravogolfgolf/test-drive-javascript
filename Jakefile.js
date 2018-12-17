@@ -14,7 +14,9 @@
         reporter: "dot"
     });
 
-    var GENERATED = "generated";
+    var GENERATED_DIRECTORY = "generated";
+    var GENERATED_CLIENT_DIRECTORY = GENERATED_DIRECTORY + "/client";
+    var GENERATED_TEST_DIRECTORY = GENERATED_DIRECTORY+ "/test";
     var KARMA_CONF_JS = "karma.conf.js";
     var EXPECTED_BROWSWERS = [
         "Safari 12.0.2 (Mac OS X 10.14.2)",
@@ -35,26 +37,26 @@
     desc("Run a local http server");
     task("run", ["build"], function () {
         console.log("Running local http server:");
-        jake.exec("node node_modules/http-server/bin/http-server " + GENERATED, {interactive: true}, complete);
+        jake.exec("node node_modules/http-server/bin/http-server " + GENERATED_CLIENT_DIRECTORY, {interactive: true}, complete);
     }, {async: true});
 
     desc("Build distribution files");
-    task("build", ["clean", GENERATED], function () {
+    task("build", ["clean", GENERATED_CLIENT_DIRECTORY], function () {
         console.log("Building distribution files:");
-        shell.cp("src/html/index.html", GENERATED);
+        shell.cp("src/html/index.html", GENERATED_CLIENT_DIRECTORY);
         jake.exec(
-            "node node_modules/browserify/bin/cmd.js src/js/client/app.js -o " + GENERATED + "/bundle.js",
+            "node node_modules/browserify/bin/cmd.js src/js/client/app.js -o " + GENERATED_CLIENT_DIRECTORY + "/bundle.js",
             {interactive: true},
             complete);
     }, {aysnc: true});
 
+    directory(GENERATED_CLIENT_DIRECTORY);
+
     desc("Cleans generated directory");
     task("clean", function () {
         console.log("Cleaning generated directory:");
-        shell.rm("-rf", GENERATED);
+        shell.rm("-rf", GENERATED_DIRECTORY);
     });
-
-    directory(GENERATED);
 
     desc("Integrate");
     task("integrate", ["default"], function () {
@@ -97,17 +99,19 @@
     }, {async: true});
 
     desc("Run server tests");
-    task("testServer", function () {
+    task("testServer", ["version", "lint", GENERATED_TEST_DIRECTORY], function () {
         console.log("Testing server JavaScript:");
         mocha.addFile("src/js/server/server_test.js");
         mocha.run(function (failures) {
-            if(failures) return fail("Server tests failed");
+            if (failures) return fail("Server tests failed");
             else return complete();
         });
     }, {async: true});
 
+    directory(GENERATED_TEST_DIRECTORY);
+
     desc("Run client tests in browsers");
-    task("testClient", function () {
+    task("testClient", ["version", "lint"], function () {
         console.log("Testing client JavaScript in browsers:");
         karma.run({
             configFile: KARMA_CONF_JS,

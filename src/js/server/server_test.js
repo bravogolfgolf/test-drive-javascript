@@ -4,6 +4,7 @@
     var assert = require("../shared/assert.js");
     var server = require("./server.js");
     var http = require("http");
+    var fs = require("fs");
 
     var PORT = 8080;
 
@@ -37,6 +38,14 @@
                     done();
                 });
             });
+        });
+
+        it('respond successfully to proper GET request with html file', function (done) {
+            var testDir = "generated/test";
+            var filename = testDir + "/test.html";
+            var data = "Hello World";
+            fs.writeFileSync(filename , data);
+            done();
         });
     });
 
