@@ -10,17 +10,23 @@
 
     describe('Server should', function () {
 
-        beforeEach(function (done) {
+        before(function (done) {
             server.start(PORT);
             done();
         });
 
-        afterEach(function (done) {
+        after(function (done) {
             server.stop();
             done();
         });
 
-        it('respond successfully to proper GET request with status code 200 and data', function (done) {
+        it('respond successfully to proper GET request with html file', function (done) {
+
+            var testDirectory = "generated/test";
+            var testFile = testDirectory + "/test.html";
+            var testData = "Test data from file.";
+            fs.writeFileSync(testFile, testData);
+
             var result = http.get({protocol: "http:", host: "localhost", port: PORT});
 
             result.on("response", function (response) {
@@ -30,7 +36,7 @@
                 response.setEncoding("utf8");
                 response.on("data", function (chunk) {
                     dataReceived = true;
-                    assert.equal("Test data", chunk);
+                    assert.equal(testData, chunk);
                 });
 
                 response.on("end", function () {
@@ -38,14 +44,6 @@
                     done();
                 });
             });
-        });
-
-        it('respond successfully to proper GET request with html file', function (done) {
-            var testDir = "generated/test";
-            var filename = testDir + "/test.html";
-            var data = "Hello World";
-            fs.writeFileSync(filename , data);
-            done();
         });
     });
 
