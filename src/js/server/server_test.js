@@ -7,8 +7,10 @@
     var fs = require("fs");
 
     var TEST_DIRECTORY = "generated/test";
-    var TEST_FILE = TEST_DIRECTORY + "/test.html";
-    var FILE_CONTENTS = "Test data from file.";
+    var TEST_HOME_PAGE = TEST_DIRECTORY + "/homepage.html";
+    var TEST_404_PAGE = TEST_DIRECTORY + "/404.html";
+    var TEST_HOME_PAGE_CONTENTS = "Test home page contents.";
+    var TEST_404_PAGE_CONTENTS = "Test 404 page contents.";
     var PORT = 8080;
 
     var HTTP_GET_OPTIONS = {
@@ -20,15 +22,17 @@
     describe('Server should', function () {
 
         before(function (done) {
-            fs.writeFileSync(TEST_FILE, FILE_CONTENTS);
-            server.start(TEST_FILE, PORT);
+            fs.writeFileSync(TEST_HOME_PAGE, TEST_HOME_PAGE_CONTENTS);
+            fs.writeFileSync(TEST_404_PAGE, TEST_404_PAGE_CONTENTS);
+            server.start(TEST_HOME_PAGE, TEST_404_PAGE, PORT);
             done();
         });
 
         after(function (done) {
             server.stop();
-            fs.unlinkSync(TEST_FILE);
-            assert.ok(!fs.existsSync(TEST_FILE), "Could not delete test file [" + TEST_FILE + "]");
+            fs.unlinkSync(TEST_HOME_PAGE);
+            fs.unlinkSync(TEST_404_PAGE);
+            assert.ok(!fs.existsSync(TEST_HOME_PAGE), "Could not delete test file [" + TEST_HOME_PAGE + "]");
             done();
         });
 
@@ -41,7 +45,7 @@
 
                 response.setEncoding("utf8");
                 response.on("data", function (chunk) {
-                    assert.equal(FILE_CONTENTS, chunk);
+                    assert.equal(TEST_HOME_PAGE_CONTENTS, chunk);
                     done();
                 });
             });
@@ -63,34 +67,16 @@
 
             result.on("response", function (response) {
                 assert.equal(response.statusCode, 404);
-                done();
+
+                response.setEncoding("utf8");
+                response.on("data", function (chunk) {
+                    assert.equal(TEST_404_PAGE_CONTENTS, chunk);
+                    done();
+                });
             });
-        });
-    });
-
-    describe('Server should', function () {
-
-        beforeEach(function (done) {
-            server.stop();
-            done();
-        });
-
-        afterEach(function (done) {
-            server.stop();
-            done();
-        });
-
-        it("throw error when port number is missing", function () {
-            assert.throws(
-                function () {
-                    server.start(TEST_FILE);
-                },
-                Error,
-                "Port number is required.");
         });
 
         it("run callback when stop completes", function (done) {
-            server.start(TEST_FILE, PORT);
             server.stop(function () {
                 done();
             });

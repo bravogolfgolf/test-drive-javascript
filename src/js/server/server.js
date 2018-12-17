@@ -5,20 +5,17 @@
     var fs = require("fs");
     var server;
 
-    exports.start = function (fileName, portNumber) {
-        if (!portNumber) throw new Error("Port number is required.");
+    exports.start = function (homePage, notFoundPage, portNumber) {
 
         server = http.createServer();
 
         server.on("request", function (request, response) {
             if (request.url === "/" || request.url === "/index.html") {
-                fs.readFile(fileName, function (err, data) {
-                    if (err) throw err; // TODO: Fix this.
-                    response.end(data);
-                });
+                response.statusCode = 200;
+                fileToServe(homePage, response);
             } else {
                 response.statusCode = 404;
-                response.end();
+                fileToServe(notFoundPage, response);
             }
         });
 
@@ -29,4 +26,10 @@
         server.close(callback);
     };
 
+    function fileToServe(fileName, response) {
+        fs.readFile(fileName, function (err, data) {
+            if (err) throw err;
+            response.end(data);
+        });
+    }
 }());
