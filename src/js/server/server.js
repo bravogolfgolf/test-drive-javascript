@@ -5,6 +5,7 @@
     var server;
 
     exports.start = function (portNumber) {
+        if(!portNumber) throw new Error("Port number is required.");
         server = http.createServer();
 
         server.on("request", function (request, response) {
@@ -14,8 +15,8 @@
         server.listen(portNumber);
     };
 
-    exports.stop = function () {
-        server.close();
+    exports.stop = function (callback) {
+        server.close(callback);
     };
 
 }());

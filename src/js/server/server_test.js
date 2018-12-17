@@ -39,4 +39,23 @@
             });
         });
     });
+
+    describe('Server should', function () {
+        it("throw error when port number is missing", function () {
+            assert.throws(
+                function () {
+                    server.start();
+                },
+                Error,
+                "Port number is required.");
+        });
+
+
+        it("run callback when stop completes", function (done) {
+            server.start(PORT);
+            server.stop(function () {
+                done();
+            });
+        });
+    });
 }());
