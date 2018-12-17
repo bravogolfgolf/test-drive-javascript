@@ -101,7 +101,9 @@
     desc("Run server tests");
     task("testServer", ["version", "lint", GENERATED_TEST_DIRECTORY], function () {
         console.log("Testing server JavaScript:");
+
         mocha.addFile("src/js/server/server_test.js");
+        mocha.addFile("src/js/smoke_test.js");
         mocha.run(function (failures) {
             if (failures) return fail("Server tests failed");
             else return complete();
