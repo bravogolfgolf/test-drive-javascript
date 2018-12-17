@@ -11,7 +11,7 @@
     var Mocha = require("mocha");
     var mocha = new Mocha({
         ui: "bdd",
-        reporter: "dot"
+        reporter: "spec"
     });
 
     var GENERATED_DIRECTORY = "generated";

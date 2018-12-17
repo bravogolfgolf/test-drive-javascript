@@ -11,9 +11,16 @@
     var FILE_CONTENTS = "Test data from file.";
     var PORT = 8080;
 
+    var HTTP_GET_OPTIONS = {
+        protocol: "http:",
+        host: "localhost",
+        port: PORT
+    };
+
     describe('Server should', function () {
 
         before(function (done) {
+            fs.writeFileSync(TEST_FILE, FILE_CONTENTS);
             server.start(TEST_FILE, PORT);
             done();
         });
@@ -25,25 +32,38 @@
             done();
         });
 
-        it('respond successfully to proper GET request with html file', function (done) {
-            fs.writeFileSync(TEST_FILE, FILE_CONTENTS);
-
-            var result = http.get({protocol: "http:", host: "localhost", port: PORT});
+        it("respond with homepage with request to '/'", function (done) {
+            HTTP_GET_OPTIONS.path = "/";
+            var result = http.get(HTTP_GET_OPTIONS);
 
             result.on("response", function (response) {
                 assert.equal(response.statusCode, 200);
 
-                var dataReceived = false;
                 response.setEncoding("utf8");
                 response.on("data", function (chunk) {
-                    dataReceived = true;
                     assert.equal(FILE_CONTENTS, chunk);
-                });
-
-                response.on("end", function () {
-                    assert.ok(dataReceived);
                     done();
                 });
+            });
+        });
+
+        it("respond with homepage with request to '/index.html'", function (done) {
+            HTTP_GET_OPTIONS.path = "/index.html";
+            var result = http.get(HTTP_GET_OPTIONS);
+
+            result.on("response", function (response) {
+                assert.equal(response.statusCode, 200);
+                done();
+            });
+        });
+
+        it("respond with 404.html to any request except to '/' and '/index.html", function (done) {
+            HTTP_GET_OPTIONS.path = "/junk";
+            var result = http.get(HTTP_GET_OPTIONS);
+
+            result.on("response", function (response) {
+                assert.equal(response.statusCode, 404);
+                done();
             });
         });
     });
