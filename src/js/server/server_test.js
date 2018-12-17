@@ -10,6 +10,10 @@
 
     describe('Server should', function () {
 
+        var testDirectory = "generated/test";
+        var testFile = testDirectory + "/test.html";
+        var testData = "Test data from file.";
+
         before(function (done) {
             server.start(PORT);
             done();
@@ -17,14 +21,12 @@
 
         after(function (done) {
             server.stop();
+            fs.unlinkSync(testFile);
+            assert.ok(!fs.existsSync(testFile), "Could not delete test file [" + testFile + "]");
             done();
         });
 
         it('respond successfully to proper GET request with html file', function (done) {
-
-            var testDirectory = "generated/test";
-            var testFile = testDirectory + "/test.html";
-            var testData = "Test data from file.";
             fs.writeFileSync(testFile, testData);
 
             var result = http.get({protocol: "http:", host: "localhost", port: PORT});
