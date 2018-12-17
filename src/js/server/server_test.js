@@ -49,6 +49,17 @@
     });
 
     describe('Server should', function () {
+
+        beforeEach(function (done) {
+            server.stop();
+            done();
+        });
+
+        afterEach(function (done) {
+            server.stop();
+            done();
+        });
+
         it("throw error when port number is missing", function () {
             assert.throws(
                 function () {
@@ -57,7 +68,6 @@
                 Error,
                 "Port number is required.");
         });
-
 
         it("run callback when stop completes", function (done) {
             server.start(TEST_FILE, PORT);
