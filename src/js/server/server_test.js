@@ -6,28 +6,27 @@
     var http = require("http");
     var fs = require("fs");
 
+    var TEST_DIRECTORY = "generated/test";
+    var TEST_FILE = TEST_DIRECTORY + "/test.html";
+    var FILE_CONTENTS = "Test data from file.";
     var PORT = 8080;
 
     describe('Server should', function () {
 
-        var testDirectory = "generated/test";
-        var testFile = testDirectory + "/test.html";
-        var testData = "Test data from file.";
-
         before(function (done) {
-            server.start(PORT);
+            server.start(TEST_FILE, PORT);
             done();
         });
 
         after(function (done) {
             server.stop();
-            fs.unlinkSync(testFile);
-            assert.ok(!fs.existsSync(testFile), "Could not delete test file [" + testFile + "]");
+            fs.unlinkSync(TEST_FILE);
+            assert.ok(!fs.existsSync(TEST_FILE), "Could not delete test file [" + TEST_FILE + "]");
             done();
         });
 
         it('respond successfully to proper GET request with html file', function (done) {
-            fs.writeFileSync(testFile, testData);
+            fs.writeFileSync(TEST_FILE, FILE_CONTENTS);
 
             var result = http.get({protocol: "http:", host: "localhost", port: PORT});
 
@@ -38,7 +37,7 @@
                 response.setEncoding("utf8");
                 response.on("data", function (chunk) {
                     dataReceived = true;
-                    assert.equal(testData, chunk);
+                    assert.equal(FILE_CONTENTS, chunk);
                 });
 
                 response.on("end", function () {
@@ -53,7 +52,7 @@
         it("throw error when port number is missing", function () {
             assert.throws(
                 function () {
-                    server.start();
+                    server.start(TEST_FILE);
                 },
                 Error,
                 "Port number is required.");
@@ -61,7 +60,7 @@
 
 
         it("run callback when stop completes", function (done) {
-            server.start(PORT);
+            server.start(TEST_FILE, PORT);
             server.stop(function () {
                 done();
             });
