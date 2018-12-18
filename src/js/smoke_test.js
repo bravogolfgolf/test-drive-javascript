@@ -5,7 +5,7 @@
     var http = require("http");
     var child_process = require("child_process");
     var child;
-    var PORT = 8080;
+    var PORT = 5000;
     var HTTP_GET_OPTIONS = {
         protocol: "http:",
         host: "localhost",
@@ -61,7 +61,7 @@
     });
 
     function runCommand(callback) {
-        child = child_process.spawn("node", ["src/js/server/weewikipaint", PORT]);
+        child = child_process.spawn("node", ["src/js/server/weewikipaint.js", PORT]);
 
         child.stdout.setEncoding("utf8");
         child.stdout.on("data", function (chunk) {
