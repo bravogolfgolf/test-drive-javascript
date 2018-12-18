@@ -121,7 +121,6 @@
 
         mocha.addFile("src/js/server/server_test.js");
         mocha.addFile("src/js/smoke_test.js");
-        mocha.addFile("src/js/release_test.js");
         mocha.run(function (failures) {
             if (failures) return fail("Server tests failed");
             else return complete();
