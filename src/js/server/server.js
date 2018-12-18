@@ -5,7 +5,7 @@
     var fs = require("fs");
     var server;
 
-    exports.start = function (homePage, notFoundPage, portNumber) {
+    exports.start = function (homePage, notFoundPage, portNumber, callback) {
 
         server = http.createServer();
 
@@ -19,7 +19,7 @@
             }
         });
 
-        server.listen(portNumber);
+        server.listen(portNumber, callback);
     };
 
     exports.stop = function (callback) {
