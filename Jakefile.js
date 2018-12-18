@@ -50,13 +50,30 @@
             complete);
     }, {aysnc: true});
 
-    directory(GENERATED_CLIENT_DIRECTORY);
-
     desc("Cleans generated directory");
     task("clean", function () {
         console.log("Cleaning generated directory:");
         shell.rm("-rf", GENERATED_DIRECTORY);
     });
+
+    directory(GENERATED_CLIENT_DIRECTORY);
+
+    desc("Deploy to Heroku");
+    task("deploy", ["default"], function() {
+        console.log("1. Make sure 'git status' is clean.");
+        console.log("2. git push heroku master");
+        console.log("3. ./jake.sh testRelease");
+    });
+
+    desc("Run release test");
+    task("testRelease", ["version", "lint"], function () {
+        console.log("Testing website is available:");
+        mocha.addFile("src/js/release_test.js");
+        mocha.run(function (failures) {
+            if (failures) return fail("Website not available.");
+            else return complete();
+        });
+    }, {async: true});
 
     desc("Integrate");
     task("integrate", ["default"], function () {
@@ -104,6 +121,7 @@
 
         mocha.addFile("src/js/server/server_test.js");
         mocha.addFile("src/js/smoke_test.js");
+        mocha.addFile("src/js/release_test.js");
         mocha.run(function (failures) {
             if (failures) return fail("Server tests failed");
             else return complete();
