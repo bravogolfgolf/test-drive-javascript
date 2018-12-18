@@ -111,7 +111,7 @@
         jshint.checkFiles({
             files: ["Jakefile.js", "src/js/**/*.js"],
             options: lintingOptions(),
-            globals: lintingGlobals()
+            globals: {}
         }, complete, fail);
     }, {async: true});
 
@@ -156,19 +156,8 @@
             undef: true,
 
             node: true,
-            browser: true
+            browser: true,
+            mocha: true
         };
     }
-
-    function lintingGlobals() {
-        return {
-            describe: false,
-            it: false,
-            before: false,
-            after: false,
-            beforeEach: false,
-            afterEach: false
-        };
-    }
-
 }());
