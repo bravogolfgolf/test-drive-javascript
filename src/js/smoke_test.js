@@ -13,6 +13,7 @@
         host: "localhost",
         port: PORT
     };
+    var UTF8 = "utf8";
 
     describe("Smoke test", function () {
 
@@ -37,7 +38,7 @@
             result.on("response", function (response) {
                 assert.equal(response.statusCode, 200);
 
-                response.setEncoding("utf8");
+                response.setEncoding(UTF8);
                 response.on("data", function (chunk) {
                     assert.notEqual(chunk.indexOf("WeeWikiPaint Homepage Watermark"), -1);
                     done();
@@ -52,7 +53,7 @@
             result.on("response", function (response) {
                 assert.equal(response.statusCode, 404);
 
-                response.setEncoding("utf8");
+                response.setEncoding(UTF8);
                 response.on("data", function (chunk) {
                     assert.notEqual(chunk.indexOf("WeeWikiPaint 404 page Watermark"), -1);
                     done();
@@ -66,19 +67,19 @@
         var result = parseProcfile();
         child = child_process.spawn(result.command, result.options);
 
-        child.stdout.setEncoding("utf8");
+        child.stdout.setEncoding(UTF8);
         child.stdout.on("data", function (chunk) {
             if (chunk.trim() === "Server started.") callback();
         });
 
-        child.stderr.setEncoding("utf8");
+        child.stderr.setEncoding(UTF8);
         child.stderr.on("data", function (chunk) {
             console.log(chunk);
         });
     }
 
     function parseProcfile() {
-        var heroku_procfile = fs.readFileSync("Procfile", "utf8");
+        var heroku_procfile = fs.readFileSync("Procfile", UTF8);
         var parsed = procfile.parse(heroku_procfile);
         var web = parsed.web;
         web.options = web.options.map(function (element) {
