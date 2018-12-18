@@ -17,7 +17,7 @@ module.exports = function (config) {
         files: [
             'src/js/client/**/*.js',
             'src/js/shared/**/*.js',
-            'src/third-party/chai-4.2.0.js'
+            'third-party/chai-4.2.0.js'
         ],
 
 
@@ -30,7 +30,7 @@ module.exports = function (config) {
         preprocessors: {
             'src/js/client/**/*.js': ['commonjs'],
             'src/js/shared/**/*.js': ['commonjs'],
-            'src/third-party/chai-4.2.0.js': ['commonjs']
+            'third-party/chai-4.2.0.js': ['commonjs']
         },
 
 
