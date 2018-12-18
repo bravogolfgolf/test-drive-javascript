@@ -1,8 +1,10 @@
 (function () {
     "use strict";
 
-    var assert = require("../js/shared/assert");
     var http = require("http");
+    var procfile = require("procfile");
+    var fs = require("fs");
+    var assert = require("../js/shared/assert");
     var child_process = require("child_process");
     var child;
     var PORT = 5000;
@@ -61,7 +63,8 @@
     });
 
     function runCommand(callback) {
-        child = child_process.spawn("node", ["src/js/server/weewikipaint.js", PORT]);
+        var result = parseProcfile();
+        child = child_process.spawn(result.command, result.options);
 
         child.stdout.setEncoding("utf8");
         child.stdout.on("data", function (chunk) {
@@ -72,5 +75,16 @@
         child.stderr.on("data", function (chunk) {
             console.log(chunk);
         });
+    }
+
+    function parseProcfile() {
+        var heroku_procfile = fs.readFileSync("Procfile", "utf8");
+        var parsed = procfile.parse(heroku_procfile);
+        var web = parsed.web;
+        web.options = web.options.map(function (element) {
+            if (element === "$PORT") return PORT;
+            else return element;
+        });
+        return web;
     }
 }());
