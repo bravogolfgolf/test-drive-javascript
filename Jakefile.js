@@ -157,7 +157,8 @@
 
             node: true,
             browser: true,
-            mocha: true
+            mocha: true,
+            jquery:true
         };
     }
 }());

@@ -15,9 +15,11 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
+            'third-party/chai-4.2.0.js',
+            'third-party/jquery-3.3.1.js',
+            'third-party/raphael-2.2.1.js',
             'src/js/client/**/*.js',
-            'src/js/shared/**/*.js',
-            'third-party/chai-4.2.0.js'
+            'src/js/shared/**/*.js'
         ],
 
 
