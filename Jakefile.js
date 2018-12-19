@@ -21,7 +21,7 @@
     var EXPECTED_BROWSWERS = [
         "Safari 12.0.2 (Mac OS X 10.14.2)",
         "Mobile Safari 12.0.0 (iOS 12.1.0)",
-        "Chrome 70.0.3538 (Mac OS X 10.14.2)",
+        "Chrome 71.0.3578 (Mac OS X 10.14.2)",
         "Firefox 64.0.0 (Mac OS X 10.14.0)",
         "IE 11.0.0 (Windows 7.0.0)",
         "Chrome Mobile 69.0.3497 (Android 0.0.0)"];
