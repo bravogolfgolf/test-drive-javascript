@@ -7,11 +7,11 @@
     var fs = require("fs");
 
     var TEST_DIRECTORY = "generated/test";
-    var TEST_HOME_PAGE = TEST_DIRECTORY + "/homepage.html";
+    var TEST_HOME_PAGE = TEST_DIRECTORY + "/index.html";
     var TEST_404_PAGE = TEST_DIRECTORY + "/404.html";
     var TEST_HOME_PAGE_CONTENTS = "Test home page contents.";
     var TEST_404_PAGE_CONTENTS = "Test 404 page contents.";
-    var PORT = 8080;
+    var PORT = 7070;
 
     var HTTP_GET_OPTIONS = {
         protocol: "http:",

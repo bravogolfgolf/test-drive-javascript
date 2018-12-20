@@ -3,7 +3,7 @@
 
 
     var TEST_DIRECTORY = "src/html";
-    var TEST_HOME_PAGE = TEST_DIRECTORY + "/homepage.html";
+    var TEST_HOME_PAGE = TEST_DIRECTORY + "/index.html";
     var TEST_404_PAGE = TEST_DIRECTORY + "/404.html";
     var PORT = process.argv[2];
 
