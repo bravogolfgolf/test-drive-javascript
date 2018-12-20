@@ -22,17 +22,30 @@
         });
 
         it("should have the same dimensions as enclosing div", function () {
-            assert.equal(paper.height, 200);
-            assert.equal(paper.width, 400);
+            assert.equal(paper.height, 200, "Height of Raphael paper:");
+            assert.equal(paper.width, 400, "Width of Raphael paper:");
         });
 
         it("draw a line", function () {
             wwp.drawLine(20, 30, 30, 300);
 
             var elements = elementsOf(paper);
-            assert.equal(elements.length, 1);
-            assert.equal(pathOf(elements[0]), "M20,30L30,300");
+            assert.equal(elements.length, 1, "Number of Raphael paper elements:");
+            assert.equal(pathOf(elements[0]), "M20,30L30,300", "Path of Raphael element:");
         });
+
+        it("mouse click", function () {
+            var event = new jQuery.Event("click");
+            event.pageX = 20;
+            event.pageY = 30;
+
+            jQuery(drawingArea).trigger(event);
+
+            var elements = elementsOf(paper);
+            assert.equal(elements.length, 1, "Number of Raphael paper elements:");
+            assert.equal(pathOf(elements[0]), "M0,0L20,30", "Path of Raphael element:");
+        });
+
 
         function elementsOf(element) {
             var elements = [];
