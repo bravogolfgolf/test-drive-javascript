@@ -5,8 +5,14 @@ wwp = {};
 (function () {
     "use strict";
 
+    var paper;
+
     wwp.initializeDrawingArea = function (drawingAreaId) {
-        var paper = new Raphael(drawingAreaId);
+        paper = new Raphael(drawingAreaId);
         return paper;
+    };
+
+    wwp.drawLine = function (startX, startY, endX, endY) {
+        paper.path("M" + startX + "," + startY + "L" + endX + "," + endY);
     };
 }());
