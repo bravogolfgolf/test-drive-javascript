@@ -4,52 +4,42 @@
     "use strict";
 
     var assert = require("../shared/assert");
-    var div;
+
+    var drawingArea;
+    var paper;
 
     describe("Drawing area", function () {
 
+        beforeEach(function () {
+            var html = "<div id='wwp-drawingArea' style='height:200px; width:400px'></div>";
+            drawingArea = $(html);
+            $(document.body).append(drawingArea);
+            paper = wwp.initializeDrawingArea(drawingArea[0]);
+        });
+
         afterEach(function () {
-            $(div).remove();
+            $(drawingArea).remove();
         });
 
-        it("should be initialized with Raphael", function () {
-            setUpDOM("<div></div>");
-
-            wwp.initializeDrawingArea(div[0]);
-
-            var tagName = $(div).children()[0].tagName;
-            assert.equal(tagName, "svg");
-        });
-
-        it("should have the same dimensions as enclosing div", function () {
-            setUpDOM("<div id='wwp-drawingArea' style='height:200px; width:400px'></div>");
-
-            var paper = wwp.initializeDrawingArea(div[0]);
-
+       it("should have the same dimensions as enclosing div", function () {
             assert.equal(paper.height, 200);
             assert.equal(paper.width, 400);
         });
 
         it("draw a line", function () {
-            setUpDOM("<div id='wwp-drawingArea' style='height:200px; width:400px'></div>");
-
-            var paper = wwp.initializeDrawingArea(div[0]);
             wwp.drawLine(20, 30, 30, 300);
 
-            var elements = [];
-            paper.forEach(function (element) {
-                elements.push(element);
-            });
+            var elements = elementsOf(paper);
             assert.equal(elements.length, 1);
-
-            var path = pathFor(elements[0]);
-            assert.equal(path, "M20,30L30,300");
-
+            assert.equal(pathFor(elements[0]), "M20,30L30,300");
         });
 
-        function setUpDOM(string) {
-            div = $(string);
-            $(document.body).append(div);
+        function elementsOf(element) {
+            var elements = [];
+            element.forEach(function (element) {
+                elements.push(element);
+            });
+            return elements;
         }
 
         function pathFor(element) {
