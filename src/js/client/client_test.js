@@ -21,7 +21,7 @@
             $(drawingArea).remove();
         });
 
-       it("should have the same dimensions as enclosing div", function () {
+        it("should have the same dimensions as enclosing div", function () {
             assert.equal(paper.height, 200);
             assert.equal(paper.width, 400);
         });
@@ -31,7 +31,7 @@
 
             var elements = elementsOf(paper);
             assert.equal(elements.length, 1);
-            assert.equal(pathFor(elements[0]), "M20,30L30,300");
+            assert.equal(pathOf(elements[0]), "M20,30L30,300");
         });
 
         function elementsOf(element) {
@@ -42,15 +42,9 @@
             return elements;
         }
 
-        function pathFor(element) {
-            var path = element.node.attributes.d.value;
-            if (path.indexOf(",") !== -1) {
-                return path;
-            } else {
-                var ie11RegEx = /M (\d+) (\d+) L (\d+) (\d+)/;
-                var ie11 = path.match(ie11RegEx);
-                return "M" + ie11[1] + "," + ie11[2] + "L" + ie11[3] + "," + ie11[4];
-            }
+        function pathOf(element) {
+            var box = element.getBBox();
+            return "M" + box.x + "," + box.y + "L" + box.x2 + "," + box.y2;
         }
     });
 }());
