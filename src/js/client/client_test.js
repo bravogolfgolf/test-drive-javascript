@@ -35,15 +35,22 @@
         });
 
         it("mouse click", function () {
+            var PAGE_X = 20;
+            var PAGE_Y = 30;
+            var TESTING_AREA_OFFSET_LEFT = 8;
+            var TESTING_AREA_OFFSET_TOP = 8;
+            var expectedX = PAGE_X - TESTING_AREA_OFFSET_LEFT;
+            var expectedY = PAGE_Y - TESTING_AREA_OFFSET_TOP;
+
             var event = new jQuery.Event("click");
-            event.pageX = 20;
-            event.pageY = 30;
+            event.pageX = PAGE_X;
+            event.pageY = PAGE_Y;
 
             jQuery(drawingArea).trigger(event);
 
             var elements = elementsOf(paper);
             assert.equal(elements.length, 1, "Number of Raphael paper elements:");
-            assert.equal(pathOf(elements[0]), "M0,0L20,30", "Path of Raphael element:");
+            assert.equal(pathOf(elements[0]), "M0,0L" + expectedX + "," + expectedY, "Path of Raphael element:");
         });
 
 

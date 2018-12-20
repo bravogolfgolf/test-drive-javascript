@@ -8,8 +8,11 @@ wwp = {};
     var paper;
 
     wwp.initializeDrawingArea = function (drawingAreaId) {
-        $(drawingAreaId).click(function (event) {
-            wwp.drawLine(0, 0, event.pageX, event.pageY);
+        var drawingArea = $(drawingAreaId);
+
+        drawingArea.click(function (event) {
+            var offSet = drawingArea.offset();
+            wwp.drawLine(0, 0, event.pageX - offSet.left, event.pageY - offSet.top);
         });
 
 
