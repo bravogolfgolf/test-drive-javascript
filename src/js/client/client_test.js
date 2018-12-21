@@ -41,24 +41,41 @@
             assert.equal(pathOf(elements[0]), "M20,30L30,300", "Path of Raphael element:");
         });
 
-        it("mouse click", function () {
-            var PAGE_X = 20;
-            var PAGE_Y = 30;
-            var TESTING_AREA_OFFSET_LEFT = 8;
-            var TESTING_AREA_OFFSET_TOP = 8;
-            var expectedX = PAGE_X - TESTING_AREA_OFFSET_LEFT;
-            var expectedY = PAGE_Y - TESTING_AREA_OFFSET_TOP;
+        it("draw connected line segments based on clicks", function () {
+            var PAGE_X_1 = 20;
+            var PAGE_Y_1 = 30;
+            var PAGE_X_2 = 50;
+            var PAGE_Y_2 = 60;
+            var offset = {
+                left: 8,
+                top: 8
+            };
 
-            var event = new jQuery.Event("click");
-            event.pageX = PAGE_X;
-            event.pageY = PAGE_Y;
+            clickEvent(PAGE_X_1, PAGE_Y_1);
+            clickEvent(PAGE_X_2, PAGE_Y_2);
 
-            jQuery(drawingArea).trigger(event);
+            var start = relativePosition(PAGE_X_1, PAGE_Y_1, offset);
+            var end = relativePosition(PAGE_X_2, PAGE_Y_2, offset);
 
             var elements = elementsOf(paper);
-            assert.equal(elements.length, 1, "Number of Raphael paper elements:");
-            assert.equal(pathOf(elements[0]), "M0,0L" + expectedX + "," + expectedY, "Path of Raphael element:");
+
+            assert.equal(elements.length, 1, "Number of Raphael paper elements");
+            assert.equal(pathOf(elements[0]), "M" + start.x + "," + start.y + "L" + end.x + "," + end.y, "Path of Raphael element");
         });
+
+
+        function clickEvent(pageX, pageY) {
+            var event = new jQuery.Event("click");
+            event.pageX = pageX;
+            event.pageY = pageY;
+            jQuery(drawingArea).trigger(event);
+        }
+
+        function relativePosition(pageX, pageY, offset) {
+            var x = pageX - offset.left;
+            var y = pageY - offset.top;
+            return {x: x, y: y};
+        }
 
 
         function elementsOf(element) {
