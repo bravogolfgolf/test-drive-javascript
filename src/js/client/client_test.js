@@ -7,11 +7,18 @@
 
     var drawingArea;
     var paper;
+    var HEIGHT = 200;
+    var WIDTH = 400;
+    // var MARGIN = 20;
+    // var BORDER = 20;
+    // var PADDING = 20;
 
     describe("Drawing area", function () {
 
         beforeEach(function () {
-            var html = "<div id='wwp-drawingArea' style='height:200px; width:400px'></div>";
+            var html = "<div id=drawingArea style='" +
+                "height: " + HEIGHT + "px;" +
+                "width: " + WIDTH + "px;'></div>";
             drawingArea = $(html);
             $(document.body).append(drawingArea);
             paper = wwp.initializeDrawingArea(drawingArea[0]);
@@ -22,8 +29,8 @@
         });
 
         it("should have the same dimensions as enclosing div", function () {
-            assert.equal(paper.height, 200, "Height of Raphael paper:");
-            assert.equal(paper.width, 400, "Width of Raphael paper:");
+            assert.equal(paper.height, HEIGHT, "Height of Raphael paper:");
+            assert.equal(paper.width, WIDTH, "Width of Raphael paper:");
         });
 
         it("draw a line", function () {
