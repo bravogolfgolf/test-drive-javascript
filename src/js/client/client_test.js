@@ -36,47 +36,37 @@
         it("draw a line", function () {
             wwp.drawLine(20, 30, 30, 300);
 
-            var elements = elementsOf(paper);
-            assert.equal(elements.length, 1, "Number of Raphael paper elements:");
-            assert.equal(pathOf(elements[0]), "M20,30L30,300", "Path of Raphael element:");
+            assert.deepEqual(paperPaths(paper), [[20, 30, 30, 300]], "Path of Raphael element:");
         });
 
         it("draw connected line segments based on clicks", function () {
-            var PAGE_X_1 = 20;
-            var PAGE_Y_1 = 30;
-            var PAGE_X_2 = 50;
-            var PAGE_Y_2 = 60;
-            var offset = {
-                left: 8,
-                top: 8
-            };
+            var click1 = {x: 20, y: 30};
+            var click2 = {x: 50, y: 60};
+            var click3 = {x: 20, y: 40};
+            var offset = {left: 8, top: 8};
 
-            clickEvent(PAGE_X_1, PAGE_Y_1);
-            clickEvent(PAGE_X_2, PAGE_Y_2);
+            clickEvent(click1.x, click1.y, offset);
+            clickEvent(click2.x, click2.y, offset);
+            clickEvent(click3.x, click3.y, offset);
 
-            var start = relativePosition(PAGE_X_1, PAGE_Y_1, offset);
-            var end = relativePosition(PAGE_X_2, PAGE_Y_2, offset);
-
-            var elements = elementsOf(paper);
-
-            assert.equal(elements.length, 1, "Number of Raphael paper elements");
-            assert.equal(pathOf(elements[0]), "M" + start.x + "," + start.y + "L" + end.x + "," + end.y, "Path of Raphael element");
+            assert.deepEqual(paperPaths(paper), [[20, 30, 50, 60], [50, 60, 20, 40]], "Paths of Raphael elements");
         });
 
 
-        function clickEvent(pageX, pageY) {
+        function clickEvent(x, y, offset) {
             var event = new jQuery.Event("click");
-            event.pageX = pageX;
-            event.pageY = pageY;
+            event.pageX = x + offset.left;
+            event.pageY = y + offset.top;
             jQuery(drawingArea).trigger(event);
         }
 
-        function relativePosition(pageX, pageY, offset) {
-            var x = pageX - offset.left;
-            var y = pageY - offset.top;
-            return {x: x, y: y};
+        function paperPaths(paper) {
+            var elements = elementsOf(paper);
+            return elements.map(function (element) {
+                var path = pathOf(element);
+                return [path.x, path.y, path.x1, path.y1];
+            });
         }
-
 
         function elementsOf(element) {
             var elements = [];
@@ -87,8 +77,17 @@
         }
 
         function pathOf(element) {
-            var box = element.getBBox();
-            return "M" + box.x + "," + box.y + "L" + box.x2 + "," + box.y2;
+            var regEx;
+            var path = element.node.attributes.d.value;
+
+            if (path.indexOf(",") !== -1) {
+                regEx = /M(\d+),(\d+)L(\d+),(\d+)/;
+            } else if ((path.indexOf(" ") !== -1)) {
+                regEx = /M (\d+) (\d+) L (\d+) (\d+)/;
+            } else throw new Error("No match of expected Raphael path.");
+
+            var items = path.match(regEx);
+            return {x: parseInt(items[1]), y: parseInt(items[2]), x1: parseInt(items[3]), y1: parseInt(items[4])};
         }
     });
 }());
