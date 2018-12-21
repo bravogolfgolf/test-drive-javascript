@@ -18,7 +18,7 @@
     var GENERATED_CLIENT_DIRECTORY = GENERATED_DIRECTORY + "/client";
     var GENERATED_TEST_DIRECTORY = GENERATED_DIRECTORY+ "/test";
     var KARMA_CONF_JS = "karma.conf.js";
-    var EXPECTED_BROWSWERS = [
+    var EXPECTED_BROWSERS = [
         "Safari 12.0.2 (Mac OS X 10.14.2)",
         "Mobile Safari 12.0.0 (iOS 12.1.0)",
         "Chrome 71.0.3578 (Mac OS X 10.14.2)",
@@ -34,64 +34,7 @@
         }, complete, fail);
     }, {async: true});
 
-    desc("Run a local http server");
-    task("run", ["build"], function () {
-        console.log("Running local http server:");
-        jake.exec("node node_modules/http-server/bin/http-server " + GENERATED_CLIENT_DIRECTORY, {interactive: true}, complete);
-    }, {async: true});
-
-    desc("Build distribution files");
-    task("build", ["clean", GENERATED_CLIENT_DIRECTORY], function () {
-        console.log("Building distribution files:");
-        shell.cp("src/html/index.html", GENERATED_CLIENT_DIRECTORY);
-        shell.cp("third-party/jquery-3.3.1.js", GENERATED_CLIENT_DIRECTORY);
-        shell.cp("third-party/raphael-2.2.1.js", GENERATED_CLIENT_DIRECTORY);
-        shell.cp("src/js/client/client.js", GENERATED_CLIENT_DIRECTORY);
-        // jake.exec(
-        //     "node node_modules/browserify/bin/cmd.js src/js/client/app.js -o " + GENERATED_CLIENT_DIRECTORY + "/bundle.js",
-        //     {interactive: true},
-        //     complete);
-    }, {aysnc: true});
-
-    desc("Cleans generated directory");
-    task("clean", function () {
-        console.log("Cleaning generated directory:");
-        shell.rm("-rf", GENERATED_DIRECTORY);
-    });
-
-    directory(GENERATED_CLIENT_DIRECTORY);
-
-    desc("Deploy to Heroku");
-    task("deploy", ["default"], function() {
-        console.log("1. Make sure 'git status' is clean.");
-        console.log("2. git push heroku master");
-        console.log("3. ./jake.sh testRelease");
-    });
-
-    desc("Run release test");
-    task("testRelease", ["version", "lint"], function () {
-        console.log("Testing website is available:");
-        mocha.addFile("src/js/release_test.js");
-        mocha.run(function (failures) {
-            if (failures) return fail("Website not available.");
-            else return complete();
-        });
-    }, {async: true});
-
-    desc("Integrate");
-    task("integrate", ["default"], function () {
-        console.log("1. Make sure 'git status' is clean.");
-        console.log("2. Build on the integration box.");
-        console.log("   a. Walk over to integration box.");
-        console.log("   b. 'git pull'");
-        console.log("   c. 'jake'");
-        console.log("   d. If jake fails, stop! Try again after fixing the issue.");
-        console.log("3. git checkout integration");
-        console.log("4. git merge master --no-ff --log");
-        console.log("5. git checkout master");
-    });
-
-    desc("Build and test");
+    desc("Test Server and Client");
     task("default", ["version", "lint", "testServer", "testClient"], function () {
         console.log("\n\nBUILD OK");
     });
@@ -137,10 +80,67 @@
         console.log("Testing client JavaScript in browsers:");
         karma.run({
             configFile: KARMA_CONF_JS,
-            expectedBrowsers: EXPECTED_BROWSWERS,
+            expectedBrowsers: EXPECTED_BROWSERS,
             strict: !process.env.loose
 
         }, complete, fail);
+    }, {async: true});
+
+    desc("Run a local http server");
+    task("run", ["build"], function () {
+        console.log("Running local http server:");
+        jake.exec("node node_modules/http-server/bin/http-server " + GENERATED_CLIENT_DIRECTORY, {interactive: true}, complete);
+    }, {async: true});
+
+    desc("Build distribution files");
+    task("build", ["clean", GENERATED_CLIENT_DIRECTORY], function () {
+        console.log("Building distribution files:");
+        shell.cp("src/html/index.html", GENERATED_CLIENT_DIRECTORY);
+        shell.cp("third-party/jquery-3.3.1.js", GENERATED_CLIENT_DIRECTORY);
+        shell.cp("third-party/raphael-2.2.1.js", GENERATED_CLIENT_DIRECTORY);
+        shell.cp("src/js/client/client.js", GENERATED_CLIENT_DIRECTORY);
+        // jake.exec(
+        //     "node node_modules/browserify/bin/cmd.js src/js/client/app.js -o " + GENERATED_CLIENT_DIRECTORY + "/bundle.js",
+        //     {interactive: true},
+        //     complete);
+    }, {aysnc: true});
+
+    desc("Cleans generated directory");
+    task("clean", function () {
+        console.log("Cleaning generated directory:");
+        shell.rm("-rf", GENERATED_DIRECTORY);
+    });
+
+    directory(GENERATED_CLIENT_DIRECTORY);
+
+    desc("Integrate");
+    task("integrate", ["default"], function () {
+        console.log("1. Make sure 'git status' is clean.");
+        console.log("2. Build on the integration box.");
+        console.log("   a. Walk over to integration box.");
+        console.log("   b. 'git pull'");
+        console.log("   c. 'jake'");
+        console.log("   d. If jake fails, stop! Try again after fixing the issue.");
+        console.log("3. git checkout integration");
+        console.log("4. git merge master --no-ff --log");
+        console.log("5. git checkout master");
+    });
+
+    desc("Deploy to Heroku");
+    task("deploy", ["default"], function() {
+        console.log("1. Make sure 'git status' is clean.");
+        console.log("2. git push heroku master");
+        console.log("3. ./jake.sh testRelease");
+    });
+
+    desc("Run release test");
+    task("testRelease", ["version", "lint"], function () {
+        console.log("Testing website is available:");
+        mocha.addFile("src/js/release_test.js");
+        mocha.run(function (failures) {
+            if (failures) return fail("Website not available.");
+            else return complete();
+        });
     }, {async: true});
 
     function lintingOptions() {
