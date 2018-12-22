@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Smoke test marker: WeeWikiPaint Homepage Watermark -->
+    <meta charset="UTF-8">
+    <title>WeeWikiPaint</title>
+    <script src="jquery-3.3.1.js" type="text/javascript"></script>
+    <script src="raphael-2.2.1.js" type="text/javascript"></script>
+    <script src="client.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="drawingArea" style='height: 300px; width: 500px; border: solid red 2px'></div>
+<script type="text/javascript">
+    $(function () {
+        wwp.initializeDrawingArea($("#drawingArea")[0]);
+    });
+</script>
+</body>
+</html>
