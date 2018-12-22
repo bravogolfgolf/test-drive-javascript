@@ -24,7 +24,7 @@ wwp = {};
             if (start === null) return;
 
             var end = position(drawingArea, event.pageX, event.pageY);
-            wwp.drawLine(start.x, start.y, end.x, end.y);
+            drawLine(start.x, start.y, end.x, end.y);
             start = end;
         });
 
@@ -33,9 +33,9 @@ wwp = {};
         });
     }
 
-    wwp.drawLine = function (startX, startY, endX, endY) {
+    function drawLine(startX, startY, endX, endY) {
         paper.path("M" + startX + "," + startY + "L" + endX + "," + endY);
-    };
+    }
 
     function position(drawingArea, pageX, pageY) {
         var offSet = drawingArea.offset();

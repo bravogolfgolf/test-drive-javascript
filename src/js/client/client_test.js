@@ -31,12 +31,6 @@
             assert.equal(paper.width, WIDTH, "Width of Raphael paper:");
         });
 
-        it.skip("draw a line", function () {
-            wwp.drawLine(20, 30, 30, 300);
-
-            assert.deepEqual(paperPaths(paper), [[20, 30, 30, 300]], "Path of Raphael element:");
-        });
-
         it("draw a line in response to a drag", function () {
             clickEvent("mousedown", 20, 30, offset);
             clickEvent("mousemove", 50, 60, offset);
