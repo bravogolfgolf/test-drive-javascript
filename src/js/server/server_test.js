@@ -62,7 +62,37 @@
             });
         });
 
-        it("respond with 404.html to any request except to '/' and '/index.html", function (done) {
+        it("respond with client.js with request to '/client.js'", function (done) {
+            HTTP_GET_OPTIONS.path = "/client.js";
+            var result = http.get(HTTP_GET_OPTIONS);
+
+            result.on("response", function (response) {
+                assert.equal(response.statusCode, 200);
+                done();
+            });
+        });
+
+        it("respond with jquery-3.3.1.js with request to '/jquery-3.3.1.js'", function (done) {
+            HTTP_GET_OPTIONS.path = "/jquery-3.3.1.js";
+            var result = http.get(HTTP_GET_OPTIONS);
+
+            result.on("response", function (response) {
+                assert.equal(response.statusCode, 200);
+                done();
+            });
+        });
+
+        it("respond with raphael-2.2.1.js with request to '/raphael-2.2.1.js'", function (done) {
+            HTTP_GET_OPTIONS.path = "/raphael-2.2.1.js";
+            var result = http.get(HTTP_GET_OPTIONS);
+
+            result.on("response", function (response) {
+                assert.equal(response.statusCode, 200);
+                done();
+            });
+        });
+
+        it("respond with 404.html to any request not explicitly defined", function (done) {
             HTTP_GET_OPTIONS.path = "/junk";
             var result = http.get(HTTP_GET_OPTIONS);
 
