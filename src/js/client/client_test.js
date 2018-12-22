@@ -93,17 +93,9 @@
         }
 
         function paperPaths(paper) {
-            var elements = elementsOf(paper);
-            return elements.map(function (element) {
-                var path = pathOf(element);
-                return [path.x, path.y, path.x1, path.y1];
-            });
-        }
-
-        function elementsOf(element) {
             var elements = [];
-            element.forEach(function (element) {
-                elements.push(element);
+            paper.forEach(function (element) {
+                elements.push(pathOf(element));
             });
             return elements;
         }
@@ -119,7 +111,7 @@
             } else throw new Error("No match of expected Raphael path.");
 
             var items = path.match(regEx);
-            return {x: parseInt(items[1]), y: parseInt(items[2]), x1: parseInt(items[3]), y1: parseInt(items[4])};
+            return [parseInt(items[1]), parseInt(items[2]), parseInt(items[3]), parseInt(items[4])];
         }
     });
 }());
