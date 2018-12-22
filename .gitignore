@@ -8,7 +8,7 @@
 node_modules/**/.bin/
 
 # generated
-generated/
+generated/test
 
 # karma
 node_modules/fsevents/build/Release/.deps/Users/briangibson/
