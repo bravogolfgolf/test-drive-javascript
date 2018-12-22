@@ -1,1 +1,1 @@
-web: node src/js/server/weewikipaint.js $PORT
+web: node src/js/server/weewikipaint.js $PORT generated/client

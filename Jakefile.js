@@ -96,6 +96,7 @@
     task("build", ["clean", GENERATED_CLIENT_DIRECTORY], function () {
         console.log("Building distribution files:");
         shell.cp("src/html/index.html", GENERATED_CLIENT_DIRECTORY);
+        shell.cp("src/html/404.html", GENERATED_CLIENT_DIRECTORY);
         shell.cp("third-party/jquery-3.3.1.js", GENERATED_CLIENT_DIRECTORY);
         shell.cp("third-party/raphael-2.2.1.js", GENERATED_CLIENT_DIRECTORY);
         shell.cp("src/js/client/client.js", GENERATED_CLIENT_DIRECTORY);
@@ -127,7 +128,7 @@
     });
 
     desc("Deploy to Heroku");
-    task("deploy", ["default"], function() {
+    task("deploy", ["build", "default"], function() {
         console.log("1. Make sure 'git status' is clean.");
         console.log("2. git push heroku master");
         console.log("3. ./jake.sh testRelease");
