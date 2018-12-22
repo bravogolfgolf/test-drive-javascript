@@ -8,11 +8,14 @@ wwp = {};
     var paper;
 
     wwp.initializeDrawingArea = function (drawingAreaId) {
+        paper = new Raphael(drawingAreaId);
+        handleMouseEvents(drawingAreaId);
+        return paper;
+        };
+
+    function handleMouseEvents(drawingAreaId) {
         var start = null;
         var drawingArea = $(drawingAreaId);
-
-        paper = new Raphael(drawingAreaId);
-
         $(document).mousedown(function (event) {
             start = position(drawingArea, event.pageX, event.pageY);
         });
@@ -28,9 +31,7 @@ wwp = {};
         $(document).mouseup(function () {
             start = null;
         });
-
-        return paper;
-    };
+    }
 
     wwp.drawLine = function (startX, startY, endX, endY) {
         paper.path("M" + startX + "," + startY + "L" + endX + "," + endY);
