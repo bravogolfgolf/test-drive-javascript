@@ -8,35 +8,25 @@ wwp = {};
     var paper;
 
     wwp.initializeDrawingArea = function (drawingAreaId) {
-        var isDraggingMouse = false;
-        var startX = null;
-        var startY = null;
+        var start = null;
+        var drawingArea = $(drawingAreaId);
 
         paper = new Raphael(drawingAreaId);
 
-        var drawingArea = $(drawingAreaId);
-
-        drawingArea.mousedown(function (event) {
-            isDraggingMouse = true;
-            var offSet = drawingArea.offset();
-            startX = event.pageX - offSet.left;
-            startY = event.pageY - offSet.top;
+        $(document).mousedown(function (event) {
+            start = position(drawingArea, event.pageX, event.pageY);
         });
 
         drawingArea.mousemove(function (event) {
-            var offSet = drawingArea.offset();
-            var endX = event.pageX - offSet.left;
-            var endY = event.pageY - offSet.top;
+            if (start === null) return;
 
-            if (isDraggingMouse)
-                wwp.drawLine(startX, startY, endX, endY);
-
-            startX = endX;
-            startY = endY;
+            var end = position(drawingArea, event.pageX, event.pageY);
+            wwp.drawLine(start.x, start.y, end.x, end.y);
+            start = end;
         });
 
-        drawingArea.mouseup(function () {
-            isDraggingMouse = false;
+        $(document).mouseup(function () {
+            start = null;
         });
 
         return paper;
@@ -45,4 +35,12 @@ wwp = {};
     wwp.drawLine = function (startX, startY, endX, endY) {
         paper.path("M" + startX + "," + startY + "L" + endX + "," + endY);
     };
+
+    function position(drawingArea, pageX, pageY) {
+        var offSet = drawingArea.offset();
+        return {
+            x: pageX - offSet.left,
+            y: pageY - offSet.top
+        };
+    }
 }());
