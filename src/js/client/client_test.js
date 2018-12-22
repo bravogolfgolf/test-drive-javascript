@@ -5,15 +5,13 @@
 
     var assert = require("../shared/assert");
 
+    var offset = {left: 8, top: 8};
     var drawingArea;
     var paper;
     var HEIGHT = 200;
     var WIDTH = 400;
-    // var MARGIN = 20;
-    // var BORDER = 20;
-    // var PADDING = 20;
 
-    describe("Drawing area", function () {
+    describe("Drawing area should", function () {
 
         beforeEach(function () {
             var html = "<div id=drawingArea style='" +
@@ -28,33 +26,73 @@
             $(drawingArea).remove();
         });
 
-        it("should have the same dimensions as enclosing div", function () {
+        it("have the same dimensions as enclosing div", function () {
             assert.equal(paper.height, HEIGHT, "Height of Raphael paper:");
             assert.equal(paper.width, WIDTH, "Width of Raphael paper:");
         });
 
-        it("draw a line", function () {
+        it.skip("draw a line", function () {
             wwp.drawLine(20, 30, 30, 300);
 
             assert.deepEqual(paperPaths(paper), [[20, 30, 30, 300]], "Path of Raphael element:");
         });
 
-        it("draw connected line segments based on clicks", function () {
-            var click1 = {x: 20, y: 30};
-            var click2 = {x: 50, y: 60};
-            var click3 = {x: 20, y: 40};
-            var offset = {left: 8, top: 8};
+        it("draw a line in response to a drag", function () {
+            clickEvent("mousedown", 20, 30, offset);
+            clickEvent("mousemove", 50, 60, offset);
 
-            clickEvent(click1.x, click1.y, offset);
-            clickEvent(click2.x, click2.y, offset);
-            clickEvent(click3.x, click3.y, offset);
-
-            assert.deepEqual(paperPaths(paper), [[20, 30, 50, 60], [50, 60, 20, 40]], "Paths of Raphael elements");
+            assert.deepEqual(paperPaths(paper), [[20, 30, 50, 60]], "Paths of Raphael elements");
         });
 
+        it("does not draw line segments when mouse is not down", function () {
+            clickEvent("mousemove", 20, 30, offset);
+            clickEvent("mousemove", 50, 60, offset);
 
-        function clickEvent(x, y, offset) {
-            var event = new jQuery.Event("click");
+            assert.deepEqual(paperPaths(paper), [], "Paths of Raphael elements");
+        });
+
+        it("stops drawing line segments when mouse is up", function () {
+            clickEvent("mousedown", 20, 30, offset);
+            clickEvent("mousemove", 50, 60, offset);
+            clickEvent("mouseup", 50, 60, offset);
+            clickEvent("mousemove", 100, 70, offset);
+
+            assert.deepEqual(paperPaths(paper), [[20, 30, 50, 60]], "Paths of Raphael elements");
+        });
+
+        it("draws multiple line segments when mouse dragged multiple places", function () {
+            clickEvent("mousedown", 20, 30, offset);
+            clickEvent("mousemove", 50, 60, offset);
+            clickEvent("mousemove", 80, 20, offset);
+            clickEvent("mousemove", 100, 70, offset);
+
+            assert.deepEqual(paperPaths(paper), [[20, 30, 50, 60], [50, 60, 80, 20], [80, 20, 100, 70]], "Paths of Raphael elements");
+        });
+
+        it("draws multiple line segments when there are multiple drags", function () {
+            clickEvent("mousedown", 20, 30, offset);
+            clickEvent("mousemove", 50, 60, offset);
+            clickEvent("mouseup", 50, 60, offset);
+
+            clickEvent("mousemove", 90, 60, offset);
+
+            clickEvent("mousedown", 100, 70, offset);
+            clickEvent("mousemove", 80, 20, offset);
+            clickEvent("mouseup", 80, 20, offset);
+
+
+            assert.deepEqual(paperPaths(paper), [[20, 30, 50, 60], [100, 70, 80, 20]], "Paths of Raphael elements");
+        });
+
+        it("does not draw line segment in response to mouseup event", function () {
+            clickEvent("mousedown", 20, 30, offset);
+            clickEvent("mouseup", 80, 20, offset);
+
+            assert.deepEqual(paperPaths(paper), [], "Paths of Raphael elements");
+        });
+
+        function clickEvent(type, x, y, offset) {
+            var event = new jQuery.Event(type);
             event.pageX = x + offset.left;
             event.pageY = y + offset.top;
             jQuery(drawingArea).trigger(event);
