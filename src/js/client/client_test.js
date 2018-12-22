@@ -44,14 +44,14 @@
             assert.deepEqual(paperPaths(paper), [[20, 30, 50, 60]], "Paths of Raphael elements");
         });
 
-        it("does not draw line segments when mouse is not down", function () {
+        it("not draw line segments when mouse is not down", function () {
             clickEvent("mousemove", 20, 30, offset);
             clickEvent("mousemove", 50, 60, offset);
 
             assert.deepEqual(paperPaths(paper), [], "Paths of Raphael elements");
         });
 
-        it("stops drawing line segments when mouse is up", function () {
+        it("stop drawing line segments when mouse is up", function () {
             clickEvent("mousedown", 20, 30, offset);
             clickEvent("mousemove", 50, 60, offset);
             clickEvent("mouseup", 50, 60, offset);
@@ -60,7 +60,7 @@
             assert.deepEqual(paperPaths(paper), [[20, 30, 50, 60]], "Paths of Raphael elements");
         });
 
-        it("draws multiple line segments when mouse dragged multiple places", function () {
+        it("draw multiple line segments when mouse dragged multiple places", function () {
             clickEvent("mousedown", 20, 30, offset);
             clickEvent("mousemove", 50, 60, offset);
             clickEvent("mousemove", 80, 20, offset);
@@ -69,7 +69,7 @@
             assert.deepEqual(paperPaths(paper), [[20, 30, 50, 60], [50, 60, 80, 20], [80, 20, 100, 70]], "Paths of Raphael elements");
         });
 
-        it("draws multiple line segments when there are multiple drags", function () {
+        it("draw multiple line segments when there are multiple drags", function () {
             clickEvent("mousedown", 20, 30, offset);
             clickEvent("mousemove", 50, 60, offset);
             clickEvent("mouseup", 50, 60, offset);
@@ -84,7 +84,7 @@
             assert.deepEqual(paperPaths(paper), [[20, 30, 50, 60], [100, 70, 80, 20]], "Paths of Raphael elements");
         });
 
-        it("does not draw line segment in response to mouseup event", function () {
+        it("not draw line segment in response to mouseup event", function () {
             clickEvent("mousedown", 20, 30, offset);
             clickEvent("mouseup", 80, 20, offset);
 
