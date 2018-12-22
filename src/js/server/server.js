@@ -13,6 +13,15 @@
             if (request.url === "/" || request.url === "/index.html") {
                 response.statusCode = 200;
                 fileToServe(homePage, response);
+            } else if (request.url === "/client.js") {
+                response.statusCode = 200;
+                fileToServe("generated/client/client.js", response);
+            } else if (request.url === "/jquery-3.3.1.js") {
+                response.statusCode = 200;
+                fileToServe("generated/client/jquery-3.3.1.js", response);
+            } else if (request.url === "/raphael-2.2.1.js") {
+                response.statusCode = 200;
+                fileToServe("generated/client/raphael-2.2.1.js", response);
             } else {
                 response.statusCode = 404;
                 fileToServe(notFoundPage, response);
