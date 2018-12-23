@@ -39,14 +39,14 @@
             assert.deepEqual(paperPaths(paper), [[20, 30, 50, 60]], "Paths of Raphael elements");
         });
 
-        it("not draw line segments when mouse is not down", function () {
+        it("not draw line segments when pointer is not down", function () {
             mouseMove(20, 30);
             mouseMove(50, 60);
 
             assert.deepEqual(paperPaths(paper), [], "Paths of Raphael elements");
         });
 
-        it("stop drawing line segments when mouse is up", function () {
+        it("stop drawing line segments when pointer is up", function () {
             mouseDown(20, 30);
             mouseMove(50, 60);
             mouseUp(50, 60);
@@ -55,7 +55,7 @@
             assert.deepEqual(paperPaths(paper), [[20, 30, 50, 60]], "Paths of Raphael elements");
         });
 
-        it("draw multiple line segments when mouse dragged multiple places", function () {
+        it("draw multiple line segments when pointer dragged multiple places", function () {
             mouseDown(20, 30);
             mouseMove(50, 60);
             mouseMove(80, 20);
@@ -78,11 +78,20 @@
             assert.deepEqual(paperPaths(paper), [[20, 30, 50, 60], [100, 70, 80, 20]], "Paths of Raphael elements");
         });
 
-        it("not draw line segment in response to mouseup event", function () {
+        it("not draw line segment in response to pointer up event", function () {
             mouseDown(20, 30);
             mouseUp(80, 20);
 
             assert.deepEqual(paperPaths(paper), [], "Paths of Raphael elements");
+        });
+
+        it.skip("not continue to draw if pointer leaves drawing area", function () {
+            mouseDown(20, 30);
+            mouseMove(50, 60);
+            mouseMove(WIDTH + 1, HEIGHT + 1);
+            mouseMove(60, 70);
+
+            assert.deepEqual(paperPaths(paper), [[20, 30, 50, 60]], "Paths of Raphael elements");
         });
 
         describe("not start drawing if started outside drawing area", function () {
@@ -134,6 +143,7 @@
             });
         });
 
+
         function mouseDown(x, y) {
             clickEvent("mousedown", x, y);
         }
@@ -156,13 +166,14 @@
         function paperPaths(paper) {
             var elements = [];
             paper.forEach(function (element) {
+                // dump(pathOf(element));
                 elements.push(pathOf(element));
             });
             return elements;
         }
 
         function pathOf(element) {
-            var regEx;
+            var regEx = null;
             var path = element.node.attributes.d.value;
 
             if (path.indexOf(",") !== -1) {

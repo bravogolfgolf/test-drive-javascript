@@ -19,11 +19,7 @@ wwp = {};
 
         $(document).mousedown(function (event) {
             var potentialStart = position(drawingArea, event.pageX, event.pageY);
-            var top = potentialStart.y >= 0;
-            var right = potentialStart.x <= paper.width;
-            var bottom = potentialStart.y <= paper.height;
-            var left = potentialStart.x >= 0;
-            if (top && right && bottom && left) start = potentialStart;
+            if (isInDrawingArea(potentialStart)) start = potentialStart;
         });
 
         drawingArea.mousemove(function (event) {
@@ -37,6 +33,14 @@ wwp = {};
         $(document).mouseup(function () {
             start = null;
         });
+    }
+
+    function isInDrawingArea(point) {
+        var top = point.y >= 0;
+        var right = point.x <= paper.width;
+        var bottom = point.y <= paper.height;
+        var left = point.x >= 0;
+        return top && right && bottom && left;
     }
 
     function drawLine(startX, startY, endX, endY) {
