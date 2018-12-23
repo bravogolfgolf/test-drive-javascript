@@ -1,4 +1,4 @@
-/* globals Raphael:false, wwp:true */
+/* globals Raphael:false, wwp:true, dump:false*/
 
 wwp = {};
 
@@ -22,12 +22,16 @@ wwp = {};
             if (isInDrawingArea(potentialStart)) start = potentialStart;
         });
 
-        drawingArea.mousemove(function (event) {
+        $(document).mousemove(function (event) {
             if (start === null) return;
 
             var end = position(drawingArea, event.pageX, event.pageY);
-            drawLine(start.x, start.y, end.x, end.y);
-            start = end;
+            if (isInDrawingArea(end)) {
+                drawLine(start.x, start.y, end.x, end.y);
+                start = end;
+            } else {
+                start = null;
+            }
         });
 
         $(document).mouseup(function () {
