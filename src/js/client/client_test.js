@@ -8,6 +8,7 @@
     var offset = {left: 8, top: 8};
     var drawingArea;
     var paper;
+    var ORIGIN = {x: 0, y: 0};
     var HEIGHT = 200;
     var WIDTH = 400;
 
@@ -84,6 +85,55 @@
             assert.deepEqual(paperPaths(paper), [], "Paths of Raphael elements");
         });
 
+        describe("not start drawing if started outside drawing area", function () {
+
+            it("from top", function () {
+                mouseDown(100, ORIGIN.y - 1);
+                mouseMove(50, 50);
+
+                assert.deepEqual(paperPaths(paper), [], "Paths of Raphael elements");
+            });
+
+            it("from right", function () {
+                mouseDown(WIDTH + 1, 100);
+                mouseMove(50, 50);
+
+                assert.deepEqual(paperPaths(paper), [], "Paths of Raphael elements");
+            });
+
+            it("from bottom", function () {
+                mouseDown(100, HEIGHT + 1);
+                mouseMove(50, 50);
+
+                assert.deepEqual(paperPaths(paper), [], "Paths of Raphael elements");
+            });
+
+            it("from left", function () {
+                mouseDown(ORIGIN.x - 1, 100);
+                mouseMove(50, 50);
+
+                assert.deepEqual(paperPaths(paper), [], "Paths of Raphael elements");
+            });
+        });
+
+        describe("draw from exact edge of drawing area", function () {
+            it("from origin", function () {
+                mouseDown(ORIGIN.x, ORIGIN.y);
+                mouseMove(50, 50);
+                mouseUp(50, 50);
+
+                assert.deepEqual(paperPaths(paper), [[ORIGIN.x, ORIGIN.y, 50, 50]], "Paths of Raphael elements");
+            });
+
+            it("from bottom, right corner", function () {
+                mouseDown(WIDTH, HEIGHT);
+                mouseMove(50, 50);
+                mouseUp(50, 50);
+
+                assert.deepEqual(paperPaths(paper), [[WIDTH, HEIGHT, 50, 50]], "Paths of Raphael elements");
+            });
+        });
+
         function mouseDown(x, y) {
             clickEvent("mousedown", x, y);
         }
@@ -100,7 +150,7 @@
             var event = new jQuery.Event(type);
             event.pageX = x + offset.left;
             event.pageY = y + offset.top;
-            jQuery(drawingArea).trigger(event);
+            drawingArea.trigger(event);
         }
 
         function paperPaths(paper) {
