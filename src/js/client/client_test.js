@@ -32,60 +32,71 @@
         });
 
         it("draw a line in response to a drag", function () {
-            clickEvent("mousedown", 20, 30, offset);
-            clickEvent("mousemove", 50, 60, offset);
+            mouseDown(20, 30);
+            mouseMove(50, 60);
 
             assert.deepEqual(paperPaths(paper), [[20, 30, 50, 60]], "Paths of Raphael elements");
         });
 
         it("not draw line segments when mouse is not down", function () {
-            clickEvent("mousemove", 20, 30, offset);
-            clickEvent("mousemove", 50, 60, offset);
+            mouseMove(20, 30);
+            mouseMove(50, 60);
 
             assert.deepEqual(paperPaths(paper), [], "Paths of Raphael elements");
         });
 
         it("stop drawing line segments when mouse is up", function () {
-            clickEvent("mousedown", 20, 30, offset);
-            clickEvent("mousemove", 50, 60, offset);
-            clickEvent("mouseup", 50, 60, offset);
-            clickEvent("mousemove", 100, 70, offset);
+            mouseDown(20, 30);
+            mouseMove(50, 60);
+            mouseUp(50, 60);
+            mouseMove(100, 70);
 
             assert.deepEqual(paperPaths(paper), [[20, 30, 50, 60]], "Paths of Raphael elements");
         });
 
         it("draw multiple line segments when mouse dragged multiple places", function () {
-            clickEvent("mousedown", 20, 30, offset);
-            clickEvent("mousemove", 50, 60, offset);
-            clickEvent("mousemove", 80, 20, offset);
-            clickEvent("mousemove", 100, 70, offset);
+            mouseDown(20, 30);
+            mouseMove(50, 60);
+            mouseMove(80, 20);
+            mouseMove(100, 70);
 
             assert.deepEqual(paperPaths(paper), [[20, 30, 50, 60], [50, 60, 80, 20], [80, 20, 100, 70]], "Paths of Raphael elements");
         });
 
         it("draw multiple line segments when there are multiple drags", function () {
-            clickEvent("mousedown", 20, 30, offset);
-            clickEvent("mousemove", 50, 60, offset);
-            clickEvent("mouseup", 50, 60, offset);
+            mouseDown(20, 30);
+            mouseMove(50, 60);
+            mouseUp(50, 60);
 
-            clickEvent("mousemove", 90, 60, offset);
+            mouseMove(90, 60);
 
-            clickEvent("mousedown", 100, 70, offset);
-            clickEvent("mousemove", 80, 20, offset);
-            clickEvent("mouseup", 80, 20, offset);
-
+            mouseDown(100, 70);
+            mouseMove(80, 20);
+            mouseUp(80, 20);
 
             assert.deepEqual(paperPaths(paper), [[20, 30, 50, 60], [100, 70, 80, 20]], "Paths of Raphael elements");
         });
 
         it("not draw line segment in response to mouseup event", function () {
-            clickEvent("mousedown", 20, 30, offset);
-            clickEvent("mouseup", 80, 20, offset);
+            mouseDown(20, 30);
+            mouseUp(80, 20);
 
             assert.deepEqual(paperPaths(paper), [], "Paths of Raphael elements");
         });
 
-        function clickEvent(type, x, y, offset) {
+        function mouseDown(x, y) {
+            clickEvent("mousedown", x, y);
+        }
+
+        function mouseMove(x, y) {
+            clickEvent("mousemove", x, y);
+        }
+
+        function mouseUp(x, y) {
+            clickEvent("mouseup", x, y);
+        }
+
+        function clickEvent(type, x, y) {
             var event = new jQuery.Event(type);
             event.pageX = x + offset.left;
             event.pageY = y + offset.top;
