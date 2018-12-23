@@ -25,8 +25,6 @@
 
         afterEach(function () {
             drawingArea.remove();
-            $(document).unbind();
-
         });
 
         it("have the same dimensions as enclosing div", function () {
@@ -37,22 +35,7 @@
         it("draw a line in response to a drag", function () {
             mouseDown(20, 30);
             mouseMove(50, 60);
-
-            assert.deepEqual(lineSegments(), [[20, 30, 50, 60]], "Paths of Raphael elements");
-        });
-
-        it("not draw line segments when pointer is not down", function () {
-            mouseMove(20, 30);
-            mouseMove(50, 60);
-
-            assert.deepEqual(lineSegments(), [], "Paths of Raphael elements");
-        });
-
-        it("stop drawing line segments when pointer is up", function () {
-            mouseDown(20, 30);
-            mouseMove(50, 60);
             mouseUp(50, 60);
-            mouseMove(100, 70);
 
             assert.deepEqual(lineSegments(), [[20, 30, 50, 60]], "Paths of Raphael elements");
         });
@@ -62,6 +45,7 @@
             mouseMove(50, 60);
             mouseMove(80, 20);
             mouseMove(100, 70);
+            mouseUp(100, 70);
 
             assert.deepEqual(lineSegments(), [[20, 30, 50, 60], [50, 60, 80, 20], [80, 20, 100, 70]], "Paths of Raphael elements");
         });
@@ -80,17 +64,34 @@
             assert.deepEqual(lineSegments(), [[20, 30, 50, 60], [100, 70, 80, 20]], "Paths of Raphael elements");
         });
 
-        it("not draw line segment in response to pointer up event", function () {
+        it("not draw line segment when pointer up", function () {
             mouseDown(20, 30);
             mouseUp(80, 20);
 
             assert.deepEqual(lineSegments(), [], "Paths of Raphael elements");
         });
 
+        it("not draw line segments when pointer is not down", function () {
+            mouseMove(20, 30);
+            mouseMove(50, 60);
+
+            assert.deepEqual(lineSegments(), [], "Paths of Raphael elements");
+        });
+
+        it("stop drawing line segments when pointer is up", function () {
+            mouseDown(20, 30);
+            mouseMove(50, 60);
+            mouseUp(50, 60);
+            mouseMove(100, 70);
+
+            assert.deepEqual(lineSegments(), [[20, 30, 50, 60]], "Paths of Raphael elements");
+        });
+
         it("not continue to draw if pointer leaves drawing area", function () {
             mouseDown(20, 30);
             mouseMove(50, 60);
-            mouseMove(WIDTH + 1, HEIGHT + 1);
+            mouseLeave(WIDTH + 1, HEIGHT + 1);
+            mouseMove(WIDTH + 1, HEIGHT + 1, $(document));
             mouseMove(60, 70);
             mouseUp(60, 70);
 
@@ -100,28 +101,28 @@
         describe("not start drawing if started outside drawing area", function () {
 
             it("from top", function () {
-                mouseDown(100, ORIGIN.y - 1);
+                mouseDown(100, ORIGIN.y - 1, $(document));
                 mouseMove(50, 50);
 
                 assert.deepEqual(lineSegments(), [], "Paths of Raphael elements");
             });
 
             it("from right", function () {
-                mouseDown(WIDTH + 1, 100);
+                mouseDown(WIDTH + 1, 100, $(document));
                 mouseMove(50, 50);
 
                 assert.deepEqual(lineSegments(), [], "Paths of Raphael elements");
             });
 
             it("from bottom", function () {
-                mouseDown(100, HEIGHT + 1);
+                mouseDown(100, HEIGHT + 1, $(document));
                 mouseMove(50, 50);
 
                 assert.deepEqual(lineSegments(), [], "Paths of Raphael elements");
             });
 
             it("from left", function () {
-                mouseDown(ORIGIN.x - 1, 100);
+                mouseDown(ORIGIN.x - 1, 100, $(document));
                 mouseMove(50, 50);
 
                 assert.deepEqual(lineSegments(), [], "Paths of Raphael elements");
@@ -147,23 +148,29 @@
         });
 
 
-        function mouseDown(x, y) {
-            clickEvent("mousedown", x, y);
+        function mouseDown(x, y, optionalJQueryElement) {
+            clickEvent("mousedown", x, y, optionalJQueryElement);
         }
 
-        function mouseMove(x, y) {
-            clickEvent("mousemove", x, y);
+        function mouseMove(x, y, optionalJQueryElement) {
+            clickEvent("mousemove", x, y, optionalJQueryElement);
         }
 
-        function mouseUp(x, y) {
-            clickEvent("mouseup", x, y);
+        function mouseLeave(x, y, optionalJQueryElement) {
+            clickEvent("mouseleave", x, y, optionalJQueryElement);
         }
 
-        function clickEvent(type, x, y) {
+        function mouseUp(x, y, optionalJQueryElement) {
+            clickEvent("mouseup", x, y, optionalJQueryElement);
+        }
+
+        function clickEvent(type, x, y, optionalJQueryElement) {
+            var jQueryElement = optionalJQueryElement || drawingArea;
+
             var event = new jQuery.Event(type);
             event.pageX = x + offset.left;
             event.pageY = y + offset.top;
-            drawingArea.trigger(event);
+            jQueryElement.trigger(event);
         }
 
         function lineSegments() {
