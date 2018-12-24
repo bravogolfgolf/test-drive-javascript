@@ -147,6 +147,14 @@
             });
         });
 
+        it("not select text or other elements when drag continues out of drawing area", function () {
+            drawingArea.mousedown(function (event) {
+            assert.isOk(event.isDefaultPrevented(), "Prevent default event on pointer down in drawing area");
+
+            });
+            mouseDown(50, 50);
+        });
+
 
         function mouseDown(x, y, optionalJQueryElement) {
             clickEvent("mousedown", x, y, optionalJQueryElement);

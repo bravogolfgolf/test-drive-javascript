@@ -19,6 +19,7 @@ wwp = {};
 
         drawingArea.mousedown(function (event) {
             start = position(drawingArea, event.pageX, event.pageY);
+            event.preventDefault();
         });
 
         drawingArea.mousemove(function (event) {
