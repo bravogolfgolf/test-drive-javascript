@@ -38,6 +38,26 @@ wwp = {};
         drawingArea.mouseup(function () {
             start = null;
         });
+
+        drawingArea.on("touchstart", function (event) {
+            start = position(drawingArea, event.changedTouches[0].pageX, event.changedTouches[0].pageY);
+        });
+
+        drawingArea.on("touchmove", function (event) {
+            if (start === null) return;
+
+            var end = position(drawingArea, event.changedTouches[0].pageX, event.changedTouches[0].pageY);
+            drawLine(start.x, start.y, end.x, end.y);
+            start = end;
+        });
+
+        drawingArea.on("touchend", function () {
+            start = null;
+        });
+
+        // drawingArea.ontouchcancel(function () {
+        //     start = null;
+        // });
     }
 
     function drawLine(startX, startY, endX, endY) {

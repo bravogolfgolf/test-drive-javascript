@@ -1,4 +1,4 @@
-/* globals wwp:true, dump:false */
+/* globals wwp:true, dump:false, Touch:false, TouchEvent:false */
 
 (function () {
     "use strict";
@@ -12,7 +12,7 @@
     var HEIGHT = 200;
     var WIDTH = 400;
 
-    describe("Drawing area should", function () {
+    describe("Drawing area should,", function () {
 
         beforeEach(function () {
             var html = "<div id=drawingArea style='" +
@@ -32,7 +32,7 @@
             assert.equal(paper.width, WIDTH, "Width of Raphael paper:");
         });
 
-        describe(",in response to mouse events, ", function () {
+        describe("in response to mouse events,", function () {
 
             it("draw a line with a drag", function () {
                 mouseDown(20, 30);
@@ -158,8 +158,21 @@
             });
         });
 
-        describe(",in response to touch events, ", function () {
+        describe("in response to touch events,", function () {
+            if (!browserSupportsTouchEvents()) return;
+
+            it("draw a line with a drag", function () {
+                touchStart(20, 30);
+                touchMove(50, 60);
+                touchEnd(50, 60);
+
+                assert.deepEqual(lineSegments(), [[20, 30, 50, 60]], "Paths of Raphael elements");
+            });
         });
+
+        function browserSupportsTouchEvents() {
+            return 'TouchEvent' in window && TouchEvent.length > 0;
+        }
 
         function mouseDown(x, y, optionalJQueryElement) {
             clickEvent("mousedown", x, y, optionalJQueryElement);
@@ -177,6 +190,18 @@
             clickEvent("mouseup", x, y, optionalJQueryElement);
         }
 
+        function touchStart(x, y, optionalJQueryElement) {
+            touchEvent("touchstart", x, y, optionalJQueryElement);
+        }
+
+        function touchMove(x, y, optionalJQueryElement) {
+            touchEvent("touchmove", x, y, optionalJQueryElement);
+        }
+
+        function touchEnd(x, y, optionalJQueryElement) {
+            touchEvent("touchend", x, y, optionalJQueryElement);
+        }
+
         function clickEvent(type, x, y, optionalJQueryElement) {
             var jQueryElement = optionalJQueryElement || drawingArea;
 
@@ -184,6 +209,27 @@
             event.pageX = x + offset.left;
             event.pageY = y + offset.top;
             jQueryElement.trigger(event);
+        }
+
+        function touchEvent(type, x, y, optionalJQueryElement) {
+            var div = document.getElementById("drawingArea");
+
+            var touch = new Touch( {
+                identifier: 1,
+                target: div,
+                pageX: x + offset.left,
+                pageY: y + offset.top
+            });
+
+            var touchEvent = new TouchEvent(type, {
+                cancelable: true,
+                bubbles: true,
+                touches: [touch],
+                targetTouches: [touch],
+                changedTouches: [touch]
+            });
+
+            div.dispatchEvent(touchEvent);
         }
 
         function lineSegments() {
