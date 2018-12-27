@@ -5,12 +5,17 @@ wwp = {};
 (function () {
     "use strict";
 
-    var paper;
+    var paper = null;
 
     wwp.initializeDrawingArea = function (drawingAreaId) {
+        if (paper !== null) throw new Error("May only initialize drawing area once.");
         paper = new Raphael(drawingAreaId);
         handleEvents(drawingAreaId);
         return paper;
+    };
+
+    wwp.removeDrawingArea = function () {
+        paper = null;
     };
 
     function handleEvents(drawingAreaId) {

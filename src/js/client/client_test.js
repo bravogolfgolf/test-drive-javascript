@@ -24,7 +24,36 @@
         });
 
         afterEach(function () {
+            wwp.removeDrawingArea();
             drawingArea.remove();
+        });
+
+        describe("if initialized twice", function () {
+
+            var drawingArea2;
+
+            beforeEach(function () {
+                var html2 = "<div id=drawingArea2 style='" +
+                    "height: " + HEIGHT + "px;" +
+                    "width: " + WIDTH + "px;'></div>";
+                drawingArea2 = $(html2);
+                $(document.body).append(drawingArea2);
+
+            });
+
+            afterEach(function () {
+                drawingArea2.remove();
+            });
+
+            it("throw error", function () {
+                assert.throws(
+                    function () {
+                        paper = wwp.initializeDrawingArea(drawingArea2[0]);
+                    },
+                    Error,
+                    "May only initialize drawing area once.");
+            });
+
         });
 
         it(" have the same dimensions as enclosing div", function () {
