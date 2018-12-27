@@ -218,23 +218,28 @@
         }
 
         function touchStart(x, y, optionalJQueryElement) {
-            singleTouchEvent("touchstart", x, y, optionalJQueryElement);
+            var points = [{x: x, y: y}];
+            touchEvent("touchstart", points, optionalJQueryElement);
         }
 
         function multiTouchStart(point1, point2, optionalJQueryElement) {
-            multiTouchEvent("touchstart", point1, point2, optionalJQueryElement);
+            var points = [point1, point2];
+            touchEvent("touchstart", points, optionalJQueryElement);
         }
 
         function touchMove(x, y, optionalJQueryElement) {
-            singleTouchEvent("touchmove", x, y, optionalJQueryElement);
+            var points = [{x: x, y: y}];
+            touchEvent("touchmove", points, optionalJQueryElement);
         }
 
         function touchEnd(x, y, optionalJQueryElement) {
-            singleTouchEvent("touchend", x, y, optionalJQueryElement);
+            var points = [{x: x, y: y}];
+            touchEvent("touchend", points, optionalJQueryElement);
         }
 
         function touchCancel(x, y, optionalJQueryElement) {
-            singleTouchEvent("touchcancel", x, y, optionalJQueryElement);
+            var points = [{x: x, y: y}];
+            touchEvent("touchcancel", points, optionalJQueryElement);
         }
 
         function clickEvent(type, x, y, optionalJQueryElement) {
@@ -246,33 +251,32 @@
             jQueryElement.trigger(event);
         }
 
-        function singleTouchEvent(type, x, y, optionalJQueryElement) {
+        function touchEvent(type, points, optionalJQueryElement) {
             var jQueryElement = optionalJQueryElement || drawingArea;
             var target = jQueryElement[0];
-            var touch = createTouch(0, target, x, y);
-            var touchList = [touch];
+            var touchList = createTouchList(points, target);
             var touchEvent = createTouchEvent(type, touchList);
 
             target.dispatchEvent(touchEvent);
         }
 
-        function multiTouchEvent(type, point1, point2, optionalJQueryElement) {
-            var jQueryElement = optionalJQueryElement || drawingArea;
-            var target = jQueryElement[0];
-            var touch1 = createTouch(1, target, point1.x, point1.y);
-            var touch2 = createTouch(2, target, point2.x, point2.y);
-            var touchList = [touch1, touch2];
-            var touchEvent = createTouchEvent(type,touchList);
-
-            target.dispatchEvent(touchEvent);
+        function createTouchList(points, target) {
+            var touchList = [];
+            var identifier = 0;
+            points.forEach(function (point) {
+                var touch = createTouch(identifier, target, point);
+                identifier++;
+                touchList.push(touch);
+            });
+            return touchList;
         }
 
-        function createTouch(identifier, target, x, y) {
+        function createTouch(identifier, target, point) {
             return new Touch({
                 identifier: identifier,
                 target: target,
-                pageX: x + offset.left,
-                pageY: y + offset.top
+                pageX: point.x + offset.left,
+                pageY: point.y + offset.top
             });
         }
 
