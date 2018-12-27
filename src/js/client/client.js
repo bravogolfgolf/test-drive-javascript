@@ -18,8 +18,8 @@ wwp = {};
         var drawingArea = $(drawingAreaId);
 
         drawingArea.mousedown(function (event) {
-            start = position(drawingArea, event.pageX, event.pageY);
             event.preventDefault();
+            start = position(drawingArea, event.pageX, event.pageY);
         });
 
         drawingArea.mousemove(function (event) {
@@ -40,6 +40,11 @@ wwp = {};
         });
 
         drawingArea.on("touchstart", function (event) {
+            event.preventDefault();
+            if (event.changedTouches.length !== 1) {
+                start = null;
+                return;
+            }
             start = position(drawingArea, event.changedTouches[0].pageX, event.changedTouches[0].pageY);
         });
 

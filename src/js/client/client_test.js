@@ -178,6 +178,23 @@
 
                 assert.deepEqual(lineSegments(), [[20, 30, 50, 60]], "Paths of Raphael elements");
             });
+
+            it("not scroll or zoom when touching in drawing area", function () {
+                drawingArea.on("touchstart", function (event) {
+                    assert.isOk(event.isDefaultPrevented(), "Prevent default event on pointer down in drawing area");
+
+                });
+                touchStart(50, 50);
+            });
+
+            it("stop drawing line when multi-touches detected", function () {
+                touchStart(20, 30);
+                touchMove(50, 60);
+                multiTouchStart({x: 50, y: 60}, {x: 100, y: 110});
+                touchMove(150, 160);
+
+                assert.deepEqual(lineSegments(), [[20, 30, 50, 60]], "Paths of Raphael elements");
+            });
         });
 
         function browserSupportsTouchEvents() {
@@ -201,19 +218,23 @@
         }
 
         function touchStart(x, y, optionalJQueryElement) {
-            touchEvent("touchstart", x, y, optionalJQueryElement);
+            singleTouchEvent("touchstart", x, y, optionalJQueryElement);
+        }
+
+        function multiTouchStart(point1, point2, optionalJQueryElement) {
+            multiTouchEvent("touchstart", point1, point2, optionalJQueryElement);
         }
 
         function touchMove(x, y, optionalJQueryElement) {
-            touchEvent("touchmove", x, y, optionalJQueryElement);
+            singleTouchEvent("touchmove", x, y, optionalJQueryElement);
         }
 
         function touchEnd(x, y, optionalJQueryElement) {
-            touchEvent("touchend", x, y, optionalJQueryElement);
+            singleTouchEvent("touchend", x, y, optionalJQueryElement);
         }
 
         function touchCancel(x, y, optionalJQueryElement) {
-            touchEvent("touchcancel", x, y, optionalJQueryElement);
+            singleTouchEvent("touchcancel", x, y, optionalJQueryElement);
         }
 
         function clickEvent(type, x, y, optionalJQueryElement) {
@@ -225,25 +246,44 @@
             jQueryElement.trigger(event);
         }
 
-        function touchEvent(type, x, y, optionalJQueryElement) {
-            var div = document.getElementById("drawingArea");
+        function singleTouchEvent(type, x, y, optionalJQueryElement) {
+            var jQueryElement = optionalJQueryElement || drawingArea;
+            var target = jQueryElement[0];
+            var touch = createTouch(0, target, x, y);
+            var touchList = [touch];
+            var touchEvent = createTouchEvent(type, touchList);
 
-            var touch = new Touch( {
-                identifier: 1,
-                target: div,
+            target.dispatchEvent(touchEvent);
+        }
+
+        function multiTouchEvent(type, point1, point2, optionalJQueryElement) {
+            var jQueryElement = optionalJQueryElement || drawingArea;
+            var target = jQueryElement[0];
+            var touch1 = createTouch(1, target, point1.x, point1.y);
+            var touch2 = createTouch(2, target, point2.x, point2.y);
+            var touchList = [touch1, touch2];
+            var touchEvent = createTouchEvent(type,touchList);
+
+            target.dispatchEvent(touchEvent);
+        }
+
+        function createTouch(identifier, target, x, y) {
+            return new Touch({
+                identifier: identifier,
+                target: target,
                 pageX: x + offset.left,
                 pageY: y + offset.top
             });
+        }
 
-            var touchEvent = new TouchEvent(type, {
+        function createTouchEvent(type, touchList) {
+            return new TouchEvent(type, {
                 cancelable: true,
                 bubbles: true,
-                touches: [touch],
-                targetTouches: [touch],
-                changedTouches: [touch]
+                touches: touchList,
+                targetTouches: touchList,
+                changedTouches: touchList
             });
-
-            div.dispatchEvent(touchEvent);
         }
 
         function lineSegments() {
