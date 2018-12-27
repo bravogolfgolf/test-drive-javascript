@@ -165,6 +165,16 @@
                 touchStart(20, 30);
                 touchMove(50, 60);
                 touchEnd(50, 60);
+                touchMove(100, 1100);
+
+                assert.deepEqual(lineSegments(), [[20, 30, 50, 60]], "Paths of Raphael elements");
+            });
+
+            it("stop drawing line when touch cancelled", function () {
+                touchStart(20, 30);
+                touchMove(50, 60);
+                touchCancel(50, 60);
+                touchMove(100, 1100);
 
                 assert.deepEqual(lineSegments(), [[20, 30, 50, 60]], "Paths of Raphael elements");
             });
@@ -200,6 +210,10 @@
 
         function touchEnd(x, y, optionalJQueryElement) {
             touchEvent("touchend", x, y, optionalJQueryElement);
+        }
+
+        function touchCancel(x, y, optionalJQueryElement) {
+            touchEvent("touchcancel", x, y, optionalJQueryElement);
         }
 
         function clickEvent(type, x, y, optionalJQueryElement) {

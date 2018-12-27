@@ -55,9 +55,9 @@ wwp = {};
             start = null;
         });
 
-        // drawingArea.ontouchcancel(function () {
-        //     start = null;
-        // });
+        drawingArea.on("touchcancel", function () {
+            start = null;
+        });
     }
 
     function drawLine(startX, startY, endX, endY) {
