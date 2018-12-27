@@ -6,12 +6,14 @@ wwp = {};
     "use strict";
 
     var paper = null;
+    var drawingArea = null;
     var start = null;
 
     wwp.initializeDrawingArea = function (drawingAreaId) {
         if (paper !== null) throw new Error("May only initialize drawing area once.");
         paper = new Raphael(drawingAreaId);
-        handleEvents(drawingAreaId);
+        drawingArea = $(drawingAreaId);
+        handleEvents();
         return paper;
     };
 
@@ -19,55 +21,60 @@ wwp = {};
         paper = null;
     };
 
-    function handleEvents(drawingAreaId) {
-        var drawingArea = $(drawingAreaId);
+    function handleEvents() {
 
         drawingArea.mousedown(function (event) {
             event.preventDefault();
-            start = position(drawingArea, event.pageX, event.pageY);
+            startDrag(event.pageX, event.pageY);
         });
 
         drawingArea.mousemove(function (event) {
-            if (start === null) return;
-
-            var end = position(drawingArea, event.pageX, event.pageY);
-            drawLine(start.x, start.y, end.x, end.y);
-            start = end;
-
+            continueDrag(event.pageX, event.pageY);
         });
 
         drawingArea.mouseleave(function () {
-            start = null;
+            endDrag();
         });
 
         drawingArea.mouseup(function () {
-            start = null;
+            endDrag();
         });
 
         drawingArea.on("touchstart", function (event) {
+            event.preventDefault();
             if (event.touches.length !== 1) {
-                start = null;
+                endDrag();
                 return;
             }
-            event.preventDefault();
-            start = position(drawingArea, event.touches[0].pageX, event.touches[0].pageY);
+            startDrag(event.touches[0].pageX, event.touches[0].pageY);
         });
 
         drawingArea.on("touchmove", function (event) {
-            if (start === null) return;
-
-            var end = position(drawingArea, event.touches[0].pageX, event.touches[0].pageY);
-            drawLine(start.x, start.y, end.x, end.y);
-            start = end;
+            continueDrag(event.touches[0].pageX, event.touches[0].pageY);
         });
 
         drawingArea.on("touchend", function () {
-            start = null;
+            endDrag();
         });
 
         drawingArea.on("touchcancel", function () {
-            start = null;
+            endDrag();
         });
+    }
+
+    function startDrag(pageX, pageY) {
+        start = position(drawingArea, pageX, pageY);
+    }
+
+    function continueDrag(pageX, pageY) {
+        if (start === null) return;
+        var end = position(drawingArea, pageX, pageY);
+        drawLine(start.x, start.y, end.x, end.y);
+        start = end;
+    }
+
+    function endDrag() {
+        start = null;
     }
 
     function drawLine(startX, startY, endX, endY) {
