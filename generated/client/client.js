@@ -6,6 +6,7 @@ wwp = {};
     "use strict";
 
     var paper = null;
+    var start = null;
 
     wwp.initializeDrawingArea = function (drawingAreaId) {
         if (paper !== null) throw new Error("May only initialize drawing area once.");
@@ -19,7 +20,6 @@ wwp = {};
     };
 
     function handleEvents(drawingAreaId) {
-        var start = null;
         var drawingArea = $(drawingAreaId);
 
         drawingArea.mousedown(function (event) {

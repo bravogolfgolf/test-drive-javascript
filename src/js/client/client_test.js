@@ -61,6 +61,14 @@
             assert.equal(paper.width, WIDTH, "Width of Raphael paper:");
         });
 
+        it("not select text or other elements when drag continues out of drawing area", function () {
+            drawingArea.mousedown(function (event) {
+                assert.isOk(event.isDefaultPrevented(), "Prevent default event on pointer down in drawing area");
+
+            });
+            mouseDown(50, 50);
+        });
+
         describe("in response to mouse events,", function () {
 
             it("draw a line with a drag", function () {
@@ -176,14 +184,6 @@
 
                     assert.deepEqual(lineSegments(), [[WIDTH, HEIGHT, 50, 50]], "Paths of Raphael elements");
                 });
-            });
-
-            it("not select text or other elements when drag continues out of drawing area", function () {
-                drawingArea.mousedown(function (event) {
-                    assert.isOk(event.isDefaultPrevented(), "Prevent default event on pointer down in drawing area");
-
-                });
-                mouseDown(50, 50);
             });
         });
 
