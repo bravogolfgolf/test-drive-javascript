@@ -11,36 +11,59 @@ window.wwp = window.wwp || {};
     };
 
     DomElement.prototype.onMouseDown = function (callback) {
-        this.element.mousedown(callback);
+        this.element.mousedown(mouseEventHandlerFn(this, callback));
     };
 
     DomElement.prototype.onMouseMove = function (callback) {
-        this.element.mousemove(callback);
+        this.element.mousemove(mouseEventHandlerFn(this, callback));
     };
 
     DomElement.prototype.onMouseLeave = function (callback) {
-        this.element.mouseleave(callback);
+        this.element.mouseleave(mouseEventHandlerFn(this, callback));
     };
 
     DomElement.prototype.onMouseUp = function (callback) {
-        this.element.mouseup(callback);
+        this.element.mouseup(mouseEventHandlerFn(this, callback));
     };
 
-    DomElement.prototype.onTouchStart = function (callback) {
-        this.element.on("touchstart", callback);
+    function mouseEventHandlerFn(self, callback) {
+        return function (event) {
+            var point = self.removeOffsetFrom(event.pageX, event.pageY);
+            callback(point, event);
+        };
+    }
+
+    DomElement.prototype.onSingleTouchStart = function (callback) {
+        this.element.on("touchstart", singleTouchEventHandlerFn(this, callback));
     };
 
-    DomElement.prototype.onTouchMove = function (callback) {
-        this.element.on("touchmove", callback);
+    DomElement.prototype.onSingleTouchMove = function (callback) {
+        this.element.on("touchmove", singleTouchEventHandlerFn(this, callback));
     };
 
-    DomElement.prototype.onTouchEnd = function (callback) {
-        this.element.on("touchend", callback);
+    DomElement.prototype.onSingleTouchEnd = function (callback) {
+        this.element.on("touchend", singleTouchEventHandlerFn(this, callback));
     };
 
-    DomElement.prototype.onTouchCancel = function (callback) {
-        this.element.on("touchcancel", callback);
+    DomElement.prototype.onSingleTouchCancel = function (callback) {
+        this.element.on("touchcancel", singleTouchEventHandlerFn(this, callback));
     };
+
+    function singleTouchEventHandlerFn(self, callback) {
+        return function (event) {
+            if (event.touches.length !== 1) return;
+            var adjusted = self.removeOffsetFrom(event.touches[0].pageX, event.touches[0].pageY);
+            callback(adjusted, event);
+        };
+    }
+
+    DomElement.prototype.onMultiTouchStart = function (callback) {
+        this.element.on("touchstart", function (event) {
+            if (event.touches.length !== 1) callback(event);
+        });
+    };
+
+
 
     DomElement.prototype.removeOffsetFrom = function (pageX, pageY) {
         return {

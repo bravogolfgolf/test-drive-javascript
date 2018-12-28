@@ -22,53 +22,48 @@ window.wwp = window.wwp || {};
     };
 
     function handleEvents() {
+        preventDefaults();
+        mouseEvents();
+        singleTouchEvents();
+        domElement.onMultiTouchStart(endDrag);
 
-        domElement.onMouseDown(function (event) {
+    }
+
+    function preventDefaults() {
+        domElement.onMouseDown(function (undefined, event) {
             event.preventDefault();
-            startDrag(event.pageX, event.pageY);
         });
 
-        domElement.onMouseMove(function (event) {
-            continueDrag(event.pageX, event.pageY);
-        });
-
-        domElement.onMouseLeave(function () {
-            endDrag();
-        });
-
-        domElement.onMouseUp(function () {
-            endDrag();
-        });
-
-        domElement.onTouchStart(function (event) {
+        domElement.onSingleTouchStart(function (undefined, event) {
             event.preventDefault();
-            if (event.touches.length !== 1) {
-                endDrag();
-                return;
-            }
-            startDrag(event.touches[0].pageX, event.touches[0].pageY);
         });
 
-        domElement.onTouchMove(function (event) {
-            continueDrag(event.touches[0].pageX, event.touches[0].pageY);
-        });
-
-        domElement.onTouchEnd(function () {
-            endDrag();
-        });
-
-        domElement.onTouchCancel(function () {
-            endDrag();
+        domElement.onMultiTouchStart(function (event) {
+            event.preventDefault();
         });
     }
 
-    function startDrag(pageX, pageY) {
-        start = domElement.removeOffsetFrom(pageX, pageY);
+    function mouseEvents() {
+        domElement.onMouseDown(startDrag);
+        domElement.onMouseMove(continueDrag);
+        domElement.onMouseLeave(endDrag);
+        domElement.onMouseUp(endDrag);
     }
 
-    function continueDrag(pageX, pageY) {
+    function singleTouchEvents() {
+        domElement.onSingleTouchStart(startDrag);
+        domElement.onSingleTouchMove(continueDrag);
+        domElement.onSingleTouchEnd(endDrag);
+        domElement.onSingleTouchCancel(endDrag);
+    }
+
+    function startDrag(point) {
+        start = point;
+    }
+
+    function continueDrag(point) {
         if (start === null) return;
-        var end = domElement.removeOffsetFrom(pageX, pageY);
+        var end = point;
         drawLine(start.x, start.y, end.x, end.y);
         start = end;
     }
