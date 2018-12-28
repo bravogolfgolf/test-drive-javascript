@@ -1,17 +1,19 @@
 /* globals Raphael:false, wwp:true, dump:false*/
 
-wwp = {};
+window.wwp = window.wwp || {};
 
 (function () {
     "use strict";
 
     var paper = null;
     var drawingArea = null;
+    var domElement = null;
     var start = null;
 
     wwp.initializeDrawingArea = function (drawingAreaId) {
         if (paper !== null) throw new Error("May only initialize drawing area once.");
         paper = new Raphael(drawingAreaId);
+        domElement = new wwp.DomElement($(drawingAreaId));
         drawingArea = $(drawingAreaId);
         handleEvents();
         return paper;
@@ -63,12 +65,12 @@ wwp = {};
     }
 
     function startDrag(pageX, pageY) {
-        start = position(drawingArea, pageX, pageY);
+        start = domElement.removeOffsetFrom(pageX, pageY);
     }
 
     function continueDrag(pageX, pageY) {
         if (start === null) return;
-        var end = position(drawingArea, pageX, pageY);
+        var end = domElement.removeOffsetFrom(pageX, pageY);
         drawLine(start.x, start.y, end.x, end.y);
         start = end;
     }
@@ -81,11 +83,4 @@ wwp = {};
         paper.path("M" + startX + "," + startY + "L" + endX + "," + endY);
     }
 
-    function position(drawingArea, pageX, pageY) {
-        var offSet = drawingArea.offset();
-        return {
-            x: pageX - offSet.left,
-            y: pageY - offSet.top
-        };
-    }
 }());

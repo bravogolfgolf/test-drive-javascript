@@ -231,19 +231,19 @@
         }
 
         function mouseDown(x, y, optionalJQueryElement) {
-            clickEvent("mousedown", x, y, optionalJQueryElement);
+            mouseEvent("mousedown", x, y, optionalJQueryElement);
         }
 
         function mouseMove(x, y, optionalJQueryElement) {
-            clickEvent("mousemove", x, y, optionalJQueryElement);
+            mouseEvent("mousemove", x, y, optionalJQueryElement);
         }
 
         function mouseLeave(x, y, optionalJQueryElement) {
-            clickEvent("mouseleave", x, y, optionalJQueryElement);
+            mouseEvent("mouseleave", x, y, optionalJQueryElement);
         }
 
         function mouseUp(x, y, optionalJQueryElement) {
-            clickEvent("mouseup", x, y, optionalJQueryElement);
+            mouseEvent("mouseup", x, y, optionalJQueryElement);
         }
 
         function touchStart(x, y, optionalJQueryElement) {
@@ -271,7 +271,7 @@
             touchEvent("touchcancel", points, optionalJQueryElement);
         }
 
-        function clickEvent(type, x, y, optionalJQueryElement) {
+        function mouseEvent(type, x, y, optionalJQueryElement) {
             var jQueryElement = optionalJQueryElement || drawingArea;
 
             var event = new jQuery.Event(type);
