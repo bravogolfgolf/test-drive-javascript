@@ -7,6 +7,7 @@
 
     var offset = {left: 8, top: 8};
     var drawingArea;
+    var domElement;
     var paper;
     var ORIGIN = {x: 0, y: 0};
     var HEIGHT = 200;
@@ -20,6 +21,7 @@
                 "width: " + WIDTH + "px;'></div>";
             drawingArea = $(html);
             $(document.body).append(drawingArea);
+            domElement = new wwp.DomElement(drawingArea[0]);
             paper = wwp.initializeDrawingArea(drawingArea[0]);
         });
 
@@ -243,7 +245,8 @@
         }
 
         function mouseUp(x, y, optionalJQueryElement) {
-            mouseEvent("mouseup", x, y, optionalJQueryElement);
+            domElement.mouseUp(x,y);
+            // mouseEvent("mouseup", x, y, optionalJQueryElement);
         }
 
         function touchStart(x, y, optionalJQueryElement) {

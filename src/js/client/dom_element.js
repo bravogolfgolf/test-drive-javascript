@@ -10,6 +10,19 @@ window.wwp = window.wwp || {};
         this.offset = this.element.offset();
     };
 
+
+    DomElement.prototype.mouseUp = function (x, y) {
+        mouseEvent(this, "mouseup", x, y);
+    };
+
+    function mouseEvent(self, type, x, y) {
+        var event = new jQuery.Event(type);
+        event.pageX = x + self.offset.left;
+        event.pageY = y + self.offset.top;
+        self.element.trigger(event);
+    }
+
+
     DomElement.prototype.onMouseDown = function (callback) {
         this.element.mousedown(mouseEventHandlerFn(this, callback));
     };
@@ -62,7 +75,6 @@ window.wwp = window.wwp || {};
             if (event.touches.length !== 1) callback(event);
         });
     };
-
 
 
     DomElement.prototype.removeOffsetFrom = function (pageX, pageY) {
