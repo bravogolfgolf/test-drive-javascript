@@ -10,33 +10,102 @@ window.wwp = window.wwp || {};
         this.offset = this.element.offset();
     };
 
-    DomElement.prototype.touchStart = function (x, y) {
-        var points = [{x: x, y: y}];
-        touchEvent(this, "touchstart", points);
+    DomElement.prototype.doMouseDown = function (x, y) {
+        doMouseEvent(this, "mousedown", x, y);
     };
 
-
-    DomElement.prototype.touchMove = function (x, y) {
-        var points = [{x: x, y: y}];
-        touchEvent(this, "touchmove", points);
+    DomElement.prototype.doMouseMove = function (x, y) {
+        doMouseEvent(this, "mousemove", x, y);
     };
 
-    DomElement.prototype.touchEnd = function (x, y) {
-        var points = [{x: x, y: y}];
-        touchEvent(this, "touchend", points);
+    DomElement.prototype.doMouseLeave = function (x, y) {
+        doMouseEvent(this, "mouseleave", x, y);
     };
 
-    DomElement.prototype.touchCancel = function (x, y) {
-        var points = [{x: x, y: y}];
-        touchEvent(this, "touchcancel", points);
+    DomElement.prototype.doMouseUp = function (x, y) {
+        doMouseEvent(this, "mouseup", x, y);
     };
 
-    DomElement.prototype.multiTouchStart = function (point1, point2) {
-        var points = [point1, point2];
-        touchEvent(this, "touchstart", points);
+    DomElement.prototype.onMouseDown = function (callback) {
+        this.element.mousedown(onMouseEventHandlerFn(this, callback));
     };
 
-    function touchEvent(self, type, points) {
+    DomElement.prototype.onMouseMove = function (callback) {
+        this.element.mousemove(onMouseEventHandlerFn(this, callback));
+    };
+
+    DomElement.prototype.onMouseLeave = function (callback) {
+        this.element.mouseleave(onMouseEventHandlerFn(this, callback));
+    };
+
+    DomElement.prototype.onMouseUp = function (callback) {
+        this.element.mouseup(onMouseEventHandlerFn(this, callback));
+    };
+
+    DomElement.prototype.doSingleTouchStart = function (x, y) {
+        doTouchEvent(this, "touchstart", [{x: x, y: y}]);
+    };
+
+    DomElement.prototype.doSingleTouchMove = function (x, y) {
+        doTouchEvent(this, "touchmove", [{x: x, y: y}]);
+    };
+
+    DomElement.prototype.doSingleTouchEnd = function (x, y) {
+        doTouchEvent(this, "touchend", [{x: x, y: y}]);
+    };
+
+    DomElement.prototype.doSingleTouchCancel = function (x, y) {
+        doTouchEvent(this, "touchcancel", [{x: x, y: y}]);
+    };
+
+    DomElement.prototype.onSingleTouchStart = function (callback) {
+        this.element.on("touchstart", onSingleTouchEventHandlerFn(this, callback));
+    };
+
+    DomElement.prototype.onSingleTouchMove = function (callback) {
+        this.element.on("touchmove", onSingleTouchEventHandlerFn(this, callback));
+    };
+
+    DomElement.prototype.onSingleTouchEnd = function (callback) {
+        this.element.on("touchend", onSingleTouchEventHandlerFn(this, callback));
+    };
+
+    DomElement.prototype.onSingleTouchCancel = function (callback) {
+        this.element.on("touchcancel", onSingleTouchEventHandlerFn(this, callback));
+    };
+
+    DomElement.prototype.doMultiTouchStart = function (point1, point2) {
+        doTouchEvent(this, "touchstart", [point1, point2]);
+    };
+
+    DomElement.prototype.onMultiTouchStart = function (callback) {
+        this.element.on("touchstart", function (event) {
+            if (event.touches.length !== 1) callback(event);
+        });
+    };
+
+    DomElement.prototype.removeOffsetFrom = function (pageX, pageY) {
+        return {
+            x: pageX - this.offset.left,
+            y: pageY - this.offset.top
+        };
+    };
+
+    function doMouseEvent(self, type, x, y) {
+        var event = new jQuery.Event(type);
+        event.pageX = x + self.offset.left;
+        event.pageY = y + self.offset.top;
+        self.element.trigger(event);
+    }
+
+    function onMouseEventHandlerFn(self, callback) {
+        return function (event) {
+            var point = self.removeOffsetFrom(event.pageX, event.pageY);
+            callback(point, event);
+        };
+    }
+
+    function doTouchEvent(self, type, points) {
         var target = self.element[0];
         var touchList = createTouchList(self, points, target);
         var touchEvent = createTouchEvent(type, touchList);
@@ -55,15 +124,6 @@ window.wwp = window.wwp || {};
         return touchList;
     }
 
-    function createTouch(self, identifier, target, point) {
-        return new Touch({
-            identifier: identifier,
-            target: target,
-            pageX: point.x + self.offset.left,
-            pageY: point.y + self.offset.top
-        });
-    }
-
     function createTouchEvent(type, touchList) {
         return new TouchEvent(type, {
             cancelable: true,
@@ -74,89 +134,20 @@ window.wwp = window.wwp || {};
         });
     }
 
-
-    DomElement.prototype.mouseDown = function (x, y) {
-        mouseEvent(this, "mousedown", x, y);
-    };
-
-    DomElement.prototype.mouseMove = function (x, y) {
-        mouseEvent(this, "mousemove", x, y);
-    };
-
-    DomElement.prototype.mouseLeave = function (x, y) {
-        mouseEvent(this, "mouseleave", x, y);
-    };
-
-    DomElement.prototype.mouseUp = function (x, y) {
-        mouseEvent(this, "mouseup", x, y);
-    };
-
-    function mouseEvent(self, type, x, y) {
-        var event = new jQuery.Event(type);
-        event.pageX = x + self.offset.left;
-        event.pageY = y + self.offset.top;
-        self.element.trigger(event);
+    function createTouch(self, identifier, target, point) {
+        return new Touch({
+            identifier: identifier,
+            target: target,
+            pageX: point.x + self.offset.left,
+            pageY: point.y + self.offset.top
+        });
     }
 
-
-    DomElement.prototype.onMouseDown = function (callback) {
-        this.element.mousedown(mouseEventHandlerFn(this, callback));
-    };
-
-    DomElement.prototype.onMouseMove = function (callback) {
-        this.element.mousemove(mouseEventHandlerFn(this, callback));
-    };
-
-    DomElement.prototype.onMouseLeave = function (callback) {
-        this.element.mouseleave(mouseEventHandlerFn(this, callback));
-    };
-
-    DomElement.prototype.onMouseUp = function (callback) {
-        this.element.mouseup(mouseEventHandlerFn(this, callback));
-    };
-
-    function mouseEventHandlerFn(self, callback) {
-        return function (event) {
-            var point = self.removeOffsetFrom(event.pageX, event.pageY);
-            callback(point, event);
-        };
-    }
-
-    DomElement.prototype.onSingleTouchStart = function (callback) {
-        this.element.on("touchstart", singleTouchEventHandlerFn(this, callback));
-    };
-
-    DomElement.prototype.onSingleTouchMove = function (callback) {
-        this.element.on("touchmove", singleTouchEventHandlerFn(this, callback));
-    };
-
-    DomElement.prototype.onSingleTouchEnd = function (callback) {
-        this.element.on("touchend", singleTouchEventHandlerFn(this, callback));
-    };
-
-    DomElement.prototype.onSingleTouchCancel = function (callback) {
-        this.element.on("touchcancel", singleTouchEventHandlerFn(this, callback));
-    };
-
-    function singleTouchEventHandlerFn(self, callback) {
+    function onSingleTouchEventHandlerFn(self, callback) {
         return function (event) {
             if (event.touches.length !== 1) return;
             var adjusted = self.removeOffsetFrom(event.touches[0].pageX, event.touches[0].pageY);
             callback(adjusted, event);
         };
     }
-
-    DomElement.prototype.onMultiTouchStart = function (callback) {
-        this.element.on("touchstart", function (event) {
-            if (event.touches.length !== 1) callback(event);
-        });
-    };
-
-
-    DomElement.prototype.removeOffsetFrom = function (pageX, pageY) {
-        return {
-            x: pageX - this.offset.left,
-            y: pageY - this.offset.top
-        };
-    };
 }());

@@ -70,73 +70,73 @@
                 assert.isOk(event.isDefaultPrevented(), "Prevent default event on pointer down in drawing area");
 
             });
-            drawingArea.mouseDown(50, 50);
+            drawingArea.doMouseDown(50, 50);
         });
 
         describe("in response to mouse events,", function () {
 
             it("draw a line with a drag", function () {
-                drawingArea.mouseDown(20, 30);
-                drawingArea.mouseMove(50, 60);
-                drawingArea.mouseUp(50, 60);
+                drawingArea.doMouseDown(20, 30);
+                drawingArea.doMouseMove(50, 60);
+                drawingArea.doMouseUp(50, 60);
 
                 assert.deepEqual(lineSegments(), [[20, 30, 50, 60]], "Paths of Raphael elements");
             });
 
             it("draw multiple line segments dragged multiple places", function () {
-                drawingArea.mouseDown(20, 30);
-                drawingArea.mouseMove(50, 60);
-                drawingArea.mouseMove(80, 20);
-                drawingArea.mouseMove(100, 70);
-                drawingArea.mouseUp(100, 70);
+                drawingArea.doMouseDown(20, 30);
+                drawingArea.doMouseMove(50, 60);
+                drawingArea.doMouseMove(80, 20);
+                drawingArea.doMouseMove(100, 70);
+                drawingArea.doMouseUp(100, 70);
 
                 assert.deepEqual(lineSegments(), [[20, 30, 50, 60], [50, 60, 80, 20], [80, 20, 100, 70]], "Paths of Raphael elements");
             });
 
             it("draw multiple line segments when there are multiple drags", function () {
-                drawingArea.mouseDown(20, 30);
-                drawingArea.mouseMove(50, 60);
-                drawingArea.mouseUp(50, 60);
+                drawingArea.doMouseDown(20, 30);
+                drawingArea.doMouseMove(50, 60);
+                drawingArea.doMouseUp(50, 60);
 
-                drawingArea.mouseMove(90, 60);
+                drawingArea.doMouseMove(90, 60);
 
-                drawingArea.mouseDown(100, 70);
-                drawingArea.mouseMove(80, 20);
-                drawingArea.mouseUp(80, 20);
+                drawingArea.doMouseDown(100, 70);
+                drawingArea.doMouseMove(80, 20);
+                drawingArea.doMouseUp(80, 20);
 
                 assert.deepEqual(lineSegments(), [[20, 30, 50, 60], [100, 70, 80, 20]], "Paths of Raphael elements");
             });
 
             it("not draw line segment when mouse is up", function () {
-                drawingArea.mouseDown(20, 30);
-                drawingArea.mouseUp(80, 20);
+                drawingArea.doMouseDown(20, 30);
+                drawingArea.doMouseUp(80, 20);
 
                 assert.deepEqual(lineSegments(), [], "Paths of Raphael elements");
             });
 
             it("not draw line segments when mouse is not down", function () {
-                drawingArea.mouseMove(20, 30);
-                drawingArea.mouseMove(50, 60);
+                drawingArea.doMouseMove(20, 30);
+                drawingArea.doMouseMove(50, 60);
 
                 assert.deepEqual(lineSegments(), [], "Paths of Raphael elements");
             });
 
             it("stop drawing line segments when mouse is up", function () {
-                drawingArea.mouseDown(20, 30);
-                drawingArea.mouseMove(50, 60);
-                drawingArea.mouseUp(50, 60);
-                drawingArea.mouseMove(100, 70);
+                drawingArea.doMouseDown(20, 30);
+                drawingArea.doMouseMove(50, 60);
+                drawingArea.doMouseUp(50, 60);
+                drawingArea.doMouseMove(100, 70);
 
                 assert.deepEqual(lineSegments(), [[20, 30, 50, 60]], "Paths of Raphael elements");
             });
 
             it("not continue to draw if mouse leaves drawing area", function () {
-                drawingArea.mouseDown(20, 30);
-                drawingArea.mouseMove(50, 60);
-                drawingArea.mouseLeave(WIDTH + 1, HEIGHT + 1);
-                documentBody.mouseMove(WIDTH + 1, HEIGHT + 1);
-                drawingArea.mouseMove(60, 70);
-                drawingArea.mouseUp(60, 70);
+                drawingArea.doMouseDown(20, 30);
+                drawingArea.doMouseMove(50, 60);
+                drawingArea.doMouseLeave(WIDTH + 1, HEIGHT + 1);
+                documentBody.doMouseMove(WIDTH + 1, HEIGHT + 1);
+                drawingArea.doMouseMove(60, 70);
+                drawingArea.doMouseUp(60, 70);
 
                 assert.deepEqual(lineSegments(), [[20, 30, 50, 60]], "Paths of Raphael elements");
             });
@@ -144,29 +144,29 @@
             describe("not start drawing if started outside drawing area", function () {
 
                 it("from top", function () {
-                    documentBody.mouseDown(100, ORIGIN.y - 1);
-                    drawingArea.mouseMove(50, 50);
+                    documentBody.doMouseDown(100, ORIGIN.y - 1);
+                    drawingArea.doMouseMove(50, 50);
 
                     assert.deepEqual(lineSegments(), [], "Paths of Raphael elements");
                 });
 
                 it("from right", function () {
-                    documentBody.mouseDown(WIDTH + 1, 100);
-                    drawingArea.mouseMove(50, 50);
+                    documentBody.doMouseDown(WIDTH + 1, 100);
+                    drawingArea.doMouseMove(50, 50);
 
                     assert.deepEqual(lineSegments(), [], "Paths of Raphael elements");
                 });
 
                 it("from bottom", function () {
-                    documentBody.mouseDown(100, HEIGHT + 1);
-                    drawingArea.mouseMove(50, 50);
+                    documentBody.doMouseDown(100, HEIGHT + 1);
+                    drawingArea.doMouseMove(50, 50);
 
                     assert.deepEqual(lineSegments(), [], "Paths of Raphael elements");
                 });
 
                 it("from left", function () {
-                    documentBody.mouseDown(ORIGIN.x - 1, 100);
-                    drawingArea.mouseMove(50, 50);
+                    documentBody.doMouseDown(ORIGIN.x - 1, 100);
+                    drawingArea.doMouseMove(50, 50);
 
                     assert.deepEqual(lineSegments(), [], "Paths of Raphael elements");
                 });
@@ -174,17 +174,17 @@
 
             describe("draw from exact edge of drawing area", function () {
                 it("from origin", function () {
-                    drawingArea.mouseDown(ORIGIN.x, ORIGIN.y);
-                    drawingArea.mouseMove(50, 50);
-                    drawingArea.mouseUp(50, 50);
+                    drawingArea.doMouseDown(ORIGIN.x, ORIGIN.y);
+                    drawingArea.doMouseMove(50, 50);
+                    drawingArea.doMouseUp(50, 50);
 
                     assert.deepEqual(lineSegments(), [[ORIGIN.x, ORIGIN.y, 50, 50]], "Paths of Raphael elements");
                 });
 
                 it("from bottom, right corner", function () {
-                    drawingArea.mouseDown(WIDTH, HEIGHT);
-                    drawingArea.mouseMove(50, 50);
-                    drawingArea.mouseUp(50, 50);
+                    drawingArea.doMouseDown(WIDTH, HEIGHT);
+                    drawingArea.doMouseMove(50, 50);
+                    drawingArea.doMouseUp(50, 50);
 
                     assert.deepEqual(lineSegments(), [[WIDTH, HEIGHT, 50, 50]], "Paths of Raphael elements");
                 });
@@ -195,19 +195,19 @@
             if (!browserSupportsTouchEvents()) return;
 
             it("draw a line with a drag", function () {
-                drawingArea.touchStart(20, 30);
-                drawingArea.touchMove(50, 60);
-                drawingArea.touchEnd(50, 60);
-                drawingArea.touchMove(100, 1100);
+                drawingArea.doSingleTouchStart(20, 30);
+                drawingArea.doSingleTouchMove(50, 60);
+                drawingArea.doSingleTouchEnd(50, 60);
+                drawingArea.doSingleTouchMove(100, 1100);
 
                 assert.deepEqual(lineSegments(), [[20, 30, 50, 60]], "Paths of Raphael elements");
             });
 
             it("stop drawing line when touch cancelled", function () {
-                drawingArea.touchStart(20, 30);
-                drawingArea.touchMove(50, 60);
-                drawingArea.touchCancel(50, 60);
-                drawingArea.touchMove(100, 110);
+                drawingArea.doSingleTouchStart(20, 30);
+                drawingArea.doSingleTouchMove(50, 60);
+                drawingArea.doSingleTouchCancel(50, 60);
+                drawingArea.doSingleTouchMove(100, 110);
 
                 assert.deepEqual(lineSegments(), [[20, 30, 50, 60]], "Paths of Raphael elements");
             });
@@ -216,14 +216,14 @@
                 drawingArea.onSingleTouchStart(function (point, event) {
                     assert.isOk(event.isDefaultPrevented(), "Prevent default event on pointer down in drawing area");
                 });
-                drawingArea.touchStart(50, 50);
+                drawingArea.doSingleTouchStart(50, 50);
             });
 
             it("stop drawing line when multi-touches detected", function () {
-                drawingArea.touchStart(20, 30);
-                drawingArea.touchMove(50, 60);
-                drawingArea.multiTouchStart({x: 50, y: 60}, {x: 100, y: 110});
-                drawingArea.touchMove(150, 160);
+                drawingArea.doSingleTouchStart(20, 30);
+                drawingArea.doSingleTouchMove(50, 60);
+                drawingArea.doMultiTouchStart({x: 50, y: 60}, {x: 100, y: 110});
+                drawingArea.doSingleTouchMove(150, 160);
 
                 assert.deepEqual(lineSegments(), [[20, 30, 50, 60]], "Paths of Raphael elements");
             });
