@@ -1,4 +1,4 @@
-/* globals wwp:true */
+/* globals wwp:true, Touch:false, TouchEvent:false */
 
 window.wwp = window.wwp || {};
 
@@ -10,6 +10,82 @@ window.wwp = window.wwp || {};
         this.offset = this.element.offset();
     };
 
+    DomElement.prototype.touchStart = function (x, y) {
+        var points = [{x: x, y: y}];
+        touchEvent(this, "touchstart", points);
+    };
+
+
+    DomElement.prototype.touchMove = function (x, y) {
+        var points = [{x: x, y: y}];
+        touchEvent(this, "touchmove", points);
+    };
+
+    DomElement.prototype.touchEnd = function (x, y) {
+        var points = [{x: x, y: y}];
+        touchEvent(this, "touchend", points);
+    };
+
+    DomElement.prototype.touchCancel = function (x, y) {
+        var points = [{x: x, y: y}];
+        touchEvent(this, "touchcancel", points);
+    };
+
+    DomElement.prototype.multiTouchStart = function (point1, point2) {
+        var points = [point1, point2];
+        touchEvent(this, "touchstart", points);
+    };
+
+    function touchEvent(self, type, points) {
+        var target = self.element[0];
+        var touchList = createTouchList(self, points, target);
+        var touchEvent = createTouchEvent(type, touchList);
+
+        target.dispatchEvent(touchEvent);
+    }
+
+    function createTouchList(self, points, target) {
+        var touchList = [];
+        var identifier = 0;
+        points.forEach(function (point) {
+            var touch = createTouch(self, identifier, target, point);
+            identifier++;
+            touchList.push(touch);
+        });
+        return touchList;
+    }
+
+    function createTouch(self, identifier, target, point) {
+        return new Touch({
+            identifier: identifier,
+            target: target,
+            pageX: point.x + self.offset.left,
+            pageY: point.y + self.offset.top
+        });
+    }
+
+    function createTouchEvent(type, touchList) {
+        return new TouchEvent(type, {
+            cancelable: true,
+            bubbles: true,
+            touches: touchList,
+            targetTouches: touchList,
+            changedTouches: touchList
+        });
+    }
+
+
+    DomElement.prototype.mouseDown = function (x, y) {
+        mouseEvent(this, "mousedown", x, y);
+    };
+
+    DomElement.prototype.mouseMove = function (x, y) {
+        mouseEvent(this, "mousemove", x, y);
+    };
+
+    DomElement.prototype.mouseLeave = function (x, y) {
+        mouseEvent(this, "mouseleave", x, y);
+    };
 
     DomElement.prototype.mouseUp = function (x, y) {
         mouseEvent(this, "mouseup", x, y);
