@@ -6,15 +6,13 @@ window.wwp = window.wwp || {};
     "use strict";
 
     var paper = null;
-    var drawingArea = null;
     var domElement = null;
     var start = null;
 
     wwp.initializeDrawingArea = function (drawingAreaId) {
         if (paper !== null) throw new Error("May only initialize drawing area once.");
         paper = new Raphael(drawingAreaId);
-        domElement = new wwp.DomElement($(drawingAreaId));
-        drawingArea = $(drawingAreaId);
+        domElement = new wwp.DomElement(drawingAreaId);
         handleEvents();
         return paper;
     };
@@ -25,24 +23,24 @@ window.wwp = window.wwp || {};
 
     function handleEvents() {
 
-        drawingArea.mousedown(function (event) {
+        domElement.onMouseDown(function (event) {
             event.preventDefault();
             startDrag(event.pageX, event.pageY);
         });
 
-        drawingArea.mousemove(function (event) {
+        domElement.onMouseMove(function (event) {
             continueDrag(event.pageX, event.pageY);
         });
 
-        drawingArea.mouseleave(function () {
+        domElement.onMouseLeave(function () {
             endDrag();
         });
 
-        drawingArea.mouseup(function () {
+        domElement.onMouseUp(function () {
             endDrag();
         });
 
-        drawingArea.on("touchstart", function (event) {
+        domElement.onTouchStart(function (event) {
             event.preventDefault();
             if (event.touches.length !== 1) {
                 endDrag();
@@ -51,15 +49,15 @@ window.wwp = window.wwp || {};
             startDrag(event.touches[0].pageX, event.touches[0].pageY);
         });
 
-        drawingArea.on("touchmove", function (event) {
+        domElement.onTouchMove(function (event) {
             continueDrag(event.touches[0].pageX, event.touches[0].pageY);
         });
 
-        drawingArea.on("touchend", function () {
+        domElement.onTouchEnd(function () {
             endDrag();
         });
 
-        drawingArea.on("touchcancel", function () {
+        domElement.onTouchCancel(function () {
             endDrag();
         });
     }
