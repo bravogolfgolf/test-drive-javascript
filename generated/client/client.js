@@ -1,6 +1,6 @@
-/* globals Raphael:false, wwp:true, dump:false*/
+/* globals Raphael:false */
 
-wwp = {};
+window.wwp = window.wwp || {};
 
 (function () {
     "use strict";
@@ -9,10 +9,10 @@ wwp = {};
     var drawingArea = null;
     var start = null;
 
-    wwp.initializeDrawingArea = function (drawingAreaId) {
+    wwp.initializeDrawingArea = function (htmlElement) {
         if (paper !== null) throw new Error("May only initialize drawing area once.");
-        paper = new Raphael(drawingAreaId);
-        drawingArea = $(drawingAreaId);
+        drawingArea = htmlElement;
+        paper = new Raphael(drawingArea.element[0]);
         handleEvents();
         return paper;
     };
@@ -22,53 +22,48 @@ wwp = {};
     };
 
     function handleEvents() {
+        preventDefaults();
+        mouseEvents();
+        singleTouchEvents();
+        drawingArea.onMultiTouchStart(endDrag);
 
-        drawingArea.mousedown(function (event) {
+    }
+
+    function preventDefaults() {
+        drawingArea.onMouseDown(function (undefined, event) {
             event.preventDefault();
-            startDrag(event.pageX, event.pageY);
         });
 
-        drawingArea.mousemove(function (event) {
-            continueDrag(event.pageX, event.pageY);
-        });
-
-        drawingArea.mouseleave(function () {
-            endDrag();
-        });
-
-        drawingArea.mouseup(function () {
-            endDrag();
-        });
-
-        drawingArea.on("touchstart", function (event) {
+        drawingArea.onSingleTouchStart(function (undefined, event) {
             event.preventDefault();
-            if (event.touches.length !== 1) {
-                endDrag();
-                return;
-            }
-            startDrag(event.touches[0].pageX, event.touches[0].pageY);
         });
 
-        drawingArea.on("touchmove", function (event) {
-            continueDrag(event.touches[0].pageX, event.touches[0].pageY);
-        });
-
-        drawingArea.on("touchend", function () {
-            endDrag();
-        });
-
-        drawingArea.on("touchcancel", function () {
-            endDrag();
+        drawingArea.onMultiTouchStart(function (event) {
+            event.preventDefault();
         });
     }
 
-    function startDrag(pageX, pageY) {
-        start = position(drawingArea, pageX, pageY);
+    function mouseEvents() {
+        drawingArea.onMouseDown(startDrag);
+        drawingArea.onMouseMove(continueDrag);
+        drawingArea.onMouseLeave(endDrag);
+        drawingArea.onMouseUp(endDrag);
     }
 
-    function continueDrag(pageX, pageY) {
+    function singleTouchEvents() {
+        drawingArea.onSingleTouchStart(startDrag);
+        drawingArea.onSingleTouchMove(continueDrag);
+        drawingArea.onSingleTouchEnd(endDrag);
+        drawingArea.onSingleTouchCancel(endDrag);
+    }
+
+    function startDrag(point) {
+        start = point;
+    }
+
+    function continueDrag(point) {
         if (start === null) return;
-        var end = position(drawingArea, pageX, pageY);
+        var end = point;
         drawLine(start.x, start.y, end.x, end.y);
         start = end;
     }
@@ -81,11 +76,4 @@ wwp = {};
         paper.path("M" + startX + "," + startY + "L" + endX + "," + endY);
     }
 
-    function position(drawingArea, pageX, pageY) {
-        var offSet = drawingArea.offset();
-        return {
-            x: pageX - offSet.left,
-            y: pageY - offSet.top
-        };
-    }
 }());

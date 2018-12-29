@@ -2,43 +2,34 @@
     "use strict";
 
     var http = require("http");
+    var send = require("send");
     var fs = require("fs");
     var server;
 
-    exports.start = function (directory, homePage, notFoundPage, portNumber, callback) {
+    exports.start = function (directory, notFoundPage, portNumber, callback) {
 
         server = http.createServer();
 
-        server.on("request", function (request, response) {
-            if (request.url === "/" || request.url === "/index.html") {
-                response.statusCode = 200;
-                fileToServe(homePage, response);
-            } else if (request.url === "/client.js") {
-                response.statusCode = 200;
-                fileToServe("generated/client/client.js", response);
-            } else if (request.url === "/jquery-3.3.1.js") {
-                response.statusCode = 200;
-                fileToServe("generated/client/jquery-3.3.1.js", response);
-            } else if (request.url === "/raphael-2.2.1.js") {
-                response.statusCode = 200;
-                fileToServe("generated/client/raphael-2.2.1.js", response);
-            } else {
-                response.statusCode = 404;
-                fileToServe(notFoundPage, response);
-            }
-        });
+        server.on("request", function onRequest(request, response) {
+            send(request, request.url, {root: directory})
+                .on("error", error)
+                .pipe(response);
 
+
+            function error() {
+                response.statusCode = 404;
+
+                fs.readFile(notFoundPage, function (error, data) {
+                    if (error) throw error;
+                    response.end(data);
+                });
+            }
+
+        });
         server.listen(portNumber, callback);
     };
 
     exports.stop = function (callback) {
         server.close(callback);
     };
-
-    function fileToServe(fileName, response) {
-        fs.readFile(fileName, function (err, data) {
-            if (err) throw err;
-            response.end(data);
-        });
-    }
 }());

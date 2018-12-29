@@ -6,11 +6,25 @@
     var http = require("http");
     var fs = require("fs");
 
+
     var TEST_DIRECTORY = "generated/test";
     var TEST_HOME_PAGE = TEST_DIRECTORY + "/index.html";
-    var TEST_404_PAGE = TEST_DIRECTORY + "/404.html";
     var TEST_HOME_PAGE_CONTENTS = "Test home page contents.";
+    var TEST_404_PAGE = TEST_DIRECTORY + "/404.html";
     var TEST_404_PAGE_CONTENTS = "Test 404 page contents.";
+
+    var CLIENT_DIRECTORY = "src/js/client";
+    var CLIENT_JS = "/client.js";
+    var SOURCE_CLIENT_JS = CLIENT_DIRECTORY + CLIENT_JS;
+    var TEST_CLIENT_JS = TEST_DIRECTORY + CLIENT_JS;
+
+    var THIRD_PARTY_DIRECTORY = "third-party";
+    var JQUERY_JS = "/jquery-3.3.1.js";
+    var SOURCE_JQUERY_JS = THIRD_PARTY_DIRECTORY + JQUERY_JS;
+    var TEST_JQUERY_JS = TEST_DIRECTORY + JQUERY_JS;
+    var RAPHAEL_JS = "/raphael-2.2.1.js";
+    var SOURCE_RAPHAEL_JS = THIRD_PARTY_DIRECTORY + RAPHAEL_JS;
+    var TEST_RAPHAEL_JS = TEST_DIRECTORY + RAPHAEL_JS;
     var PORT = 7070;
 
     var HTTP_GET_OPTIONS = {
@@ -24,7 +38,10 @@
         before(function (done) {
             fs.writeFileSync(TEST_HOME_PAGE, TEST_HOME_PAGE_CONTENTS);
             fs.writeFileSync(TEST_404_PAGE, TEST_404_PAGE_CONTENTS);
-            server.start(undefined,TEST_HOME_PAGE, TEST_404_PAGE, PORT, function () {
+            fs.copyFileSync(SOURCE_CLIENT_JS, TEST_CLIENT_JS);
+            fs.copyFileSync(SOURCE_JQUERY_JS, TEST_JQUERY_JS);
+            fs.copyFileSync(SOURCE_RAPHAEL_JS, TEST_RAPHAEL_JS);
+            server.start(TEST_DIRECTORY, TEST_404_PAGE, PORT, function () {
                 done();
             });
         });
@@ -33,6 +50,9 @@
             server.stop();
             fs.unlinkSync(TEST_HOME_PAGE);
             fs.unlinkSync(TEST_404_PAGE);
+            fs.unlinkSync(TEST_CLIENT_JS);
+            fs.unlinkSync(TEST_JQUERY_JS);
+            fs.unlinkSync(TEST_RAPHAEL_JS);
             assert.ok(!fs.existsSync(TEST_HOME_PAGE), "Could not delete test file [" + TEST_HOME_PAGE + "]");
             done();
         });
