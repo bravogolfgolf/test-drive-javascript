@@ -84,13 +84,6 @@ window.wwp = window.wwp || {};
         });
     };
 
-    DomElement.prototype.removeOffsetFrom = function (pageX, pageY) {
-        return {
-            x: pageX - this.offset.left,
-            y: pageY - this.offset.top
-        };
-    };
-
     function doMouseEvent(self, type, x, y) {
         var event = new jQuery.Event(type);
         event.pageX = x + self.offset.left;
@@ -100,7 +93,7 @@ window.wwp = window.wwp || {};
 
     function onMouseEventHandlerFn(self, callback) {
         return function (event) {
-            var point = self.removeOffsetFrom(event.pageX, event.pageY);
+            var point = removeOffsetFrom(self, event.pageX, event.pageY);
             callback(point, event);
         };
     }
@@ -146,8 +139,15 @@ window.wwp = window.wwp || {};
     function onSingleTouchEventHandlerFn(self, callback) {
         return function (event) {
             if (event.touches.length !== 1) return;
-            var adjusted = self.removeOffsetFrom(event.touches[0].pageX, event.touches[0].pageY);
+            var adjusted = removeOffsetFrom(self, event.touches[0].pageX, event.touches[0].pageY);
             callback(adjusted, event);
+        };
+    }
+
+    function removeOffsetFrom(self, pageX, pageY) {
+        return {
+            x: pageX - self.offset.left,
+            y: pageY - self.offset.top
         };
     }
 }());
