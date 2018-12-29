@@ -1,17 +1,17 @@
-/* globals wwp:true, dump:false, Touch:false, TouchEvent:false */
+/* globals wwp:true, TouchEvent:false */
 
 (function () {
     "use strict";
 
     var assert = require("../shared/assert");
 
-    var jQueryDrawingArea;
-    var drawingArea;
-    var documentBody;
-    var paper;
     var ORIGIN = {x: 0, y: 0};
     var HEIGHT = 200;
     var WIDTH = 400;
+
+    var drawingArea;
+    var documentBody;
+    var paper;
 
     describe("Drawing area should,", function () {
 
@@ -19,17 +19,15 @@
             var html = "<div id=drawingArea style='" +
                 "height: " + HEIGHT + "px;" +
                 "width: " + WIDTH + "px;'></div>";
-            drawingArea = wwp.DomElement.fromHtml(html);
-            jQueryDrawingArea = drawingArea.element;
-
-            documentBody = new wwp.DomElement($(document.body));
+            drawingArea = new wwp.HtmlElement(html);
+            documentBody = new wwp.HtmlElement(document.body);
             documentBody.append(drawingArea);
             paper = wwp.initializeDrawingArea(drawingArea);
         });
 
         afterEach(function () {
-            jQueryDrawingArea.remove();
-            wwp.removeDrawingArea(jQueryDrawingArea[0]);
+            drawingArea.remove();
+            wwp.removeDrawingArea();
         });
 
         describe("if initialized twice", function () {
@@ -40,8 +38,8 @@
                 var html2 = "<div id=drawingArea2 style='" +
                     "height: " + HEIGHT + "px;" +
                     "width: " + WIDTH + "px;'></div>";
-                drawingArea2 = $(html2);
-                $(document.body).append(drawingArea2);
+                drawingArea2 = wwp.HtmlElement.fromHtml(html2);
+                documentBody.append(drawingArea2);
 
             });
 
@@ -52,7 +50,7 @@
             it("throw error", function () {
                 assert.throws(
                     function () {
-                        paper = wwp.initializeDrawingArea(drawingArea2[0]);
+                        paper = wwp.initializeDrawingArea(drawingArea2);
                     },
                     Error,
                     "May only initialize drawing area once.");
@@ -236,7 +234,6 @@
         function lineSegments() {
             var elements = [];
             paper.forEach(function (element) {
-                // dump(pathOf(element));
                 elements.push(pathOf(element));
             });
             return elements;

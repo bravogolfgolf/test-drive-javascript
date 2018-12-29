@@ -9,9 +9,9 @@ window.wwp = window.wwp || {};
     var drawingArea = null;
     var start = null;
 
-    wwp.initializeDrawingArea = function (domElement) {
+    wwp.initializeDrawingArea = function (htmlElement) {
         if (paper !== null) throw new Error("May only initialize drawing area once.");
-        drawingArea = domElement;
+        drawingArea = htmlElement;
         paper = new Raphael(drawingArea.element[0]);
         handleEvents();
         return paper;
