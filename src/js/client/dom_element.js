@@ -14,6 +14,10 @@ window.wwp = window.wwp || {};
         return new DomElement($(html));
     };
 
+    DomElement.prototype.append = function(element){
+        this.element.append(element.element);
+    };
+
     DomElement.prototype.doMouseDown = function (x, y) {
         doMouseEvent(this, "mousedown", x, y);
     };

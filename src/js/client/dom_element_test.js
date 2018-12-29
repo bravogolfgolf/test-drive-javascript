@@ -6,11 +6,17 @@
 
     var assert = require("../shared/assert");
 
-    describe("dom_element should,", function () {
+    describe("dom_element should", function () {
         var domElement;
 
         beforeEach(function () {
             domElement = wwp.DomElement.fromHtml("<div></div>>");
+        });
+
+        it("appends element", function () {
+            domElement.append(wwp.DomElement.fromHtml("<div></div>>"));
+            assert.equal(domElement.element.children().length, 1);
+
         });
 
         describe("on all devices,", function () {
