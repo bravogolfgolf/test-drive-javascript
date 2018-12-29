@@ -10,8 +10,7 @@
         var domElement;
 
         beforeEach(function () {
-            var div = document.createElement("div");
-            domElement = new wwp.DomElement(div);
+            domElement = wwp.DomElement.fromHtml("<div></div>>");
         });
 
         describe("on all devices,", function () {
@@ -52,7 +51,7 @@
             listener.call(domElement, function (event) {
                 actual = event;
             });
-            instigator.call(domElement, {x: 12, y: 34},{x: 56, y: 78});
+            instigator.call(domElement, {x: 12, y: 34}, {x: 56, y: 78});
             assert.isOk(actual);
         }
 

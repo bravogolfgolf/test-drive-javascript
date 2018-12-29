@@ -1,4 +1,4 @@
-/* globals wwp:true, Touch:false, TouchEvent:false */
+/* globals wwp:true, Touch:false, TouchEvent:false, dump:false */
 
 window.wwp = window.wwp || {};
 
@@ -8,6 +8,10 @@ window.wwp = window.wwp || {};
     var DomElement = wwp.DomElement = function DomElement(element) {
         this.element = $(element);
         this.offset = this.element.offset();
+    };
+
+    DomElement.fromHtml = function(html){
+        return new DomElement($(html));
     };
 
     DomElement.prototype.doMouseDown = function (x, y) {

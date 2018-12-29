@@ -19,17 +19,18 @@
             var html = "<div id=drawingArea style='" +
                 "height: " + HEIGHT + "px;" +
                 "width: " + WIDTH + "px;'></div>";
-            jQueryDrawingArea = $(html);
-            $(document.body).append(jQueryDrawingArea);
+            drawingArea = wwp.DomElement.fromHtml(html);
+            jQueryDrawingArea = drawingArea.element;
 
             documentBody = new wwp.DomElement(document.body);
-            drawingArea = new wwp.DomElement(jQueryDrawingArea[0]);
-            paper = wwp.initializeDrawingArea(jQueryDrawingArea[0]);
+
+            $(document.body).append(jQueryDrawingArea);
+            paper = wwp.initializeDrawingArea(drawingArea);
         });
 
         afterEach(function () {
-            wwp.removeDrawingArea();
             jQueryDrawingArea.remove();
+            wwp.removeDrawingArea(jQueryDrawingArea[0]);
         });
 
         describe("if initialized twice", function () {

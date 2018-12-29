@@ -6,13 +6,13 @@ window.wwp = window.wwp || {};
     "use strict";
 
     var paper = null;
-    var domElement = null;
+    var drawingArea = null;
     var start = null;
 
-    wwp.initializeDrawingArea = function (drawingAreaId) {
+    wwp.initializeDrawingArea = function (domElement) {
         if (paper !== null) throw new Error("May only initialize drawing area once.");
-        paper = new Raphael(drawingAreaId);
-        domElement = new wwp.DomElement(drawingAreaId);
+        drawingArea = domElement;
+        paper = new Raphael(drawingArea.element[0]);
         handleEvents();
         return paper;
     };
@@ -25,36 +25,36 @@ window.wwp = window.wwp || {};
         preventDefaults();
         mouseEvents();
         singleTouchEvents();
-        domElement.onMultiTouchStart(endDrag);
+        drawingArea.onMultiTouchStart(endDrag);
 
     }
 
     function preventDefaults() {
-        domElement.onMouseDown(function (undefined, event) {
+        drawingArea.onMouseDown(function (undefined, event) {
             event.preventDefault();
         });
 
-        domElement.onSingleTouchStart(function (undefined, event) {
+        drawingArea.onSingleTouchStart(function (undefined, event) {
             event.preventDefault();
         });
 
-        domElement.onMultiTouchStart(function (event) {
+        drawingArea.onMultiTouchStart(function (event) {
             event.preventDefault();
         });
     }
 
     function mouseEvents() {
-        domElement.onMouseDown(startDrag);
-        domElement.onMouseMove(continueDrag);
-        domElement.onMouseLeave(endDrag);
-        domElement.onMouseUp(endDrag);
+        drawingArea.onMouseDown(startDrag);
+        drawingArea.onMouseMove(continueDrag);
+        drawingArea.onMouseLeave(endDrag);
+        drawingArea.onMouseUp(endDrag);
     }
 
     function singleTouchEvents() {
-        domElement.onSingleTouchStart(startDrag);
-        domElement.onSingleTouchMove(continueDrag);
-        domElement.onSingleTouchEnd(endDrag);
-        domElement.onSingleTouchCancel(endDrag);
+        drawingArea.onSingleTouchStart(startDrag);
+        drawingArea.onSingleTouchMove(continueDrag);
+        drawingArea.onSingleTouchEnd(endDrag);
+        drawingArea.onSingleTouchCancel(endDrag);
     }
 
     function startDrag(point) {
