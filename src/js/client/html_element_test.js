@@ -1,4 +1,4 @@
-/* globals wwp:true, TouchEvent:false */
+/* globals TouchEvent:false */
 
 
 (function () {

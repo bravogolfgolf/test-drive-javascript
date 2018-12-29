@@ -16,7 +16,7 @@
 
     var GENERATED_DIRECTORY = "generated";
     var GENERATED_CLIENT_DIRECTORY = GENERATED_DIRECTORY + "/client";
-    var GENERATED_TEST_DIRECTORY = GENERATED_DIRECTORY+ "/test";
+    var GENERATED_TEST_DIRECTORY = GENERATED_DIRECTORY + "/test";
     var KARMA_CONF_JS = "karma.conf.js";
     var EXPECTED_BROWSERS = [
         "Safari 12.0.2 (Mac OS X 10.14.2)",
@@ -57,7 +57,7 @@
         jshint.checkFiles({
             files: ["Jakefile.js", "src/js/**/*.js"],
             options: lintingOptions(),
-            globals: {}
+            globals: {wwp: true}
         }, complete, fail);
     }, {async: true});
 
@@ -128,7 +128,7 @@
     });
 
     desc("Deploy to Heroku");
-    task("deploy", ["build", "default"], function() {
+    task("deploy", ["build", "default"], function () {
         console.log("1. Make sure 'git status' is clean.");
         console.log("2. git push heroku master");
         console.log("3. ./jake.sh testRelease");
@@ -162,7 +162,7 @@
             node: true,
             browser: true,
             mocha: true,
-            jquery:true
+            jquery: true
         };
     }
 }());
