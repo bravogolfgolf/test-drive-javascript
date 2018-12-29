@@ -7,13 +7,14 @@
     <script src="jquery-3.3.1.js" type="text/javascript"></script>
     <script src="raphael-2.2.1.js" type="text/javascript"></script>
     <script src="client.js" type="text/javascript"></script>
+    <script src="html_element.js" type="text/javascript"></script>
 </head>
 <body>
 <div style='text-align: center; margin:auto; width: 900px;'>WeeWikiPaint Tutorial</div>
 <div id="drawingArea" style='margin: auto; height: 300px; width: 500px; border: solid red 20px'></div>
 <script type="text/javascript">
     $(function () {
-        wwp.initializeDrawingArea($("#drawingArea").get(0));
+        wwp.initializeDrawingArea(new wwp.HtmlElement($("#drawingArea").get(0)));
     });
 </script>
 </body>
