@@ -9,7 +9,7 @@
 
 
     var server = require("./server.js");
-    server.start(PAGE_HOME, PAGE_404, PORT, function () {
+    server.start(undefined, PAGE_HOME, PAGE_404, PORT, function () {
         console.log("Server started.");
     });
 

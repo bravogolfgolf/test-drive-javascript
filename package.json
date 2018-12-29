@@ -19,5 +19,8 @@
     "shelljs": "^0.8.3",
     "simplebuild-jshint": "^1.3.0",
     "simplebuild-karma": "^1.0.0"
+  },
+  "dependencies": {
+    "send": "^0.16.2"
   }
 }

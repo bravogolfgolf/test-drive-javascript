@@ -5,7 +5,7 @@
     var fs = require("fs");
     var server;
 
-    exports.start = function (homePage, notFoundPage, portNumber, callback) {
+    exports.start = function (directory, homePage, notFoundPage, portNumber, callback) {
 
         server = http.createServer();
 

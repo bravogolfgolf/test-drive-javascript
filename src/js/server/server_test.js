@@ -24,7 +24,7 @@
         before(function (done) {
             fs.writeFileSync(TEST_HOME_PAGE, TEST_HOME_PAGE_CONTENTS);
             fs.writeFileSync(TEST_404_PAGE, TEST_404_PAGE_CONTENTS);
-            server.start(TEST_HOME_PAGE, TEST_404_PAGE, PORT, function () {
+            server.start(undefined,TEST_HOME_PAGE, TEST_404_PAGE, PORT, function () {
                 done();
             });
         });
