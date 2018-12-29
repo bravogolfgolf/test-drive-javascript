@@ -22,9 +22,8 @@
             drawingArea = wwp.DomElement.fromHtml(html);
             jQueryDrawingArea = drawingArea.element;
 
-            documentBody = new wwp.DomElement(document.body);
-
-            $(document.body).append(jQueryDrawingArea);
+            documentBody = new wwp.DomElement($(document.body));
+            documentBody.append(drawingArea);
             paper = wwp.initializeDrawingArea(drawingArea);
         });
 

@@ -5,17 +5,17 @@ window.wwp = window.wwp || {};
 (function () {
     "use strict";
 
-    var DomElement = wwp.DomElement = function DomElement(element) {
-        this.element = $(element);
+    var DomElement = wwp.DomElement = function DomElement(jQueryElement) {
+        this.element = jQueryElement;
         this.offset = this.element.offset();
     };
 
-    DomElement.fromHtml = function(html){
+    DomElement.fromHtml = function (html) {
         return new DomElement($(html));
     };
 
-    DomElement.prototype.append = function(element){
-        this.element.append(element.element);
+    DomElement.prototype.append = function (elementToAppend) {
+        this.element.append(elementToAppend.element);
     };
 
     DomElement.prototype.doMouseDown = function (x, y) {
