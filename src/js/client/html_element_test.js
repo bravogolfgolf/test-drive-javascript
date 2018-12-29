@@ -62,9 +62,9 @@
         }
 
         function multiPoint(listener, instigator) {
-            var actual = null;
+            var actual = false;
             listener.call(htmlElement, function (event) {
-                actual = event;
+                actual = true;
             });
             instigator.call(htmlElement, {x: 12, y: 34}, {x: 56, y: 78});
             assert.isOk(actual);
