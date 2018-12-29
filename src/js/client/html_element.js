@@ -1,4 +1,4 @@
-/* globals Touch:false, TouchEvent:false, dump:false */
+/* globals Touch:false, TouchEvent:false */
 
 window.wwp = window.wwp || {};
 

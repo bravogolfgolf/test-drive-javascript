@@ -1,4 +1,4 @@
-/* globals Raphael:false, dump:false*/
+/* globals Raphael:false */
 
 window.wwp = window.wwp || {};
 
