@@ -18,6 +18,10 @@ window.wwp = window.wwp || {};
         this.element.append(elementToAppend.element);
     };
 
+    DomElement.prototype.remove = function(){
+      this.element.remove();
+    };
+
     DomElement.prototype.doMouseDown = function (x, y) {
         doMouseEvent(this, "mousedown", x, y);
     };

@@ -10,12 +10,21 @@
         var domElement;
 
         beforeEach(function () {
-            domElement = wwp.DomElement.fromHtml("<div></div>>");
+            var html = "<div id=drawingArea></div>";
+            domElement = new wwp.DomElement($(html));
         });
 
         it("appends element", function () {
             domElement.append(wwp.DomElement.fromHtml("<div></div>>"));
             assert.equal(domElement.element.children().length, 1);
+
+        });
+
+        it("removes element", function () {
+            var elementToAppend = wwp.DomElement.fromHtml("<div id=drawingArea></div>");
+            domElement.append(elementToAppend);
+            elementToAppend.remove();
+            assert.equal(domElement.element.children().length, 0);
 
         });
 
