@@ -15,7 +15,7 @@
     };
     var UTF8 = "utf8";
 
-    describe("Smoke test", function () {
+    describe("Application should", function () {
 
         before(function (done) {
             runCommand(function () {
@@ -31,7 +31,7 @@
         });
 
 
-        it("start server and test home page was displayed", function (done) {
+        it("should display home page", function (done) {
             HTTP_GET_OPTIONS.path = "/";
             var result = http.get(HTTP_GET_OPTIONS);
 
@@ -46,7 +46,7 @@
             });
         });
 
-        it("start server and test 404 page was displayed", function (done) {
+        it("display 404 page", function (done) {
             HTTP_GET_OPTIONS.path = "/junk";
             var result = http.get(HTTP_GET_OPTIONS);
 
@@ -61,6 +61,9 @@
             });
         });
 
+        it("draw line in drawing area", function (done) {
+            done();
+        });
     });
 
     function runCommand(callback) {

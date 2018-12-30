@@ -66,7 +66,7 @@
         console.log("Testing server JavaScript:");
 
         mocha.addFile("src/js/server/server_test.js");
-        mocha.addFile("src/js/smoke_test.js");
+        mocha.addFile("src/js/application_test.js");
         mocha.run(function (failures) {
             if (failures) return fail("Server tests failed");
             else return complete();
