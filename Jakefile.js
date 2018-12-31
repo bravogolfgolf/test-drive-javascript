@@ -10,6 +10,7 @@
     var shell = require("shelljs");
     var Mocha = require("mocha");
     var mocha = new Mocha({
+        timeout: 20000, // 20 seconds
         ui: "bdd",
         reporter: "spec"
     });
@@ -67,7 +68,6 @@
 
         mocha.addFile("src/js/server/server_test.js");
         mocha.addFile("src/js/application_test.js");
-        mocha.addFile("src/js/selenium_test.js");
         mocha.run(function (failures) {
             if (failures) return fail("Server tests failed");
             else return complete();

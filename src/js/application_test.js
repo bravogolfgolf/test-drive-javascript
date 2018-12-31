@@ -1,6 +1,9 @@
 (function () {
     "use strict";
 
+    require("geckodriver");
+    var webdriver = require('selenium-webdriver');
+
     var http = require("http");
     var procfile = require("procfile");
     var fs = require("fs");
@@ -13,6 +16,8 @@
         host: "localhost",
         port: PORT
     };
+    var WEE_WIKI_PAINT = HTTP_GET_OPTIONS.protocol + "//" + HTTP_GET_OPTIONS.host + ":" + HTTP_GET_OPTIONS.port;
+
     var UTF8 = "utf8";
 
     describe("Application should", function () {
@@ -58,6 +63,19 @@
                     assert.notEqual(chunk.indexOf("WeeWikiPaint 404 page Watermark"), -1);
                     done();
                 });
+            });
+        });
+
+        it("draw line in drawing area", function (done) {
+
+            var driver = new webdriver.Builder()
+                .withCapabilities(webdriver.Capabilities.firefox())
+                .build();
+
+            driver.get(WEE_WIKI_PAINT);
+
+            driver.quit().then(function () {
+                done();
             });
         });
     });
