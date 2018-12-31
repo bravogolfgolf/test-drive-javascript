@@ -4,7 +4,7 @@
 # WebStorm
 .idea/workspace.xml
 
-# nmp
+# npm
 node_modules/**/.bin/
 
 # generated
@@ -22,3 +22,8 @@ node_modules/fsevents/build/Release/obj.target/fse/fsevents.o
 node_modules/fsevents/build/action_after_build.target.mk
 node_modules/fsevents/build/fse.target.mk
 node_modules/fsevents/build/
+
+# chromedriver
+node_modules/chromedriver/lib/chromedriver/
+node_modules/geckodriver/geckodriver.tar.gz
+
