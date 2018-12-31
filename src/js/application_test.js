@@ -1,3 +1,5 @@
+/* globals Promise:false, Capabilities:false */
+
 (function () {
     "use strict";
 
@@ -61,8 +63,21 @@
             });
         });
 
-        it("draw line in drawing area", function (done) {
-           done();
+        it("draw line in drawing area", function () {
+
+            var webdriver = require('selenium-webdriver');
+            var safari = require('selenium-webdriver/firefox');
+
+            new webdriver.Builder()
+                .forBrowser('firefox')
+                .build();
+
+            var promise;
+            promise = new Promise(function (resolve, reject) {
+                assert.isOk(true);
+                resolve();
+            });
+            return promise;
         });
     });
 
