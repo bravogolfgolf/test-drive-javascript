@@ -1,3 +1,5 @@
+/* globals webdriver:false */
+
 (function () {
     "use strict";
 
@@ -62,7 +64,30 @@
         });
 
         it("draw line in drawing area", function (done) {
-            done();
+            var webdriver = require("selenium-webdriver");
+            var driver = new webdriver.Builder().withCapabilities(webdriver.Capabilities.firefox()).build();
+            driver.get("http://www.google.com");
+            driver.findElement(webdriver.By.name("q")).sendKeys("webdriver");
+            driver.findElement(webdriver.By.name("bthG")).click();
+            driver.wait(function () {
+                return driver.getTitle().then(function (title) {
+                    return title === "webdriver - Google Search";
+                });
+            });
+
+            // var firefox = require("selenium-webdriver/firefox");
+            // var driver = new firefox.Driver();
+            // var promise = driver.get("http://www.google.com");
+            // console.log("before 'then' called?");
+            // promise.then(function () {
+            //     console.log("then called?");
+            //     driver.quit();
+            //     done();
+            // });
+            // promise.catch(function (reason) {
+            //     console.log("Reason: " + reason);
+            //     done();
+            // });
         });
     });
 
