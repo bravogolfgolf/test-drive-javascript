@@ -12,7 +12,6 @@
     var svgCanvas;
     var documentBody;
     var drawingArea;
-    var paper;
 
     describe("Drawing area should,", function () {
 
@@ -24,7 +23,6 @@
             documentBody = new wwp.HtmlElement(document.body);
             documentBody.append(drawingArea);
             svgCanvas = wwp.initializeDrawingArea(drawingArea);
-            paper = svgCanvas._paper;
         });
 
         afterEach(function () {
@@ -52,7 +50,7 @@
             it("throw error", function () {
                 assert.throws(
                     function () {
-                        paper = wwp.initializeDrawingArea(drawingArea2);
+                        svgCanvas = wwp.initializeDrawingArea(drawingArea2);
                     },
                     Error,
                     "May only initialize canvas once.");
@@ -61,8 +59,8 @@
         });
 
         it(" have the same dimensions as enclosing div", function () {
-            assert.equal(paper.height, HEIGHT, "Height of Raphael paper:");
-            assert.equal(paper.width, WIDTH, "Width of Raphael paper:");
+            assert.equal(svgCanvas.height(), HEIGHT, "Height of Raphael paper:");
+            assert.equal(svgCanvas.width(), WIDTH, "Width of Raphael paper:");
         });
 
         it("not select text or other elements when drag continues out of drawing area", function () {

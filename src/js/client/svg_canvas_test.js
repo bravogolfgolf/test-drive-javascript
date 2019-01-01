@@ -5,11 +5,17 @@
 
     describe("SvgCanvas should", function () {
 
+        var HEIGHT = 200;
+        var WIDTH = 400;
+
         var div;
         var svgCanvas;
 
         beforeEach(function (done) {
-            div = wwp.HtmlElement.fromHtml("<div></div>");
+            var html = "<div id=drawingArea style='" +
+                "height: " + HEIGHT + "px;" +
+                "width: " + WIDTH + "px;'></div>";
+            div = wwp.HtmlElement.fromHtml(html);
             svgCanvas = new wwp.SvgCanvas(div);
             done();
         });
@@ -18,6 +24,11 @@
             div.remove();
             wwp.removeDrawingArea();
             done();
+        });
+
+        it("return height and width", function () {
+            assert.equal(svgCanvas.height(), HEIGHT, "Svg canvas returns height");
+            assert.equal(svgCanvas.width(), WIDTH, "Svg canvas returns width");
         });
 
         it("draw zero line segments", function () {

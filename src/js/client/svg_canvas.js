@@ -5,15 +5,23 @@ window.wwp = window.wwp || {};
 (function () {
     "use strict";
 
-    var SvgCanvas = wwp.SvgCanvas = function(htmlElement){
+    var SvgCanvas = wwp.SvgCanvas = function (htmlElement) {
         this._paper = new Raphael($(htmlElement.element).get(0));
     };
 
-    SvgCanvas.prototype.drawLine = function(startX, startY, endX, endY) {
+    SvgCanvas.prototype.drawLine = function (startX, startY, endX, endY) {
         this._paper.path("M" + startX + "," + startY + "L" + endX + "," + endY);
     };
 
-    SvgCanvas.prototype.lineSegments = function() {
+    SvgCanvas.prototype.height = function () {
+        return this._paper.height;
+    };
+
+    SvgCanvas.prototype.width = function () {
+        return this._paper.width;
+    };
+
+    SvgCanvas.prototype.lineSegments = function () {
         var elements = [];
         this._paper.forEach(function (element) {
             elements.push(pathOf(element));
