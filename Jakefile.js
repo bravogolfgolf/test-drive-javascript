@@ -63,7 +63,7 @@
     }, {async: true});
 
     desc("Run server tests");
-    task("testServer", ["version", "lint", GENERATED_TEST_DIRECTORY], function () {
+    task("testServer", ["version", "lint", "build", GENERATED_TEST_DIRECTORY], function () {
         console.log("Testing server JavaScript:");
 
         mocha.addFile("src/js/server/server_test.js");

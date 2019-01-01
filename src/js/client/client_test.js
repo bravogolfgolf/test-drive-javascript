@@ -9,8 +9,9 @@
     var HEIGHT = 200;
     var WIDTH = 400;
 
-    var drawingArea;
+    var svgCanvas;
     var documentBody;
+    var drawingArea;
     var paper;
 
     describe("Drawing area should,", function () {
@@ -22,7 +23,8 @@
             drawingArea = new wwp.HtmlElement(html);
             documentBody = new wwp.HtmlElement(document.body);
             documentBody.append(drawingArea);
-            paper = wwp.initializeDrawingArea(drawingArea);
+            svgCanvas = wwp.initializeDrawingArea(drawingArea);
+            paper = svgCanvas._paper;
         });
 
         afterEach(function () {
@@ -53,7 +55,7 @@
                         paper = wwp.initializeDrawingArea(drawingArea2);
                     },
                     Error,
-                    "May only initialize drawing area once.");
+                    "May only initialize canvas once.");
             });
 
         });
@@ -232,25 +234,7 @@
         }
 
         function lineSegments() {
-            var elements = [];
-            paper.forEach(function (element) {
-                elements.push(pathOf(element));
-            });
-            return elements;
-        }
-
-        function pathOf(element) {
-            var regEx = null;
-            var path = element.node.attributes.d.value;
-
-            if (path.indexOf(",") !== -1) {
-                regEx = /M(\d+),(\d+)L(\d+),(\d+)/;
-            } else if ((path.indexOf(" ") !== -1)) {
-                regEx = /M (\d+) (\d+) L (\d+) (\d+)/;
-            } else throw new Error("No match of expected Raphael path.");
-
-            var items = path.match(regEx);
-            return [parseInt(items[1]), parseInt(items[2]), parseInt(items[3]), parseInt(items[4])];
+            return svgCanvas.lineSegments();
         }
     });
 }());

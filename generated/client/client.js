@@ -5,20 +5,20 @@ window.wwp = window.wwp || {};
 (function () {
     "use strict";
 
-    var paper = null;
+    var svgCanvas = null;
     var drawingArea = null;
     var start = null;
 
     wwp.initializeDrawingArea = function (htmlElement) {
-        if (paper !== null) throw new Error("May only initialize drawing area once.");
+        if (svgCanvas !== null) throw new Error("May only initialize canvas once.");
         drawingArea = htmlElement;
-        paper = new Raphael($(drawingArea.element).get(0));
+        svgCanvas = new wwp.SvgCanvas(drawingArea);
         handleEvents();
-        return paper;
+        return svgCanvas;
     };
 
     wwp.removeDrawingArea = function () {
-        paper = null;
+        svgCanvas = null;
     };
 
     function handleEvents() {
@@ -64,16 +64,12 @@ window.wwp = window.wwp || {};
     function continueDrag(point) {
         if (start === null) return;
         var end = point;
-        drawLine(start.x, start.y, end.x, end.y);
+        svgCanvas.drawLine(start.x, start.y, end.x, end.y);
         start = end;
     }
 
     function endDrag() {
         start = null;
-    }
-
-    function drawLine(startX, startY, endX, endY) {
-        paper.path("M" + startX + "," + startY + "L" + endX + "," + endY);
     }
 
 }());
