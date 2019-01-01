@@ -1,7 +1,7 @@
 (function () {
     "use strict";
 
-    require("geckodriver");
+    require("chromedriver");
     var webdriver = require('selenium-webdriver');
 
     var http = require("http");
@@ -69,10 +69,19 @@
         it("draw line in drawing area", function (done) {
 
             var driver = new webdriver.Builder()
-                .withCapabilities(webdriver.Capabilities.firefox())
+                .withCapabilities(webdriver.Capabilities.chrome())
                 .build();
-
             driver.get(WEE_WIKI_PAINT);
+            var drawingArea = driver.findElement(webdriver.By.id("drawingArea"));
+
+            driver.actions()
+                .mouseMove(drawingArea, {x: 50, y: 50})
+                .mouseDown()
+                .mouseMove({x: 80, y: 80})
+                .mouseUp()
+                .perform();
+
+            // driver.sleep(2000);
 
             driver.quit().then(function () {
                 done();
