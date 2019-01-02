@@ -17,20 +17,24 @@
         port: PORT
     };
     var WEE_WIKI_PAINT = HTTP_GET_OPTIONS.protocol + "//" + HTTP_GET_OPTIONS.host + ":" + HTTP_GET_OPTIONS.port;
-
+    var driver;
     var UTF8 = "utf8";
 
     describe("Application should", function () {
 
         before(function (done) {
+
             runCommand(function () {
+                driver = new webdriver.Builder()
+                    .withCapabilities(webdriver.Capabilities.chrome())
+                    .build();
                 done();
             });
         });
 
         after(function (done) {
             child.on("exit", function () {
-                done();
+                driver.quit().then(done);
             });
             child.kill();
         });
@@ -67,10 +71,6 @@
         });
 
         it("draw line in drawing area", function (done) {
-
-            var driver = new webdriver.Builder()
-                .withCapabilities(webdriver.Capabilities.chrome())
-                .build();
             driver.get(WEE_WIKI_PAINT);
             var drawingArea = driver.findElement(webdriver.By.id("drawingArea"));
 
@@ -81,9 +81,7 @@
                 .mouseUp()
                 .perform();
 
-            // driver.sleep(2000);
-
-            driver.quit().then(function () {
+            driver.then(function () {
                 done();
             });
         });
