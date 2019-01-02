@@ -102,6 +102,7 @@
         shell.cp("third-party/raphael-2.2.1.js", GENERATED_CLIENT_DIRECTORY);
         shell.cp("src/js/client/client.js", GENERATED_CLIENT_DIRECTORY);
         shell.cp("src/js/client/html_element.js", GENERATED_CLIENT_DIRECTORY);
+        shell.cp("src/js/client/svg_canvas.js", GENERATED_CLIENT_DIRECTORY);
         // jake.exec(
         //     "node node_modules/browserify/bin/cmd.js src/js/client/app.js -o " + GENERATED_CLIENT_DIRECTORY + "/bundle.js",
         //     {interactive: true},

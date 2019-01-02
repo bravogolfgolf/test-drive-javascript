@@ -8,13 +8,14 @@
     <script src="raphael-2.2.1.js" type="text/javascript"></script>
     <script src="client.js" type="text/javascript"></script>
     <script src="html_element.js" type="text/javascript"></script>
+    <script src="svg_canvas.js" type="text/javascript"></script>
 </head>
 <body>
 <div style='text-align: center; margin:auto; width: 900px;'>WeeWikiPaint Tutorial</div>
 <div id="drawingArea" style='margin: auto; height: 300px; width: 500px; border: solid red 20px'></div>
 <script type="text/javascript">
     $(function () {
-        wwwp.drawingAreaCanvas = wwp.initializeDrawingArea(new wwp.HtmlElement(document.getElementById("drawingArea"));
+        wwp.drawingAreaCanvas = wwp.initializeDrawingArea(new wwp.HtmlElement(document.getElementById("drawingArea")));
     });
 </script>
 </body>

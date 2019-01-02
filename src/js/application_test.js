@@ -72,6 +72,7 @@
 
         it("draw line in drawing area", function (done) {
             driver.get(WEE_WIKI_PAINT);
+
             var drawingArea = driver.findElement(webdriver.By.id("drawingArea"));
 
             driver.actions()
@@ -81,9 +82,13 @@
                 .mouseUp()
                 .perform();
 
-            driver.then(function () {
-                done();
+            driver.executeScript(function () {
+                return wwp.drawingAreaCanvas.lineSegments();
+            }).then(function (lineSegments) {
+                assert.deepEqual(lineSegments, [[50, 50, 130, 130]], "Selenium draw line failed");
             });
+
+            driver.controlFlow().execute(done);
         });
     });
 
