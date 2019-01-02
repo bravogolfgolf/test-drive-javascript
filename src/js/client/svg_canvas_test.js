@@ -9,6 +9,7 @@
         var WIDTH = 400;
 
         var div;
+        var documentBody;
         var svgCanvas;
 
         beforeEach(function (done) {
@@ -16,6 +17,8 @@
                 "height: " + HEIGHT + "px;" +
                 "width: " + WIDTH + "px;'></div>";
             div = wwp.HtmlElement.fromHtml(html);
+            documentBody = new wwp.HtmlElement(document.body);
+            documentBody.append(div);
             svgCanvas = new wwp.SvgCanvas(div);
             done();
         });

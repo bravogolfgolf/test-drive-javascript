@@ -58,7 +58,7 @@
 
         });
 
-        it(" have the same dimensions as enclosing div", function () {
+        it("have the same dimensions as enclosing div", function () {
             assert.equal(svgCanvas.height(), HEIGHT, "Height of Raphael paper:");
             assert.equal(svgCanvas.width(), WIDTH, "Width of Raphael paper:");
         });
