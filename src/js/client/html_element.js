@@ -14,12 +14,16 @@ window.wwp = window.wwp || {};
         return new HtmlElement($(html));
     };
 
+    HtmlElement.prototype.toDomElement = function () {
+        return this._element.get(0);
+    };
+
     HtmlElement.prototype.append = function (elementToAppend) {
         this._element.append(elementToAppend._element);
     };
 
-    HtmlElement.prototype.remove = function(){
-      this._element.remove();
+    HtmlElement.prototype.remove = function () {
+        this._element.remove();
     };
 
     HtmlElement.prototype.doMouseDown = function (x, y) {

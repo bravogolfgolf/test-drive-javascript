@@ -27,6 +27,11 @@
 
         });
 
+        it("", function () {
+            var domElement = htmlElement.toDomElement();
+            assert.equal("DIV", domElement.tagName);
+        });
+
         describe("on all devices,", function () {
             it("handled mouse events", function () {
                 singlePoint(htmlElement.onMouseDown, htmlElement.doMouseDown);
