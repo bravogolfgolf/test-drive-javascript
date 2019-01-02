@@ -6,8 +6,8 @@ window.wwp = window.wwp || {};
     "use strict";
 
     var HtmlElement = wwp.HtmlElement = function (html) {
-        this.element = $(html);
-        this.offset = this.element.offset();
+        this._element = $(html);
+        this.offset = this._element.offset();
     };
 
     HtmlElement.fromHtml = function (html) {
@@ -15,11 +15,11 @@ window.wwp = window.wwp || {};
     };
 
     HtmlElement.prototype.append = function (elementToAppend) {
-        this.element.append(elementToAppend.element);
+        this._element.append(elementToAppend._element);
     };
 
     HtmlElement.prototype.remove = function(){
-      this.element.remove();
+      this._element.remove();
     };
 
     HtmlElement.prototype.doMouseDown = function (x, y) {
@@ -39,19 +39,19 @@ window.wwp = window.wwp || {};
     };
 
     HtmlElement.prototype.onMouseDown = function (callback) {
-        this.element.mousedown(onMouseEventHandlerFn(this, callback));
+        this._element.mousedown(onMouseEventHandlerFn(this, callback));
     };
 
     HtmlElement.prototype.onMouseMove = function (callback) {
-        this.element.mousemove(onMouseEventHandlerFn(this, callback));
+        this._element.mousemove(onMouseEventHandlerFn(this, callback));
     };
 
     HtmlElement.prototype.onMouseLeave = function (callback) {
-        this.element.mouseleave(onMouseEventHandlerFn(this, callback));
+        this._element.mouseleave(onMouseEventHandlerFn(this, callback));
     };
 
     HtmlElement.prototype.onMouseUp = function (callback) {
-        this.element.mouseup(onMouseEventHandlerFn(this, callback));
+        this._element.mouseup(onMouseEventHandlerFn(this, callback));
     };
 
     HtmlElement.prototype.doSingleTouchStart = function (x, y) {
@@ -71,19 +71,19 @@ window.wwp = window.wwp || {};
     };
 
     HtmlElement.prototype.onSingleTouchStart = function (callback) {
-        this.element.on("touchstart", onSingleTouchEventHandlerFn(this, callback));
+        this._element.on("touchstart", onSingleTouchEventHandlerFn(this, callback));
     };
 
     HtmlElement.prototype.onSingleTouchMove = function (callback) {
-        this.element.on("touchmove", onSingleTouchEventHandlerFn(this, callback));
+        this._element.on("touchmove", onSingleTouchEventHandlerFn(this, callback));
     };
 
     HtmlElement.prototype.onSingleTouchEnd = function (callback) {
-        this.element.on("touchend", onSingleTouchEventHandlerFn(this, callback));
+        this._element.on("touchend", onSingleTouchEventHandlerFn(this, callback));
     };
 
     HtmlElement.prototype.onSingleTouchCancel = function (callback) {
-        this.element.on("touchcancel", onSingleTouchEventHandlerFn(this, callback));
+        this._element.on("touchcancel", onSingleTouchEventHandlerFn(this, callback));
     };
 
     HtmlElement.prototype.doMultiTouchStart = function (point1, point2) {
@@ -91,7 +91,7 @@ window.wwp = window.wwp || {};
     };
 
     HtmlElement.prototype.onMultiTouchStart = function (callback) {
-        this.element.on("touchstart", function (event) {
+        this._element.on("touchstart", function (event) {
             if (event.touches.length !== 1) callback(event);
         });
     };
@@ -100,7 +100,7 @@ window.wwp = window.wwp || {};
         var event = new jQuery.Event(type);
         event.pageX = x + self.offset.left;
         event.pageY = y + self.offset.top;
-        self.element.trigger(event);
+        self._element.trigger(event);
     }
 
     function onMouseEventHandlerFn(self, callback) {
@@ -111,7 +111,7 @@ window.wwp = window.wwp || {};
     }
 
     function doTouchEvent(self, type, points) {
-        var target = self.element[0];
+        var target = self._element[0];
         var touchList = createTouchList(self, points, target);
         var touchEvent = createTouchEvent(type, touchList);
 

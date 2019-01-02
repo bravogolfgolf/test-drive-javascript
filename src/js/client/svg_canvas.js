@@ -6,7 +6,7 @@ window.wwp = window.wwp || {};
     "use strict";
 
     var SvgCanvas = wwp.SvgCanvas = function (htmlElement) {
-        this._paper = new Raphael($(htmlElement.element).get(0));
+        this._paper = new Raphael($(htmlElement._element).get(0));
     };
 
     SvgCanvas.prototype.drawLine = function (startX, startY, endX, endY) {

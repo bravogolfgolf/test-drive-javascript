@@ -1,12 +1,11 @@
 /* globals TouchEvent:false */
 
-
 (function () {
     "use strict";
 
     var assert = require("../shared/assert");
 
-    describe("dom_element should", function () {
+    describe("HtmlElement should", function () {
         var htmlElement;
 
         beforeEach(function () {
@@ -16,7 +15,7 @@
 
         it("appends element", function () {
             htmlElement.append(wwp.HtmlElement.fromHtml("<div></div>>"));
-            assert.equal(htmlElement.element.children().length, 1);
+            assert.equal(htmlElement._element.children().length, 1);
 
         });
 
@@ -24,7 +23,7 @@
             var elementToAppend = wwp.HtmlElement.fromHtml("<div id=drawingArea></div>");
             htmlElement.append(elementToAppend);
             elementToAppend.remove();
-            assert.equal(htmlElement.element.children().length, 0);
+            assert.equal(htmlElement._element.children().length, 0);
 
         });
 
