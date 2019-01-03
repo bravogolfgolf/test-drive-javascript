@@ -8,6 +8,8 @@
     var jshint = require("simplebuild-jshint");
     var karma = require("simplebuild-karma");
     var shell = require("shelljs");
+    var browserify = require("browserify");
+    var fs = require("fs");
     var Mocha = require("mocha");
     var mocha = new Mocha({
         timeout: 20000, // 20 seconds
@@ -96,15 +98,20 @@
     desc("Build distribution files");
     task("build", ["clean", GENERATED_CLIENT_DIRECTORY], function () {
         console.log("Building distribution files:");
-        shell.cp("src/html/index.html", GENERATED_CLIENT_DIRECTORY);
-        shell.cp("src/html/404.html", GENERATED_CLIENT_DIRECTORY);
+        shell.cp("src/html/*.html", GENERATED_CLIENT_DIRECTORY);
         shell.cp("third-party/jquery-3.3.1.js", GENERATED_CLIENT_DIRECTORY);
         shell.cp("third-party/raphael-2.2.1.js", GENERATED_CLIENT_DIRECTORY);
-        shell.cp("src/js/client/client.js", GENERATED_CLIENT_DIRECTORY);
-        shell.cp("src/js/client/html_element.js", GENERATED_CLIENT_DIRECTORY);
-        shell.cp("src/js/client/svg_canvas.js", GENERATED_CLIENT_DIRECTORY);
+
+        var files = browserify([
+            "./src/js/client/client.js",
+            "./src/js/client/html_element.js",
+            "./src/js/client/svg_canvas.js"
+        ]);
+
+        files.bundle().pipe(fs.createWriteStream(GENERATED_CLIENT_DIRECTORY + "/bundle.js"));
+
         // jake.exec(
-        //     "node node_modules/browserify/bin/cmd.js src/js/client/app.js -o " + GENERATED_CLIENT_DIRECTORY + "/bundle.js",
+        //     "node node_modules/browserify/bin/cmd.js src/js/client/client.js -o " + GENERATED_CLIENT_DIRECTORY + "/bundle.js",
         //     {interactive: true},
         //     complete);
     }, {aysnc: true});

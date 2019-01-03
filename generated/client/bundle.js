@@ -1,3 +1,80 @@
+(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+/* globals Raphael:false */
+
+window.wwp = window.wwp || {};
+
+(function () {
+    "use strict";
+
+    var svgCanvas = null;
+    var drawingArea = null;
+    var start = null;
+
+    wwp.initializeDrawingArea = function (htmlElement) {
+        if (svgCanvas !== null) throw new Error("May only initialize canvas once.");
+        drawingArea = htmlElement;
+        svgCanvas = new wwp.SvgCanvas(drawingArea);
+        handleEvents();
+        return svgCanvas;
+    };
+
+    wwp.removeDrawingArea = function () {
+        svgCanvas = null;
+    };
+
+    function handleEvents() {
+        preventDefaults();
+        mouseEvents();
+        singleTouchEvents();
+        drawingArea.onMultiTouchStart(endDrag);
+
+    }
+
+    function preventDefaults() {
+        drawingArea.onMouseDown(function (undefined, event) {
+            event.preventDefault();
+        });
+
+        drawingArea.onSingleTouchStart(function (undefined, event) {
+            event.preventDefault();
+        });
+
+        drawingArea.onMultiTouchStart(function (event) {
+            event.preventDefault();
+        });
+    }
+
+    function mouseEvents() {
+        drawingArea.onMouseDown(startDrag);
+        drawingArea.onMouseMove(continueDrag);
+        drawingArea.onMouseLeave(endDrag);
+        drawingArea.onMouseUp(endDrag);
+    }
+
+    function singleTouchEvents() {
+        drawingArea.onSingleTouchStart(startDrag);
+        drawingArea.onSingleTouchMove(continueDrag);
+        drawingArea.onSingleTouchEnd(endDrag);
+        drawingArea.onSingleTouchCancel(endDrag);
+    }
+
+    function startDrag(point) {
+        start = point;
+    }
+
+    function continueDrag(point) {
+        if (start === null) return;
+        var end = point;
+        svgCanvas.drawLine(start.x, start.y, end.x, end.y);
+        start = end;
+    }
+
+    function endDrag() {
+        start = null;
+    }
+
+}());
+},{}],2:[function(require,module,exports){
 /* globals Touch:false, TouchEvent:false */
 
 window.wwp = window.wwp || {};
@@ -167,3 +244,51 @@ window.wwp = window.wwp || {};
         };
     }
 }());
+},{}],3:[function(require,module,exports){
+/* globals Raphael:false */
+
+window.wwp = window.wwp || {};
+
+(function () {
+    "use strict";
+
+    var SvgCanvas = wwp.SvgCanvas = function (htmlElement) {
+        this._paper = new Raphael(htmlElement.toDomElement());
+    };
+
+    SvgCanvas.prototype.drawLine = function (startX, startY, endX, endY) {
+        this._paper.path("M" + startX + "," + startY + "L" + endX + "," + endY);
+    };
+
+    SvgCanvas.prototype.height = function () {
+        return this._paper.height;
+    };
+
+    SvgCanvas.prototype.width = function () {
+        return this._paper.width;
+    };
+
+    SvgCanvas.prototype.lineSegments = function () {
+        var elements = [];
+        this._paper.forEach(function (element) {
+            elements.push(pathOf(element));
+        });
+        return elements;
+    };
+
+    function pathOf(element) {
+        var regEx = null;
+        var path = element.node.attributes.d.value;
+
+        if (path.indexOf(",") !== -1) {
+            regEx = /M(\d+),(\d+)L(\d+),(\d+)/;
+        } else if ((path.indexOf(" ") !== -1)) {
+            regEx = /M (\d+) (\d+) L (\d+) (\d+)/;
+        } else throw new Error("No match of expected Raphael path.");
+
+        var items = path.match(regEx);
+        return [parseInt(items[1]), parseInt(items[2]), parseInt(items[3]), parseInt(items[4])];
+    }
+
+}());
+},{}]},{},[1,2,3]);
