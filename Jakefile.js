@@ -79,7 +79,7 @@
     directory(GENERATED_TEST_DIRECTORY);
 
     desc("Run client tests in browsers");
-    task("testClient", ["version", "lint"], function () {
+    task("testClient", ["version", "lint", "build"], function () {
         console.log("Testing client JavaScript in browsers:");
         karma.run({
             configFile: KARMA_CONF_JS,
@@ -104,9 +104,7 @@
 
         var files = browserify([
             "./src/js/client/client.js",
-            "./src/js/client/html_element.js",
-            "./src/js/client/svg_canvas.js"
-        ]);
+            "./src/js/client/html_element.js"]);
 
         files.bundle().pipe(fs.createWriteStream(GENERATED_CLIENT_DIRECTORY + "/bundle.js"));
 

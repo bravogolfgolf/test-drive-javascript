@@ -5,6 +5,8 @@ window.wwp = window.wwp || {};
 (function () {
     "use strict";
 
+    var SvgCanvas = require("./svg_canvas.js");
+
     var svgCanvas = null;
     var drawingArea = null;
     var start = null;
@@ -12,7 +14,7 @@ window.wwp = window.wwp || {};
     wwp.initializeDrawingArea = function (htmlElement) {
         if (svgCanvas !== null) throw new Error("May only initialize canvas once.");
         drawingArea = htmlElement;
-        svgCanvas = new wwp.SvgCanvas(drawingArea);
+        svgCanvas = new SvgCanvas(drawingArea);
         handleEvents();
         return svgCanvas;
     };

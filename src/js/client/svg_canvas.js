@@ -1,11 +1,9 @@
 /* globals Raphael:false */
 
-window.wwp = window.wwp || {};
-
 (function () {
     "use strict";
 
-    var SvgCanvas = wwp.SvgCanvas = function (htmlElement) {
+    var SvgCanvas = module.exports = wwp.SvgCanvas = function (htmlElement) {
         this._paper = new Raphael(htmlElement.toDomElement());
     };
 

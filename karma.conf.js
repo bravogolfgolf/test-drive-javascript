@@ -18,7 +18,8 @@ module.exports = function (config) {
             'third-party/chai-4.2.0.js',
             'third-party/jquery-3.3.1.js',
             'third-party/raphael-2.2.1.js',
-            'src/js/client/**/*.js',
+            'generated/client/bundle.js',
+            'src/js/client/*_test.js',
             'src/js/shared/**/*.js'
         ],
 
@@ -30,8 +31,8 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            'src/js/client/**/*.js': ['commonjs'],
-            'src/js/shared/**/*.js': ['commonjs'],
+            'src/js/client/*_test.js': ['commonjs'],
+            'src/js/shared/*.js': ['commonjs'],
             'third-party/chai-4.2.0.js': ['commonjs']
         },
 
