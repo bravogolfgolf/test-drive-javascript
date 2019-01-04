@@ -158,6 +158,12 @@
     desc("Run release test");
     task("testRelease", ["version", "lint"], function () {
         console.log("Testing website is available:");
+
+        var mocha = new Mocha({
+            ui: "bdd",
+            reporter: "spec"
+        });
+
         mocha.addFile("src/js/release_test.js");
         mocha.run(function (failures) {
             if (failures) return fail("Website not available.");
