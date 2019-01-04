@@ -85,7 +85,8 @@
                 .perform();
 
             driver.executeScript(function () {
-                return wwp.drawingAreaCanvas.lineSegments();
+                var client = require("./client.js");
+                return client.drawingAreaCanvas.lineSegments();
             }).then(function (lineSegments) {
                 assert.deepEqual(lineSegments, [[50, 50, 130, 130]], "Selenium draw line failed");
             });

@@ -33,7 +33,7 @@
     }, {async: true});
 
     desc("Test Server and Client");
-    task("default", ["version", "lint", "testClient", "testServer", "testApp"], function () {
+    task("default", ["testClient", "testServer", "testApp"], function () {
         console.log("\n\nBUILD OK");
     });
 
@@ -78,7 +78,7 @@
     directory(GENERATED_TEST_DIRECTORY);
 
     desc("Run client tests in browsers");
-    task("testClient", ["lint", "build"], function () {
+    task("testClient", ["lint"], function () {
         console.log("Testing client JavaScript in browsers:");
         karma.run({
             configFile: KARMA_CONF_JS,
@@ -117,11 +117,12 @@
         shell.cp("third-party/jquery-3.3.1.js", GENERATED_CLIENT_DIRECTORY);
         shell.cp("third-party/raphael-2.2.1.js", GENERATED_CLIENT_DIRECTORY);
 
-        var files = browserify([
+        var b = browserify([
             "./src/js/client/client.js",
             "./src/js/client/html_element.js"]);
-
-        files.bundle(function (error, bundle) {
+        b.require("./src/js/client/client.js", {expose: "./client.js"});
+        b.require("./src/js/client/html_element.js", {expose: "./html_element.js"});
+        b.bundle(function (error, bundle) {
             if (error) fail(error);
             fs.writeFileSync(GENERATED_CLIENT_DIRECTORY + "/bundle.js", bundle);
             complete();

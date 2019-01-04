@@ -13,7 +13,9 @@
 <div id="drawingArea" style='margin: auto; height: 300px; width: 500px; border: solid red 20px'></div>
 <script type="text/javascript">
     $(function () {
-        wwp.drawingAreaCanvas = wwp.initializeDrawingArea(new wwp.HtmlElement(document.getElementById("drawingArea")));
+        var client = require("./client.js");
+        var HtmlElement = require("./html_element.js");
+        client.drawingAreaCanvas = client.initializeDrawingArea(new HtmlElement(document.getElementById("drawingArea")));
     });
 </script>
 </body>
