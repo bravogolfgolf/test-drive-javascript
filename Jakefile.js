@@ -85,7 +85,6 @@
             configFile: KARMA_CONF_JS,
             expectedBrowsers: EXPECTED_BROWSERS,
             strict: !process.env.loose
-
         }, complete, fail);
     }, {async: true});
 
@@ -106,13 +105,12 @@
             "./src/js/client/client.js",
             "./src/js/client/html_element.js"]);
 
-        files.bundle().pipe(fs.createWriteStream(GENERATED_CLIENT_DIRECTORY + "/bundle.js"));
-
-        // jake.exec(
-        //     "node node_modules/browserify/bin/cmd.js src/js/client/client.js -o " + GENERATED_CLIENT_DIRECTORY + "/bundle.js",
-        //     {interactive: true},
-        //     complete);
-    }, {aysnc: true});
+        files.bundle(function (error, bundle) {
+            if (error) fail(error);
+            fs.writeFileSync(GENERATED_CLIENT_DIRECTORY + "/bundle.js", bundle);
+            complete();
+        });
+    }, {async: true});
 
     desc("Cleans generated directory");
     task("clean", function () {
