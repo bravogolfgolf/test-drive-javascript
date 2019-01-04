@@ -11,11 +11,6 @@
     var browserify = require("browserify");
     var fs = require("fs");
     var Mocha = require("mocha");
-    var mocha = new Mocha({
-        timeout: 20000, // 20 seconds
-        ui: "bdd",
-        reporter: "spec"
-    });
 
     var GENERATED_DIRECTORY = "generated";
     var GENERATED_CLIENT_DIRECTORY = GENERATED_DIRECTORY + "/client";
@@ -38,7 +33,7 @@
     }, {async: true});
 
     desc("Test Server and Client");
-    task("default", ["version", "lint", "testServer", "testClient"], function () {
+    task("default", ["version", "lint", "testClient", "testServer", "testApp"], function () {
         console.log("\n\nBUILD OK");
     });
 
@@ -65,11 +60,15 @@
     }, {async: true});
 
     desc("Run server tests");
-    task("testServer", ["version", "lint", "build", GENERATED_TEST_DIRECTORY], function () {
+    task("testServer", ["version", "lint", GENERATED_TEST_DIRECTORY], function () {
         console.log("Testing server JavaScript:");
 
+        var mocha = new Mocha({
+            ui: "bdd",
+            reporter: "spec"
+        });
+
         mocha.addFile("src/js/server/server_test.js");
-        mocha.addFile("src/js/application_test.js");
         mocha.run(function (failures) {
             if (failures) return fail("Server tests failed");
             else return complete();
@@ -79,13 +78,30 @@
     directory(GENERATED_TEST_DIRECTORY);
 
     desc("Run client tests in browsers");
-    task("testClient", ["version", "lint", "build"], function () {
+    task("testClient", ["lint", "build"], function () {
         console.log("Testing client JavaScript in browsers:");
         karma.run({
             configFile: KARMA_CONF_JS,
             expectedBrowsers: EXPECTED_BROWSERS,
             strict: !process.env.loose
         }, complete, fail);
+    }, {async: true});
+
+    desc("Run application tests");
+    task("testApp", ["lint", "build"], function () {
+        console.log("Testing application:");
+
+        var mocha = new Mocha({
+            timeout: 20000, // 20 seconds
+            ui: "bdd",
+            reporter: "spec"
+        });
+
+        mocha.addFile("src/js/application_test.js");
+        mocha.run(function (failures) {
+            if (failures) return fail("Application tests failed");
+            else return complete();
+        });
     }, {async: true});
 
     desc("Run a local http server");
