@@ -11,7 +11,7 @@ window.wwp = window.wwp || {};
     var drawingArea = null;
     var start = null;
 
-    wwp.initializeDrawingArea = function (htmlElement) {
+    exports.initializeDrawingArea = wwp.initializeDrawingArea = function (htmlElement) {
         if (svgCanvas !== null) throw new Error("May only initialize canvas once.");
         drawingArea = htmlElement;
         svgCanvas = new SvgCanvas(drawingArea);
@@ -19,7 +19,7 @@ window.wwp = window.wwp || {};
         return svgCanvas;
     };
 
-    wwp.removeDrawingArea = function () {
+    exports.removeDrawingArea = function () {
         svgCanvas = null;
     };
 

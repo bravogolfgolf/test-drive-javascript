@@ -3,7 +3,7 @@
 (function () {
     "use strict";
 
-    var SvgCanvas = module.exports = wwp.SvgCanvas = function (htmlElement) {
+    var SvgCanvas = module.exports = function (htmlElement) {
         this._paper = new Raphael(htmlElement.toDomElement());
     };
 

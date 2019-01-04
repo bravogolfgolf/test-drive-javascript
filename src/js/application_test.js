@@ -2,13 +2,15 @@
     "use strict";
 
     require("chromedriver");
-    var webdriver = require('selenium-webdriver');
 
+    var assert = require("../js/shared/assert");
+
+    var webdriver = require('selenium-webdriver');
     var http = require("http");
     var procfile = require("procfile");
     var fs = require("fs");
-    var assert = require("../js/shared/assert");
     var child_process = require("child_process");
+
     var child;
     var PORT = 5000;
     var HTTP_GET_OPTIONS = {

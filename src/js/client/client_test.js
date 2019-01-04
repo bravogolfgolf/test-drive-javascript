@@ -4,6 +4,8 @@
     "use strict";
 
     var assert = require("../shared/assert");
+    var client = require("./client.js");
+    var HtmlElement = require("./html_element.js");
 
     var ORIGIN = {x: 0, y: 0};
     var HEIGHT = 200;
@@ -19,15 +21,15 @@
             var html = "<div id=drawingArea style='" +
                 "height: " + HEIGHT + "px;" +
                 "width: " + WIDTH + "px;'></div>";
-            drawingArea = new wwp.HtmlElement(html);
-            documentBody = new wwp.HtmlElement(document.body);
+            drawingArea = new HtmlElement(html);
+            documentBody = new HtmlElement(document.body);
             documentBody.append(drawingArea);
-            svgCanvas = wwp.initializeDrawingArea(drawingArea);
+            svgCanvas = client.initializeDrawingArea(drawingArea);
         });
 
         afterEach(function () {
             drawingArea.remove();
-            wwp.removeDrawingArea();
+            client.removeDrawingArea();
         });
 
         describe("if initialized twice", function () {
@@ -38,7 +40,7 @@
                 var html2 = "<div id=drawingArea2 style='" +
                     "height: " + HEIGHT + "px;" +
                     "width: " + WIDTH + "px;'></div>";
-                drawingArea2 = wwp.HtmlElement.fromHtml(html2);
+                drawingArea2 = HtmlElement.fromHtml(html2);
                 documentBody.append(drawingArea2);
 
             });
@@ -50,7 +52,7 @@
             it("throw error", function () {
                 assert.throws(
                     function () {
-                        svgCanvas = wwp.initializeDrawingArea(drawingArea2);
+                        svgCanvas = client.initializeDrawingArea(drawingArea2);
                     },
                     Error,
                     "May only initialize canvas once.");

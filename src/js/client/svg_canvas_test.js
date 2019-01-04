@@ -2,6 +2,8 @@
     "use strict";
 
     var assert = require("../shared/assert");
+    var HtmlElement = require("./html_element.js");
+    var SvgCanvas = require("./svg_canvas.js");
 
     describe("SvgCanvas should", function () {
 
@@ -16,16 +18,15 @@
             var html = "<div id=drawingArea style='" +
                 "height: " + HEIGHT + "px;" +
                 "width: " + WIDTH + "px;'></div>";
-            div = wwp.HtmlElement.fromHtml(html);
-            documentBody = new wwp.HtmlElement(document.body);
+            div = HtmlElement.fromHtml(html);
+            documentBody = new HtmlElement(document.body);
             documentBody.append(div);
-            svgCanvas = new wwp.SvgCanvas(div);
+            svgCanvas = new SvgCanvas(div);
             done();
         });
 
         afterEach(function (done) {
             div.remove();
-            wwp.removeDrawingArea();
             done();
         });
 

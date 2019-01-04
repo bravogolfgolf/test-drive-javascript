@@ -1,11 +1,9 @@
 /* globals Touch:false, TouchEvent:false */
 
-window.wwp = window.wwp || {};
-
 (function () {
     "use strict";
 
-    var HtmlElement = wwp.HtmlElement = function (html) {
+    var HtmlElement = module.exports = wwp.HtmlElement = function (html) {
         this._element = $(html);
         this.offset = this._element.offset();
     };

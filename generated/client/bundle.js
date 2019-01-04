@@ -12,7 +12,7 @@ window.wwp = window.wwp || {};
     var drawingArea = null;
     var start = null;
 
-    wwp.initializeDrawingArea = function (htmlElement) {
+    exports.initializeDrawingArea = wwp.initializeDrawingArea = function (htmlElement) {
         if (svgCanvas !== null) throw new Error("May only initialize canvas once.");
         drawingArea = htmlElement;
         svgCanvas = new SvgCanvas(drawingArea);
@@ -20,7 +20,7 @@ window.wwp = window.wwp || {};
         return svgCanvas;
     };
 
-    wwp.removeDrawingArea = function () {
+    exports.removeDrawingArea = function () {
         svgCanvas = null;
     };
 
@@ -79,12 +79,10 @@ window.wwp = window.wwp || {};
 },{"./svg_canvas.js":3}],2:[function(require,module,exports){
 /* globals Touch:false, TouchEvent:false */
 
-window.wwp = window.wwp || {};
-
 (function () {
     "use strict";
 
-    var HtmlElement = wwp.HtmlElement = function (html) {
+    var HtmlElement = module.exports = wwp.HtmlElement = function (html) {
         this._element = $(html);
         this.offset = this._element.offset();
     };
@@ -252,7 +250,7 @@ window.wwp = window.wwp || {};
 (function () {
     "use strict";
 
-    var SvgCanvas = module.exports = wwp.SvgCanvas = function (htmlElement) {
+    var SvgCanvas = module.exports = function (htmlElement) {
         this._paper = new Raphael(htmlElement.toDomElement());
     };
 

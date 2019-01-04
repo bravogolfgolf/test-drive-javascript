@@ -4,23 +4,24 @@
     "use strict";
 
     var assert = require("../shared/assert");
+    var HtmlElement = require("./html_element.js");
 
     describe("HtmlElement should", function () {
         var htmlElement;
 
         beforeEach(function () {
             var html = "<div id=drawingArea></div>";
-            htmlElement = new wwp.HtmlElement(html);
+            htmlElement = new HtmlElement(html);
         });
 
         it("appends element", function () {
-            htmlElement.append(wwp.HtmlElement.fromHtml("<div></div>>"));
+            htmlElement.append(HtmlElement.fromHtml("<div></div>>"));
             assert.equal(htmlElement._element.children().length, 1);
 
         });
 
         it("removes element", function () {
-            var elementToAppend = wwp.HtmlElement.fromHtml("<div id=drawingArea></div>");
+            var elementToAppend = HtmlElement.fromHtml("<div id=drawingArea></div>");
             htmlElement.append(elementToAppend);
             elementToAppend.remove();
             assert.equal(htmlElement._element.children().length, 0);
