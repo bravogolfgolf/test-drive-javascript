@@ -118,8 +118,8 @@
         shell.cp("third-party/raphael-2.2.1.js", GENERATED_CLIENT_DIRECTORY);
 
         var b = browserify([
-            "./src/js/client/client.js",
-            "./src/js/client/html_element.js"]);
+            "./src/js/client/client.js"
+        ]);
         b.require("./src/js/client/client.js", {expose: "./client.js"});
         b.require("./src/js/client/html_element.js", {expose: "./html_element.js"});
         b.bundle(function (error, bundle) {
