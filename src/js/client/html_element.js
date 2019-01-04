@@ -3,7 +3,7 @@
 (function () {
     "use strict";
 
-    var HtmlElement = module.exports = wwp.HtmlElement = function (html) {
+    var HtmlElement = module.exports = function (html) {
         this._element = $(html);
         this.offset = this._element.offset();
     };

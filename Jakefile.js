@@ -55,7 +55,7 @@
         jshint.checkFiles({
             files: ["Jakefile.js", "src/js/**/*.js"],
             options: lintingOptions(),
-            globals: {wwp: true}
+            globals: {}
         }, complete, fail);
     }, {async: true});
 

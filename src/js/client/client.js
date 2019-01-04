@@ -1,7 +1,5 @@
 /* globals Raphael:false */
 
-window.wwp = window.wwp || {};
-
 (function () {
     "use strict";
 
@@ -11,7 +9,7 @@ window.wwp = window.wwp || {};
     var drawingArea = null;
     var start = null;
 
-    exports.initializeDrawingArea = wwp.initializeDrawingArea = function (htmlElement) {
+    exports.initializeDrawingArea = function (htmlElement) {
         if (svgCanvas !== null) throw new Error("May only initialize canvas once.");
         drawingArea = htmlElement;
         svgCanvas = new SvgCanvas(drawingArea);
