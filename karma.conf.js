@@ -19,8 +19,10 @@ module.exports = function (config) {
             'third-party/jquery-3.3.1.js',
             'third-party/raphael-2.2.1.js',
             'generated/client/bundle.js',
-            'src/js/client/*_test.js',
-            'src/js/shared/**/*.js'
+            'src/js/client/client_test.js',
+            'src/js/client/html_element_test.js',
+            'src/js/client/svg_canvas_test.js',
+            'src/js/shared/assert.js'
         ],
 
 
@@ -31,11 +33,12 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            'src/js/client/*_test.js': ['commonjs'],
-            'src/js/shared/*.js': ['commonjs'],
+            'src/js/client/client_test.js': ['commonjs'],
+            'src/js/client/html_element_test.js': ['commonjs'],
+            'src/js/client/svg_canvas_test.js': ['commonjs'],
+            'src/js/shared/assert.js': ['commonjs'],
             'third-party/chai-4.2.0.js': ['commonjs']
         },
-
 
         // test results reporter to use
         // possible values: 'dots', 'progress'
