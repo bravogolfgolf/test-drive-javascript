@@ -107,7 +107,7 @@
     desc("Run a local http server");
     task("run", ["build"], function () {
         console.log("Running local http server:");
-        jake.exec("node node_modules/http-server/bin/http-server " + GENERATED_CLIENT_DIRECTORY, {interactive: true}, complete);
+        jake.exec("heroku local", {interactive: true}, complete);
     }, {async: true});
 
     desc("Build distribution files");
@@ -117,9 +117,7 @@
         shell.cp("third-party/jquery-3.3.1.js", GENERATED_CLIENT_DIRECTORY);
         shell.cp("third-party/raphael-2.2.1.js", GENERATED_CLIENT_DIRECTORY);
 
-        var b = browserify([
-            "./src/js/client/client.js"
-        ]);
+        var b = browserify();
         b.require("./src/js/client/client.js", {expose: "./client.js"});
         b.require("./src/js/client/html_element.js", {expose: "./html_element.js"});
         b.bundle(function (error, bundle) {
