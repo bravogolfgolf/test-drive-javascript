@@ -60,11 +60,6 @@
 
         });
 
-        it("have the same dimensions as enclosing div", function () {
-            assert.equal(svgCanvas.height(), HEIGHT, "Height of Raphael paper:");
-            assert.equal(svgCanvas.width(), WIDTH, "Width of Raphael paper:");
-        });
-
         it("not select text or other elements when drag continues out of drawing area", function () {
             drawingArea.onMouseDown(function (point, event) {
                 assert.isOk(event.isDefaultPrevented(), "Prevent default event on pointer down in drawing area");

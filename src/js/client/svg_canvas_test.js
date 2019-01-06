@@ -30,7 +30,7 @@
             done();
         });
 
-        it("return height and width", function () {
+        it("have the same dimensions as enclosing div", function () {
             assert.equal(svgCanvas.height(), HEIGHT, "Svg canvas returns height");
             assert.equal(svgCanvas.width(), WIDTH, "Svg canvas returns width");
         });
