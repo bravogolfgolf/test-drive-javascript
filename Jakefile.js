@@ -4,6 +4,8 @@
 
     "use strict";
 
+    var runCommand = require("./src/js/_run_server.js");
+
     var semver = require("semver");
     var jshint = require("simplebuild-jshint");
     var karma = require("simplebuild-karma");
@@ -92,7 +94,7 @@
         console.log("Testing application:");
 
         var mocha = new Mocha({
-            timeout: 20000, // 20 seconds
+            timeout: 30000, // 30 seconds
             ui: "bdd",
             reporter: "spec"
         });
@@ -107,7 +109,7 @@
     desc("Run a local http server");
     task("run", ["build"], function () {
         console.log("Running local http server:");
-        jake.exec("heroku local", {interactive: true}, complete);
+        runCommand.runInteractively();
     }, {async: true});
 
     desc("Build distribution files");

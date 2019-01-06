@@ -4,14 +4,12 @@
     require("chromedriver");
 
     var assert = require("../js/shared/assert");
+    var server = require("./_run_server.js");
 
     var webdriver = require('selenium-webdriver');
     var http = require("http");
-    var procfile = require("procfile");
-    var fs = require("fs");
-    var child_process = require("child_process");
 
-    var child;
+    var serverProcess;
     var PORT = 5000;
     var HTTP_GET_OPTIONS = {
         protocol: "http:",
@@ -26,7 +24,8 @@
 
         before(function (done) {
 
-            runCommand(function () {
+            server.run(function (process) {
+                serverProcess = process;
                 driver = new webdriver.Builder()
                     .withCapabilities(webdriver.Capabilities.chrome())
                     .build();
@@ -35,12 +34,11 @@
         });
 
         after(function (done) {
-            child.on("exit", function () {
+            serverProcess.on("exit", function () {
                 driver.quit().then(done);
             });
-            child.kill();
+            serverProcess.kill();
         });
-
 
         it("should display home page", function (done) {
             HTTP_GET_OPTIONS.path = "/";
@@ -94,30 +92,4 @@
             driver.controlFlow().execute(done);
         });
     });
-
-    function runCommand(callback) {
-        var result = parseProcfile();
-        child = child_process.spawn(result.command, result.options);
-
-        child.stdout.setEncoding(UTF8);
-        child.stdout.on("data", function (chunk) {
-            if (chunk.trim() === "Server started.") callback();
-        });
-
-        child.stderr.setEncoding(UTF8);
-        child.stderr.on("data", function (chunk) {
-            console.log(chunk);
-        });
-    }
-
-    function parseProcfile() {
-        var heroku_procfile = fs.readFileSync("Procfile", UTF8);
-        var parsed = procfile.parse(heroku_procfile);
-        var web = parsed.web;
-        web.options = web.options.map(function (element) {
-            if (element === "$PORT") return PORT;
-            else return element;
-        });
-        return web;
-    }
 }());
