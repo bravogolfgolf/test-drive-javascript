@@ -28,9 +28,16 @@
 
         });
 
-        it("", function () {
+        it("return DOM element", function () {
             var domElement = htmlElement.toDomElement();
             assert.equal("DIV", domElement.tagName);
+        });
+
+        it("convert page coordinate into relative element coordinate", function () {
+            var documentBody = new HtmlElement(document.body);
+            documentBody.append(htmlElement);
+            var actual = htmlElement.relativeCoordinate({x: 100, y: 100});
+            assert.deepEqual(actual, {x: 92, y: 92});
         });
 
         describe("on all devices,", function () {
