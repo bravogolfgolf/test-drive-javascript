@@ -17,8 +17,13 @@
         });
 
         it("appends element", function () {
-            htmlElement.append(HtmlElement.fromHtml("<div></div>>"));
-            assert.equal(htmlElement._element.children().length, 1);
+            var elementToAppend = HtmlElement.fromHtml("<div id=drawingArea></div>");
+            try {
+                htmlElement.append(elementToAppend);
+                assert.equal(htmlElement._element.children().length, 1);
+            } finally {
+                elementToAppend.remove();
+            }
         });
 
         it("removes element", function () {
@@ -35,6 +40,15 @@
         it("return DOM element", function () {
             var domElement = htmlElement.toDomElement();
             assert.equal("DIV", domElement.tagName);
+        });
+
+        it("remove event listeners", function () {
+            var testPoint = {x: 0, y: 0};
+            htmlElement.onMouseDown(function () {
+                throw new Error("Event listener should have been removed.");
+            });
+            htmlElement.removeEventListeners();
+            htmlElement.doMouseDown(testPoint.x, testPoint.y);
         });
 
         it("convert relative coordinate into page coordinate", function () {
