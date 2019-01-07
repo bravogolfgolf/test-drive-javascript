@@ -5,13 +5,16 @@ require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c=
     "use strict";
 
     var SvgCanvas = require("./svg_canvas.js");
+    var HtmlElement = require("./html_element.js");
 
     var svgCanvas = null;
+    var documentBody = null;
     var drawingArea = null;
     var start = null;
 
     exports.initializeDrawingArea = function (htmlElement) {
         if (svgCanvas !== null) throw new Error("May only initialize canvas once.");
+        documentBody = new HtmlElement(document.body);
         drawingArea = htmlElement;
         svgCanvas = new SvgCanvas(drawingArea);
         handleEvents();
@@ -46,9 +49,8 @@ require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c=
 
     function mouseEvents() {
         drawingArea.onMouseDown(startDrag);
-        drawingArea.onMouseMove(continueDrag);
-        drawingArea.onMouseLeave(endDrag);
-        drawingArea.onMouseUp(endDrag);
+        documentBody.onMouseMove(continueDrag);
+        documentBody.onMouseUp(endDrag);
     }
 
     function singleTouchEvents() {
@@ -74,7 +76,7 @@ require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c=
     }
 
 }());
-},{"./svg_canvas.js":1}],"./html_element.js":[function(require,module,exports){
+},{"./html_element.js":"./html_element.js","./svg_canvas.js":1}],"./html_element.js":[function(require,module,exports){
 /* globals Touch:false, TouchEvent:false */
 
 (function () {
