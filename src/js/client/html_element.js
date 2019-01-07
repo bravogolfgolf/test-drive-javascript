@@ -27,11 +27,11 @@
         this._element.off();
     };
 
-    HtmlElement.prototype.toPageOffset = function (elementCoordinate) {
+    HtmlElement.prototype.pageOffset = function (elementCoordinate) {
         return addOffset(this, elementCoordinate.x, elementCoordinate.y);
     };
 
-    HtmlElement.prototype.toElementOffset = function (pageCoordinate) {
+    HtmlElement.prototype.relativeOffset = function (pageCoordinate) {
         return subtractOffset(this, pageCoordinate.x, pageCoordinate.y);
     };
 

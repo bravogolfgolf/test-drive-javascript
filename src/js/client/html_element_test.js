@@ -52,20 +52,24 @@
         });
 
         it("convert relative coordinate into page coordinate", function () {
+            var testPoint = {x: 100, y: 100};
+            var expectedPoint = {x: 92, y: 92};
             try {
                 documentBody.append(htmlElement);
-                var actual = htmlElement.toElementOffset({x: 100, y: 100});
-                assert.deepEqual(actual, {x: 92, y: 92});
+                var actualPoint = htmlElement.relativeOffset(testPoint);
+                assert.deepEqual(actualPoint, expectedPoint);
             } finally {
                 htmlElement.remove();
             }
         });
 
         it("convert page coordinate into relative element coordinate", function () {
+            var testPoint = {x: 92, y: 92};
+            var expectedPoint = {x: 100, y: 100};
             try {
                 documentBody.append(htmlElement);
-                var actual = htmlElement.toPageOffset({x: 92, y: 92});
-                assert.deepEqual(actual, {x: 100, y: 100});
+                var actualPoint = htmlElement.pageOffset(testPoint);
+                assert.deepEqual(actualPoint, expectedPoint);
             } finally {
                 htmlElement.remove();
             }

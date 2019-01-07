@@ -59,12 +59,12 @@ require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c=
     }
 
     function startDrag(pageOffset) {
-        start = drawingArea.toElementOffset(pageOffset);
+        start = drawingArea.relativeOffset(pageOffset);
     }
 
     function continueDrag(pageOffset) {
         if (start === null) return;
-        var end = drawingArea.toElementOffset(pageOffset);
+        var end = drawingArea.relativeOffset(pageOffset);
         svgCanvas.drawLine(start.x, start.y, end.x, end.y);
         start = end;
     }
@@ -88,24 +88,28 @@ require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c=
         return new HtmlElement($(html));
     };
 
-    HtmlElement.prototype.toDomElement = function () {
-        return this._element.get(0);
-    };
-
-    HtmlElement.prototype.toPageOffset = function (elementCoordinate) {
-        return addOffset(this, elementCoordinate.x, elementCoordinate.y);
-    };
-
-    HtmlElement.prototype.toElementOffset = function (pageCoordinate) {
-        return subtractOffset(this, pageCoordinate.x, pageCoordinate.y);
-    };
-
     HtmlElement.prototype.append = function (elementToAppend) {
         this._element.append(elementToAppend._element);
     };
 
     HtmlElement.prototype.remove = function () {
         this._element.remove();
+    };
+
+    HtmlElement.prototype.toDomElement = function () {
+        return this._element.get(0);
+    };
+
+    HtmlElement.prototype.removeEventListeners = function () {
+        this._element.off();
+    };
+
+    HtmlElement.prototype.pageOffset = function (elementCoordinate) {
+        return addOffset(this, elementCoordinate.x, elementCoordinate.y);
+    };
+
+    HtmlElement.prototype.relativeOffset = function (pageCoordinate) {
+        return subtractOffset(this, pageCoordinate.x, pageCoordinate.y);
     };
 
     HtmlElement.prototype.doMouseDown = function (x, y) {

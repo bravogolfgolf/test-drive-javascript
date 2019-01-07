@@ -58,12 +58,12 @@
     }
 
     function startDrag(pageOffset) {
-        start = drawingArea.toElementOffset(pageOffset);
+        start = drawingArea.relativeOffset(pageOffset);
     }
 
     function continueDrag(pageOffset) {
         if (start === null) return;
-        var end = drawingArea.toElementOffset(pageOffset);
+        var end = drawingArea.relativeOffset(pageOffset);
         svgCanvas.drawLine(start.x, start.y, end.x, end.y);
         start = end;
     }
