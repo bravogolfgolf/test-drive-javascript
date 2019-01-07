@@ -6,13 +6,15 @@
     var SvgCanvas = require("./svg_canvas.js");
     var HtmlElement = require("./html_element.js");
 
-    var svgCanvas = null;
+    var windowElement = null;
     var documentBody = null;
     var drawingArea = null;
+    var svgCanvas = null;
     var start = null;
 
     exports.initializeDrawingArea = function (htmlElement) {
         if (svgCanvas !== null) throw new Error("May only initialize canvas once.");
+        windowElement = new HtmlElement(window);
         documentBody = new HtmlElement(document.body);
         drawingArea = htmlElement;
         svgCanvas = new SvgCanvas(drawingArea);
@@ -49,7 +51,7 @@
     function mouseEvents() {
         drawingArea.onMouseDown(startDrag);
         documentBody.onMouseMove(continueDrag);
-        documentBody.onMouseUp(endDrag);
+        windowElement.onMouseUp(endDrag);
     }
 
     function singleTouchEvents() {

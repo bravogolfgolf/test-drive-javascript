@@ -11,9 +11,10 @@
     var HEIGHT = 200;
     var WIDTH = 400;
 
-    var svgCanvas;
+    var windowElement;
     var documentBody;
     var drawingArea;
+    var svgCanvas;
 
     describe("Drawing area should,", function () {
 
@@ -21,8 +22,9 @@
             var html = "<div id=drawingArea style='" +
                 "height: " + HEIGHT + "px;" +
                 "width: " + WIDTH + "px;'></div>";
-            drawingArea = new HtmlElement(html);
+            windowElement = new HtmlElement(window);
             documentBody = new HtmlElement(document.body);
+            drawingArea = new HtmlElement(html);
             documentBody.append(drawingArea);
             svgCanvas = client.initializeDrawingArea(drawingArea);
         });
@@ -141,6 +143,18 @@
                 drawingArea.doMouseMove(50, 60);
                 documentBody.doMouseMove(WIDTH + 100, HEIGHT + 100);
                 documentBody.doMouseUp(WIDTH + 100, HEIGHT + 100);
+                drawingArea.doMouseMove(60, 70);
+
+                assert.deepEqual(lineSegments(), [[20, 30, 50, 60], [50, 60, WIDTH + 100, HEIGHT + 100]], "Paths of Raphael elements");
+
+            });
+
+            it("not continue to draw if mouse leaves window and mouse is released", function () {
+                drawingArea.doMouseDown(20, 30);
+                drawingArea.doMouseMove(50, 60);
+                documentBody.doMouseMove(WIDTH + 100, HEIGHT + 100);
+                windowElement.doMouseMove();
+                windowElement.doMouseUp();
                 drawingArea.doMouseMove(60, 70);
 
                 assert.deepEqual(lineSegments(), [[20, 30, 50, 60], [50, 60, WIDTH + 100, HEIGHT + 100]], "Paths of Raphael elements");
