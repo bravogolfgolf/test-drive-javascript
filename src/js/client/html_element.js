@@ -15,7 +15,11 @@
         return this._element.get(0);
     };
 
-    HtmlElement.prototype.relativeCoordinate = function (pageCoordinate) {
+    HtmlElement.prototype.toPageOffset = function (elementCoordinate) {
+        return addOffset(this, elementCoordinate.x, elementCoordinate.y);
+    };
+
+    HtmlElement.prototype.toElementOffset = function (pageCoordinate) {
         return subtractOffset(this, pageCoordinate.x, pageCoordinate.y);
     };
 
@@ -102,17 +106,17 @@
     };
 
     function doMouseEvent(self, type, x, y) {
-        var adjusted = addOffset(self, x, y);
+        var pageOffset = addOffset(self, x, y);
         var event = new jQuery.Event(type);
-        event.pageX = adjusted.x;
-        event.pageY = adjusted.y;
+        event.pageX = pageOffset.x;
+        event.pageY = pageOffset.y;
         self._element.trigger(event);
     }
 
     function onMouseEventHandlerFn(self, callback) {
         return function (event) {
-            var point = subtractOffset(self, event.pageX, event.pageY);
-            callback(point, event);
+            var pageOffset = {x: event.pageX, y: event.pageY};
+            callback(pageOffset, event);
         };
     }
 
@@ -146,24 +150,24 @@
     }
 
     function createTouch(self, identifier, target, point) {
-        var adjusted = addOffset(self, point.x, point.y);
+        var pageOffset = addOffset(self, point.x, point.y);
         return new Touch({
             identifier: identifier,
             target: target,
-            pageX: adjusted.x,
-            pageY: adjusted.y
+            pageX: pageOffset.x,
+            pageY: pageOffset.y
         });
     }
 
     function onSingleTouchEventHandlerFn(self, callback) {
         return function (event) {
             if (event.touches.length !== 1) return;
-            var adjusted = subtractOffset(self, event.touches[0].pageX, event.touches[0].pageY);
-            callback(adjusted, event);
+            var pageOffset = {x: event.touches[0].pageX, y: event.touches[0].pageY};
+            callback(pageOffset, event);
         };
     }
 
-    function addOffset(self, x, y){
+    function addOffset(self, x, y) {
         var offset = self._element.offset();
         return {
             x: x + offset.left,

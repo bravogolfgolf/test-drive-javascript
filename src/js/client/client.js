@@ -57,13 +57,13 @@
         drawingArea.onSingleTouchCancel(endDrag);
     }
 
-    function startDrag(point) {
-        start = point;
+    function startDrag(pageOffset) {
+        start = drawingArea.toElementOffset(pageOffset);
     }
 
-    function continueDrag(point) {
+    function continueDrag(pageOffset) {
         if (start === null) return;
-        var end = point;
+        var end = drawingArea.toElementOffset(pageOffset);
         svgCanvas.drawLine(start.x, start.y, end.x, end.y);
         start = end;
     }

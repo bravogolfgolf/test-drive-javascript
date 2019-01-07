@@ -8,24 +8,28 @@
 
     describe("HtmlElement should", function () {
         var htmlElement;
+        var documentBody;
 
         beforeEach(function () {
             var html = "<div id=drawingArea></div>";
+            documentBody = new HtmlElement(document.body);
             htmlElement = new HtmlElement(html);
         });
 
         it("appends element", function () {
             htmlElement.append(HtmlElement.fromHtml("<div></div>>"));
             assert.equal(htmlElement._element.children().length, 1);
-
         });
 
         it("removes element", function () {
             var elementToAppend = HtmlElement.fromHtml("<div id=drawingArea></div>");
-            htmlElement.append(elementToAppend);
-            elementToAppend.remove();
-            assert.equal(htmlElement._element.children().length, 0);
-
+            try {
+                htmlElement.append(elementToAppend);
+                elementToAppend.remove();
+                assert.equal(htmlElement._element.children().length, 0);
+            } finally {
+                elementToAppend.remove();
+            }
         });
 
         it("return DOM element", function () {
@@ -33,15 +37,28 @@
             assert.equal("DIV", domElement.tagName);
         });
 
+        it("convert relative coordinate into page coordinate", function () {
+            try {
+                documentBody.append(htmlElement);
+                var actual = htmlElement.toElementOffset({x: 100, y: 100});
+                assert.deepEqual(actual, {x: 92, y: 92});
+            } finally {
+                htmlElement.remove();
+            }
+        });
+
         it("convert page coordinate into relative element coordinate", function () {
-            var documentBody = new HtmlElement(document.body);
-            documentBody.append(htmlElement);
-            var actual = htmlElement.relativeCoordinate({x: 100, y: 100});
-            assert.deepEqual(actual, {x: 92, y: 92});
+            try {
+                documentBody.append(htmlElement);
+                var actual = htmlElement.toPageOffset({x: 92, y: 92});
+                assert.deepEqual(actual, {x: 100, y: 100});
+            } finally {
+                htmlElement.remove();
+            }
         });
 
         describe("on all devices,", function () {
-            it("handled mouse events", function () {
+            it("triggers mouse events relative to element and handles them relative to page", function () {
                 singlePoint(htmlElement.onMouseDown, htmlElement.doMouseDown);
                 singlePoint(htmlElement.onMouseMove, htmlElement.doMouseMove);
                 singlePoint(htmlElement.onMouseLeave, htmlElement.doMouseLeave);
@@ -65,12 +82,21 @@
         });
 
         function singlePoint(listener, instigator) {
-            var actual = null;
-            listener.call(htmlElement, function (point) {
-                actual = point;
-            });
-            instigator.call(htmlElement, 123, 456);
-            assert.deepEqual(actual, {x: 123, y: 456});
+            var relativePoint = {x: 100, y: 100};
+            var offset = {x: 8, y: 8};
+            var expected = {x: relativePoint.x + offset.x, y: relativePoint.y + offset.y};
+
+            try {
+                documentBody.append(htmlElement);
+                var actual = null;
+                listener.call(htmlElement, function (point) {
+                    actual = point;
+                });
+                instigator.call(htmlElement, relativePoint.x, relativePoint.y);
+                assert.deepEqual(actual, expected);
+            } finally {
+                htmlElement.remove();
+            }
         }
 
         function multiPoint(listener, instigator) {

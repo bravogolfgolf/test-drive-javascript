@@ -58,13 +58,13 @@ require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c=
         drawingArea.onSingleTouchCancel(endDrag);
     }
 
-    function startDrag(point) {
-        start = point;
+    function startDrag(pageOffset) {
+        start = drawingArea.toElementOffset(pageOffset);
     }
 
-    function continueDrag(point) {
+    function continueDrag(pageOffset) {
         if (start === null) return;
-        var end = point;
+        var end = drawingArea.toElementOffset(pageOffset);
         svgCanvas.drawLine(start.x, start.y, end.x, end.y);
         start = end;
     }
@@ -92,8 +92,12 @@ require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c=
         return this._element.get(0);
     };
 
-    HtmlElement.prototype.relativeCoordinate = function (pageCoordinate) {
-        return removeOffset(this, pageCoordinate.x, pageCoordinate.y);
+    HtmlElement.prototype.toPageOffset = function (elementCoordinate) {
+        return addOffset(this, elementCoordinate.x, elementCoordinate.y);
+    };
+
+    HtmlElement.prototype.toElementOffset = function (pageCoordinate) {
+        return subtractOffset(this, pageCoordinate.x, pageCoordinate.y);
     };
 
     HtmlElement.prototype.append = function (elementToAppend) {
@@ -179,17 +183,17 @@ require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c=
     };
 
     function doMouseEvent(self, type, x, y) {
-        var adjusted = addOffset(self, x, y);
+        var pageOffset = addOffset(self, x, y);
         var event = new jQuery.Event(type);
-        event.pageX = adjusted.x;
-        event.pageY = adjusted.y;
+        event.pageX = pageOffset.x;
+        event.pageY = pageOffset.y;
         self._element.trigger(event);
     }
 
     function onMouseEventHandlerFn(self, callback) {
         return function (event) {
-            var point = removeOffset(self, event.pageX, event.pageY);
-            callback(point, event);
+            var pageOffset = {x: event.pageX, y: event.pageY};
+            callback(pageOffset, event);
         };
     }
 
@@ -223,32 +227,32 @@ require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c=
     }
 
     function createTouch(self, identifier, target, point) {
-        var adjusted = addOffset(self, point.x, point.y);
+        var pageOffset = addOffset(self, point.x, point.y);
         return new Touch({
             identifier: identifier,
             target: target,
-            pageX: adjusted.x,
-            pageY: adjusted.y
+            pageX: pageOffset.x,
+            pageY: pageOffset.y
         });
     }
 
     function onSingleTouchEventHandlerFn(self, callback) {
         return function (event) {
             if (event.touches.length !== 1) return;
-            var adjusted = removeOffset(self, event.touches[0].pageX, event.touches[0].pageY);
-            callback(adjusted, event);
+            var pageOffset = {x: event.touches[0].pageX, y: event.touches[0].pageY};
+            callback(pageOffset, event);
         };
     }
 
-    function addOffset(self, pageX, pageY){
+    function addOffset(self, x, y) {
         var offset = self._element.offset();
         return {
-            x: pageX + offset.left,
-            y: pageY + offset.top
+            x: x + offset.left,
+            y: y + offset.top
         };
     }
 
-    function removeOffset(self, pageX, pageY) {
+    function subtractOffset(self, pageX, pageY) {
         var offset = self._element.offset();
         return {
             x: pageX - offset.left,
