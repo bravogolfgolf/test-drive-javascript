@@ -110,7 +110,12 @@
     };
 
     function doMouseEvent(self, type, x, y) {
-        var pageOffset = addOffset(self, x, y);
+        var pageOffset = null;
+        if (x === undefined || y === undefined) {
+            pageOffset = {x: 0, y: 0};
+        } else {
+            pageOffset = addOffset(self, x, y);
+        }
         var event = new jQuery.Event(type);
         event.pageX = pageOffset.x;
         event.pageY = pageOffset.y;

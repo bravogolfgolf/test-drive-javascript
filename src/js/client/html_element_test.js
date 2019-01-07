@@ -76,11 +76,19 @@
         });
 
         describe("on all devices,", function () {
+
+            it("allows mouse events to be triggered without coordinate parameters", function () {
+                singlePointWithoutCoordinate(htmlElement.onMouseDown, htmlElement.doMouseDown);
+                singlePointWithoutCoordinate(htmlElement.onMouseMove, htmlElement.doMouseMove);
+                singlePointWithoutCoordinate(htmlElement.onMouseLeave, htmlElement.doMouseLeave);
+                singlePointWithoutCoordinate(htmlElement.onMouseUp, htmlElement.doMouseUp);
+            });
+
             it("triggers mouse events relative to element and handles them relative to page", function () {
-                singlePoint(htmlElement.onMouseDown, htmlElement.doMouseDown);
-                singlePoint(htmlElement.onMouseMove, htmlElement.doMouseMove);
-                singlePoint(htmlElement.onMouseLeave, htmlElement.doMouseLeave);
-                singlePoint(htmlElement.onMouseUp, htmlElement.doMouseUp);
+                singlePointWithCoordinate(htmlElement.onMouseDown, htmlElement.doMouseDown);
+                singlePointWithCoordinate(htmlElement.onMouseMove, htmlElement.doMouseMove);
+                singlePointWithCoordinate(htmlElement.onMouseLeave, htmlElement.doMouseLeave);
+                singlePointWithCoordinate(htmlElement.onMouseUp, htmlElement.doMouseUp);
             });
 
         });
@@ -88,10 +96,10 @@
         describe("on supported devices,", function () {
             if (!browserSupportsTouchEvents()) return;
             it("handled single touch events", function () {
-                singlePoint(htmlElement.onSingleTouchStart, htmlElement.doSingleTouchStart);
-                singlePoint(htmlElement.onSingleTouchMove, htmlElement.doSingleTouchMove);
-                singlePoint(htmlElement.onSingleTouchCancel, htmlElement.doSingleTouchCancel);
-                singlePoint(htmlElement.onSingleTouchEnd, htmlElement.doSingleTouchEnd);
+                singlePointWithCoordinate(htmlElement.onSingleTouchStart, htmlElement.doSingleTouchStart);
+                singlePointWithCoordinate(htmlElement.onSingleTouchMove, htmlElement.doSingleTouchMove);
+                singlePointWithCoordinate(htmlElement.onSingleTouchCancel, htmlElement.doSingleTouchCancel);
+                singlePointWithCoordinate(htmlElement.onSingleTouchEnd, htmlElement.doSingleTouchEnd);
             });
 
             it("handled multi touch events", function () {
@@ -99,7 +107,7 @@
             });
         });
 
-        function singlePoint(listener, instigator) {
+        function singlePointWithCoordinate(listener, instigator) {
             var relativePoint = {x: 100, y: 100};
             var offset = {x: 8, y: 8};
             var expected = {x: relativePoint.x + offset.x, y: relativePoint.y + offset.y};
@@ -111,6 +119,22 @@
                     actual = point;
                 });
                 instigator.call(htmlElement, relativePoint.x, relativePoint.y);
+                assert.deepEqual(actual, expected);
+            } finally {
+                htmlElement.remove();
+            }
+        }
+
+        function singlePointWithoutCoordinate(listener, instigator) {
+            var expected = {x: 0, y: 0};
+
+            try {
+                documentBody.append(htmlElement);
+                var actual = null;
+                listener.call(htmlElement, function (point) {
+                    actual = point;
+                });
+                instigator.call(htmlElement);
                 assert.deepEqual(actual, expected);
             } finally {
                 htmlElement.remove();
