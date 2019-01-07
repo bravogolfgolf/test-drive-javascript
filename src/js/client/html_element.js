@@ -110,16 +110,20 @@
     };
 
     function doMouseEvent(self, type, x, y) {
-        var pageOffset = null;
-        if (x === undefined || y === undefined) {
-            pageOffset = {x: 0, y: 0};
-        } else {
-            pageOffset = addOffset(self, x, y);
-        }
+        var pageOffset = handleUndefinedCoordinate(self, x, y);
+
         var event = new jQuery.Event(type);
         event.pageX = pageOffset.x;
         event.pageY = pageOffset.y;
         self._element.trigger(event);
+    }
+
+    function handleUndefinedCoordinate(self, x, y) {
+        if (x === undefined || y === undefined) {
+            return {x: 0, y: 0};
+        } else {
+            return addOffset(self, x, y);
+        }
     }
 
     function onMouseEventHandlerFn(self, callback) {
@@ -159,7 +163,7 @@
     }
 
     function createTouch(self, identifier, target, point) {
-        var pageOffset = addOffset(self, point.x, point.y);
+        var pageOffset = handleUndefinedCoordinate(self, point.x, point.y);
         return new Touch({
             identifier: identifier,
             target: target,

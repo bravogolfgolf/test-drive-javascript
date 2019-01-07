@@ -95,6 +95,14 @@
 
         describe("on supported devices,", function () {
             if (!browserSupportsTouchEvents()) return;
+
+            it("allows touch events to be triggered without coordinate parameters", function () {
+                singlePointWithoutCoordinate(htmlElement.onSingleTouchStart, htmlElement.doSingleTouchStart);
+                singlePointWithoutCoordinate(htmlElement.onSingleTouchMove, htmlElement.doSingleTouchMove);
+                singlePointWithoutCoordinate(htmlElement.onSingleTouchCancel, htmlElement.doSingleTouchCancel);
+                singlePointWithoutCoordinate(htmlElement.onSingleTouchEnd, htmlElement.doSingleTouchEnd);
+            });
+
             it("handled single touch events", function () {
                 singlePointWithCoordinate(htmlElement.onSingleTouchStart, htmlElement.doSingleTouchStart);
                 singlePointWithCoordinate(htmlElement.onSingleTouchMove, htmlElement.doSingleTouchMove);
