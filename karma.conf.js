@@ -18,6 +18,7 @@ module.exports = function (config) {
             'third-party/chai-4.2.0.js',
             'third-party/jquery-3.3.1.js',
             'third-party/raphael-2.2.1.js',
+            'third-party/modernizr-3.6.0.js',
             'src/js/client/*.js',
             'src/js/shared/assert.js'
         ],

@@ -1,9 +1,8 @@
-/* globals TouchEvent:false */
-
 (function () {
     "use strict";
 
     var assert = require("../shared/assert");
+    var browser = require("./browser.js");
     var HtmlElement = require("./html_element.js");
 
     describe("HtmlElement should", function () {
@@ -94,7 +93,7 @@
         });
 
         describe("on supported devices,", function () {
-            if (!browserSupportsTouchEvents()) return;
+            if (!browser.supportsTouchEvents()) return;
 
             it("allows touch events to be triggered without coordinate parameters", function () {
                 singlePointWithoutCoordinate(htmlElement.onSingleTouchStart, htmlElement.doSingleTouchStart);
@@ -156,10 +155,6 @@
             });
             instigator.call(htmlElement, {x: 12, y: 34}, {x: 56, y: 78});
             assert.isOk(actual);
-        }
-
-        function browserSupportsTouchEvents() {
-            return 'TouchEvent' in window && TouchEvent.length > 0;
         }
     });
 }());

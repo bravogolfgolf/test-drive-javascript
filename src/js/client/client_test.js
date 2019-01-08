@@ -1,10 +1,9 @@
-/* globals TouchEvent:false */
-
 (function () {
     "use strict";
 
     var assert = require("../shared/assert");
     var client = require("./client.js");
+    var browser = require("./browser.js");
     var HtmlElement = require("./html_element.js");
 
     var ORIGIN = {x: 0, y: 0};
@@ -212,7 +211,7 @@
         });
 
         describe("in response to touch events,", function () {
-            if (!browserSupportsTouchEvents()) return;
+            if (!browser.supportsTouchEvents()) return;
 
             it("draw a line with a drag", function () {
                 drawingArea.doSingleTouchStart(20, 30);
@@ -248,10 +247,6 @@
                 assert.deepEqual(lineSegments(), [[20, 30, 50, 60]], "Paths of Raphael elements");
             });
         });
-
-        function browserSupportsTouchEvents() {
-            return 'TouchEvent' in window && TouchEvent.length > 0;
-        }
 
         function lineSegments() {
             return svgCanvas.lineSegments();
