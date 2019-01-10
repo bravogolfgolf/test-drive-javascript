@@ -47,7 +47,7 @@
                 throw new Error("Event listener should have been removed.");
             });
             htmlElement.removeEventListeners();
-            htmlElement.doMouseDown(testPoint.x, testPoint.y);
+            htmlElement.triggerMouseDown(testPoint.x, testPoint.y);
         });
 
         it("convert relative coordinate into page coordinate", function () {
@@ -77,17 +77,18 @@
         describe("on all devices,", function () {
 
             it("allows mouse events to be triggered without coordinate parameters", function () {
-                singlePointWithoutCoordinate(htmlElement.onMouseDown, htmlElement.doMouseDown);
-                singlePointWithoutCoordinate(htmlElement.onMouseMove, htmlElement.doMouseMove);
-                singlePointWithoutCoordinate(htmlElement.onMouseLeave, htmlElement.doMouseLeave);
-                singlePointWithoutCoordinate(htmlElement.onMouseUp, htmlElement.doMouseUp);
+                singlePointWithoutCoordinate(htmlElement.onMouseDown, htmlElement.triggerMouseDown);
+                singlePointWithoutCoordinate(htmlElement.onMouseMove, htmlElement.triggerMouseMove);
+                singlePointWithoutCoordinate(htmlElement.onMouseLeave, htmlElement.triggerMouseLeave);
+                singlePointWithoutCoordinate(htmlElement.onMouseUp, htmlElement.triggerMouseUp);
             });
 
             it("triggers mouse events relative to element and handles them relative to page", function () {
-                singlePointWithCoordinate(htmlElement.onMouseDown, htmlElement.doMouseDown);
-                singlePointWithCoordinate(htmlElement.onMouseMove, htmlElement.doMouseMove);
-                singlePointWithCoordinate(htmlElement.onMouseLeave, htmlElement.doMouseLeave);
-                singlePointWithCoordinate(htmlElement.onMouseUp, htmlElement.doMouseUp);
+                singlePointWithCoordinate(htmlElement.onMouseClick, htmlElement.triggerMouseClick);
+                singlePointWithCoordinate(htmlElement.onMouseDown, htmlElement.triggerMouseDown);
+                singlePointWithCoordinate(htmlElement.onMouseMove, htmlElement.triggerMouseMove);
+                singlePointWithCoordinate(htmlElement.onMouseLeave, htmlElement.triggerMouseLeave);
+                singlePointWithCoordinate(htmlElement.onMouseUp, htmlElement.triggerMouseUp);
             });
 
         });
