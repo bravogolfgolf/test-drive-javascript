@@ -77,7 +77,7 @@
         var end = drawingArea.relativeOffset(pageOffset);
 
         if (start.x !== end.x || start.y !== end.y) {
-            svgCanvas.draw(start.x, start.y, end.x, end.y);
+            svgCanvas.drawLine(start.x, start.y, end.x, end.y);
             start = end;
             drawingLine = true;
         }

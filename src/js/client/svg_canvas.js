@@ -20,7 +20,7 @@
             });
     };
 
-    SvgCanvas.prototype.draw = function (startX, startY, endX, endY) {
+    SvgCanvas.prototype.drawLine = function (startX, startY, endX, endY) {
         this._paper.path("M" + startX + "," + startY + "L" + endX + "," + endY)
             .attr({
                 "stroke": SvgCanvas.COLOR,

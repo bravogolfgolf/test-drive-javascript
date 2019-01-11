@@ -58,7 +58,7 @@
         });
 
         it("draw a line with proper attributes set", function () {
-            svgCanvas.draw(10, 20, 30, 40);
+            svgCanvas.drawLine(10, 20, 30, 40);
             var elements = svgCanvas.elements();
             assert.equal(elements.length, 1);
             assert.equal(elements[0].attrs.stroke, SvgCanvas.COLOR, "Svg Canvas line segment stroke");
@@ -79,13 +79,13 @@
         });
 
         it("draw line segment", function () {
-            svgCanvas.draw(10, 20, 30, 40);
+            svgCanvas.drawLine(10, 20, 30, 40);
             assert.deepEqual(svgCanvas.lineSegments(), [[10, 20, 30, 40]], "Svg canvas draws line");
         });
 
         it("draws multiple line segments", function () {
-            svgCanvas.draw(10, 20, 30, 40);
-            svgCanvas.draw(50, 60, 70, 80);
+            svgCanvas.drawLine(10, 20, 30, 40);
+            svgCanvas.drawLine(50, 60, 70, 80);
             assert.deepEqual(svgCanvas.lineSegments(), [[10, 20, 30, 40], [50, 60, 70, 80]], "Svg canvas draws multiple lines");
         });
     });
