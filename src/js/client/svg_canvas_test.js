@@ -57,19 +57,21 @@
             assert.deepEqual(expectedCircle, actualCircle, "Svg Canvas draws circle");
         });
 
-        it("draw a line with stroke width and line cap attributes set", function () {
+        it("draw a line with proper attributes set", function () {
             svgCanvas.draw(10, 20, 30, 40);
             var elements = svgCanvas.elements();
             assert.equal(elements.length, 1);
-            assert.equal(elements[0].attrs["stroke-width"], 2, "Svg Canvas line segment stroke width");
-            assert.equal(elements[0].attrs["stroke-linecap"], "round", "Svg Canvas line segment stroke linecap");
+            assert.equal(elements[0].attrs.stroke, SvgCanvas.COLOR, "Svg Canvas line segment stroke");
+            assert.equal(elements[0].attrs["stroke-width"], SvgCanvas.STROKE_WIDTH, "Svg Canvas line segment stroke width");
+            assert.equal(elements[0].attrs["stroke-linecap"], SvgCanvas.STROKE_LINE_CAP, "Svg Canvas line segment stroke linecap");
         });
 
-        it("draw circle with fill attribute set", function () {
+        it("draw circle with proper attributes set", function () {
             svgCanvas.draw(20, 30, 20, 30);
             var elements = svgCanvas.elements();
             assert.equal(elements.length, 1);
-            assert.equal(elements[0].attrs.fill, "black", "Svg Canvas circle fill is black");
+            assert.equal(elements[0].attrs.stroke, SvgCanvas.COLOR, "Svg Canvas circle stroke");
+            assert.equal(elements[0].attrs.fill, SvgCanvas.COLOR, "Svg Canvas circle fill");
         });
 
         it("draw zero line segments", function () {
