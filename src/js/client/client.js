@@ -62,11 +62,6 @@
         drawingArea.onSingleTouchCancel(endDrag);
     }
 
-    function drawCircle(pageOffset) {
-        var point = drawingArea.relativeOffset(pageOffset);
-        svgCanvas.drawDot(point.x, point.y);
-    }
-
     function startDrag(pageOffset) {
         start = drawingArea.relativeOffset(pageOffset);
     }
@@ -85,7 +80,8 @@
 
     function endDrag(pageOffset) {
         if (start !== null && !drawingLine) {
-            drawCircle(pageOffset);
+            var point = drawingArea.relativeOffset(pageOffset);
+            svgCanvas.drawDot(point.x, point.y);
         }
         start = null;
         drawingLine = false;

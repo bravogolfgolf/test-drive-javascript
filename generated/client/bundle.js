@@ -63,11 +63,6 @@ require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c=
         drawingArea.onSingleTouchCancel(endDrag);
     }
 
-    function drawCircle(pageOffset) {
-        var point = drawingArea.relativeOffset(pageOffset);
-        svgCanvas.drawDot(point.x, point.y);
-    }
-
     function startDrag(pageOffset) {
         start = drawingArea.relativeOffset(pageOffset);
     }
@@ -86,7 +81,8 @@ require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c=
 
     function endDrag(pageOffset) {
         if (start !== null && !drawingLine) {
-            drawCircle(pageOffset);
+            var point = drawingArea.relativeOffset(pageOffset);
+            svgCanvas.drawDot(point.x, point.y);
         }
         start = null;
         drawingLine = false;
