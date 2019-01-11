@@ -9,6 +9,7 @@
     var windowElement = null;
     var documentBody = null;
     var drawingArea = null;
+    var drawingLine = false;
     var svgCanvas = null;
     var start = null;
 
@@ -49,7 +50,6 @@
     }
 
     function mouseEvents() {
-        drawingArea.onMouseClick(drawCircle);
         drawingArea.onMouseDown(startDrag);
         documentBody.onMouseMove(continueDrag);
         windowElement.onMouseUp(endDrag);
@@ -73,13 +73,22 @@
 
     function continueDrag(pageOffset) {
         if (start === null) return;
+
         var end = drawingArea.relativeOffset(pageOffset);
-        svgCanvas.draw(start.x, start.y, end.x, end.y);
-        start = end;
+
+        if (start.x !== end.x || start.y !== end.y) {
+            svgCanvas.draw(start.x, start.y, end.x, end.y);
+            start = end;
+            drawingLine = true;
+        }
     }
 
-    function endDrag() {
+    function endDrag(pageOffset) {
+        if (start !== null && !drawingLine) {
+            drawCircle(pageOffset);
+        }
         start = null;
+        drawingLine = false;
     }
 
 }());

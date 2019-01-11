@@ -74,12 +74,13 @@
 
             it("draw a circle on mouse click", function () {
                 var expectedCircle = {
-                    x: 50,
-                    y: 60,
+                    x: 20,
+                    y: 30,
                     r: 1
                 };
 
-                drawingArea.triggerMouseClick(50, 60);
+                drawingArea.triggerMouseDown(20, 30);
+                drawingArea.triggerMouseUp(20, 30);
 
                 var elements = svgCanvas.elements();
                 assert.equal(elements.length, 1);
@@ -92,13 +93,42 @@
                 assert.deepEqual(expectedCircle, actualCircle, "Svg Canvas draws circle");
             });
 
-
             it("draw a line with a drag", function () {
                 drawingArea.triggerMouseDown(20, 30);
                 drawingArea.triggerMouseMove(50, 60);
                 drawingArea.triggerMouseUp(50, 60);
 
                 assert.deepEqual(lineSegments(), [[20, 30, 50, 60]], "Paths of Raphael elements");
+            });
+
+            it("not draw circles in line when dragged slowly", function () {
+                drawingArea.triggerMouseDown(20, 30);
+
+                drawingArea.triggerMouseMove(50, 60);
+                drawingArea.triggerMouseMove(50, 60);
+                drawingArea.triggerMouseMove(50, 60);
+
+                drawingArea.triggerMouseUp(50, 60);
+
+                assert.deepEqual(lineSegments(), [[20, 30, 50, 60]], "Paths of Raphael elements");
+            });
+
+            it("not draw circle at end of drag", function () {
+                drawingArea.triggerMouseDown(20, 30);
+                drawingArea.triggerMouseMove(50, 60);
+                drawingArea.triggerMouseUp(50, 60);
+                drawingArea.triggerMouseClick(50, 60);
+
+                assert.equal(svgCanvas.elements().length, 1);
+                assert.deepEqual(lineSegments(), [[20, 30, 50, 60]], "Paths of Raphael elements");
+
+            });
+
+            it("not draw circle if drag not started in drawing area", function () {
+                documentBody.triggerMouseDown(20, 30);
+                drawingArea.triggerMouseMove(50, 60);
+                drawingArea.triggerMouseUp(50, 60);
+                assert.deepEqual(lineSegments(), [], "Paths of Raphael elements");
             });
 
             it("draw multiple line segments dragged multiple places", function () {
@@ -123,13 +153,6 @@
                 drawingArea.triggerMouseUp(80, 20);
 
                 assert.deepEqual(lineSegments(), [[20, 30, 50, 60], [100, 70, 80, 20]], "Paths of Raphael elements");
-            });
-
-            it("not draw line segment when mouse is up", function () {
-                drawingArea.triggerMouseDown(20, 30);
-                drawingArea.triggerMouseUp(80, 20);
-
-                assert.deepEqual(lineSegments(), [], "Paths of Raphael elements");
             });
 
             it("not draw line segments when mouse is not down", function () {

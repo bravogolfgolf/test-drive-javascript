@@ -10,6 +10,7 @@ require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c=
     var windowElement = null;
     var documentBody = null;
     var drawingArea = null;
+    var drawingLine = false;
     var svgCanvas = null;
     var start = null;
 
@@ -50,7 +51,6 @@ require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c=
     }
 
     function mouseEvents() {
-        drawingArea.onMouseClick(drawCircle);
         drawingArea.onMouseDown(startDrag);
         documentBody.onMouseMove(continueDrag);
         windowElement.onMouseUp(endDrag);
@@ -74,13 +74,22 @@ require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c=
 
     function continueDrag(pageOffset) {
         if (start === null) return;
+
         var end = drawingArea.relativeOffset(pageOffset);
-        svgCanvas.draw(start.x, start.y, end.x, end.y);
-        start = end;
+
+        if (start.x !== end.x || start.y !== end.y) {
+            svgCanvas.draw(start.x, start.y, end.x, end.y);
+            start = end;
+            drawingLine = true;
+        }
     }
 
-    function endDrag() {
+    function endDrag(pageOffset) {
+        if (start !== null && !drawingLine) {
+            drawCircle(pageOffset);
+        }
         start = null;
+        drawingLine = false;
     }
 
 }());
@@ -335,12 +344,13 @@ require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c=
     SvgCanvas.prototype.lineSegments = function () {
         var paths = [];
         this._paper.forEach(function (element) {
-            if (element.type === "path") paths.push(pathOf(element));
+            if (element.type === "path") paths.push(pathOfLine(element));
+            else paths.push(pathOfCircle(element));
         });
         return paths;
     };
 
-    function pathOf(element) {
+    function pathOfLine(element) {
         var regEx = null;
         var path = element.node.attributes.d.value;
 
@@ -352,6 +362,15 @@ require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c=
 
         var items = path.match(regEx);
         return [parseInt(items[1]), parseInt(items[2]), parseInt(items[3]), parseInt(items[4])];
+    }
+
+    function pathOfCircle(element) {
+        return[
+            element.attrs.cx,
+            element.attrs.cy,
+            element.attrs.cx,
+            element.attrs.cy
+        ];
     }
 }());
 },{}]},{},[]);

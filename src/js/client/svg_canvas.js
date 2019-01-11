@@ -53,12 +53,13 @@
     SvgCanvas.prototype.lineSegments = function () {
         var paths = [];
         this._paper.forEach(function (element) {
-            if (element.type === "path") paths.push(pathOf(element));
+            if (element.type === "path") paths.push(pathOfLine(element));
+            else paths.push(pathOfCircle(element));
         });
         return paths;
     };
 
-    function pathOf(element) {
+    function pathOfLine(element) {
         var regEx = null;
         var path = element.node.attributes.d.value;
 
@@ -70,5 +71,14 @@
 
         var items = path.match(regEx);
         return [parseInt(items[1]), parseInt(items[2]), parseInt(items[3]), parseInt(items[4])];
+    }
+
+    function pathOfCircle(element) {
+        return[
+            element.attrs.cx,
+            element.attrs.cy,
+            element.attrs.cx,
+            element.attrs.cy
+        ];
     }
 }());
