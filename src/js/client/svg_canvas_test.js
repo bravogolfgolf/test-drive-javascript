@@ -44,7 +44,7 @@
                 r: 1
             };
 
-            svgCanvas.draw(expectedCircle.x, expectedCircle.y, expectedCircle.x, expectedCircle.y);
+            svgCanvas.drawDot(expectedCircle.x, expectedCircle.y);
 
             var elements = svgCanvas.elements();
             assert.equal(elements.length, 1);
@@ -67,7 +67,7 @@
         });
 
         it("draw circle with proper attributes set", function () {
-            svgCanvas.draw(20, 30, 20, 30);
+            svgCanvas.drawDot(20, 30);
             var elements = svgCanvas.elements();
             assert.equal(elements.length, 1);
             assert.equal(elements[0].attrs.stroke, SvgCanvas.COLOR, "Svg Canvas circle stroke");

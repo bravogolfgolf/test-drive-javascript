@@ -73,24 +73,11 @@
         describe("in response to mouse events,", function () {
 
             it("draw a circle on mouse click", function () {
-                var expectedCircle = {
-                    x: 20,
-                    y: 30,
-                    r: 1
-                };
-
                 drawingArea.triggerMouseDown(20, 30);
                 drawingArea.triggerMouseUp(20, 30);
+                drawingArea.triggerMouseClick(20, 30);
 
-                var elements = svgCanvas.elements();
-                assert.equal(elements.length, 1);
-                var actualCircle = {
-                    x: elements[0].attrs.cx,
-                    y: elements[0].attrs.cy,
-                    r: elements[0].attrs.r
-                };
-
-                assert.deepEqual(expectedCircle, actualCircle, "Svg Canvas draws circle");
+                assert.deepEqual(lineSegments(), [[20, 30]], "Origin of Raphael circle");
             });
 
             it("draw a line with a drag", function () {

@@ -64,7 +64,7 @@
 
     function drawCircle(pageOffset) {
         var point = drawingArea.relativeOffset(pageOffset);
-        svgCanvas.draw(point.x, point.y, point.x, point.y);
+        svgCanvas.drawDot(point.x, point.y);
     }
 
     function startDrag(pageOffset) {
