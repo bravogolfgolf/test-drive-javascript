@@ -49,6 +49,7 @@
     }
 
     function mouseEvents() {
+        drawingArea.onMouseClick(drawCircle);
         drawingArea.onMouseDown(startDrag);
         documentBody.onMouseMove(continueDrag);
         windowElement.onMouseUp(endDrag);
@@ -61,6 +62,11 @@
         drawingArea.onSingleTouchCancel(endDrag);
     }
 
+    function drawCircle(pageOffset) {
+        var point = drawingArea.relativeOffset(pageOffset);
+        svgCanvas.draw(point.x, point.y, point.x, point.y);
+    }
+
     function startDrag(pageOffset) {
         start = drawingArea.relativeOffset(pageOffset);
     }
@@ -68,7 +74,7 @@
     function continueDrag(pageOffset) {
         if (start === null) return;
         var end = drawingArea.relativeOffset(pageOffset);
-        svgCanvas.drawLine(start.x, start.y, end.x, end.y);
+        svgCanvas.draw(start.x, start.y, end.x, end.y);
         start = end;
     }
 

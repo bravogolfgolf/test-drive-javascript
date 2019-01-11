@@ -15,7 +15,7 @@
     var drawingArea;
     var svgCanvas;
 
-    describe("Drawing area should,", function () {
+    describe("Client should,", function () {
 
         beforeEach(function () {
             var html = "<div id=drawingArea style='" +
@@ -71,6 +71,27 @@
         });
 
         describe("in response to mouse events,", function () {
+
+            it("draw a circle on mouse click", function () {
+                var expectedCircle = {
+                    x: 50,
+                    y: 60,
+                    r: 1
+                };
+
+                drawingArea.triggerMouseClick(50, 60);
+
+                var elements = svgCanvas.elements();
+                assert.equal(elements.length, 1);
+                var actualCircle = {
+                    x: elements[0].attrs.cx,
+                    y: elements[0].attrs.cy,
+                    r: elements[0].attrs.r
+                };
+
+                assert.deepEqual(expectedCircle, actualCircle, "Svg Canvas draws circle");
+            });
+
 
             it("draw a line with a drag", function () {
                 drawingArea.triggerMouseDown(20, 30);
