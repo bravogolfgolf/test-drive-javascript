@@ -244,22 +244,39 @@
         describe("in response to touch events,", function () {
             if (!browser.supportsTouchEvents()) return;
 
+            it("draw a dot when screen is tapped", function() {
+                drawingArea.doSingleTouchStart(3, 42);
+                drawingArea.triggerTouchEnd();
+
+                assert.deepEqual(lineSegments(), [[3, 42]], "Paths of Raphael elements");
+            });
+
             it("draw a line with a drag", function () {
                 drawingArea.doSingleTouchStart(20, 30);
                 drawingArea.doSingleTouchMove(50, 60);
-                drawingArea.doSingleTouchEnd(50, 60);
-                drawingArea.doSingleTouchMove(100, 1100);
+                drawingArea.triggerTouchEnd();
 
                 assert.deepEqual(lineSegments(), [[20, 30, 50, 60]], "Paths of Raphael elements");
             });
 
-            it("stop drawing line when touch cancelled", function () {
+            it("draw multiple line segments when there are multiple drags", function () {
                 drawingArea.doSingleTouchStart(20, 30);
                 drawingArea.doSingleTouchMove(50, 60);
-                drawingArea.doSingleTouchCancel(50, 60);
-                drawingArea.doSingleTouchMove(100, 110);
+                drawingArea.triggerTouchEnd();
 
-                assert.deepEqual(lineSegments(), [[20, 30, 50, 60]], "Paths of Raphael elements");
+                drawingArea.doSingleTouchStart(70, 10);
+                drawingArea.doSingleTouchMove(120, 130);
+                drawingArea.triggerTouchEnd();
+
+                assert.deepEqual(lineSegments(), [[20, 30, 50, 60], [70, 10, 120, 130]], "Paths of Raphael elements");
+            });
+
+            it("stop drawing lines when touch is cancelled", function() {
+                drawingArea.doSingleTouchStart(10, 40);
+                drawingArea.doSingleTouchMove(5, 20);
+                drawingArea.triggerTouchCancel();
+
+                assert.deepEqual(lineSegments(), [[10, 40, 5, 20]], "Paths of Raphael elements");
             });
 
             it("not scroll or zoom when touching in drawing area", function () {

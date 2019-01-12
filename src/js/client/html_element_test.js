@@ -96,18 +96,68 @@
         describe("on supported devices,", function () {
             if (!browser.supportsTouchEvents()) return;
 
+            it("send zero touches when touchend triggered", function () {
+                var monitor = monitorEvent("touchend");
+                htmlElement.triggerTouchEnd();
+                assert.isOk(monitor.eventTriggered);
+                assert.deepEqual(monitor.touches, []);
+
+            });
+
+            it("send zero touches when touchcancel triggered", function () {
+                var monitor = monitorEvent("touchcancel");
+                htmlElement.triggerTouchCancel();
+                assert.isOk(monitor.eventTriggered);
+                assert.deepEqual(monitor.touches, []);
+
+            });
+
+            it("handles zero-touch touchend event", function() {
+                var functionCalled = false;
+                htmlElement.onTouchEnd(function() {
+                    functionCalled = true;
+                });
+
+                htmlElement.triggerTouchEnd();
+                assert.isOk(functionCalled);
+            });
+
+            it("handles zero-touch touchcancel event", function() {
+                var functionCalled = false;
+                htmlElement.onTouchCancel(function() {
+                    functionCalled = true;
+                });
+
+                htmlElement.triggerTouchCancel();
+                assert.isOk(functionCalled);
+            });
+
+            function monitorEvent(event) {
+                var monitor = {
+                    eventTriggered: false,
+                    touches: null
+                };
+
+                htmlElement._element.on(event, function (event) {
+                    monitor.eventTriggered = true;
+                    monitor.touches = [];
+                    var eventTouches = event.touches;
+                    for (var i = 0; i < eventTouches.length; i++) {
+                        monitor.touches.push([eventTouches[i].pageX, eventTouches[i].pageY]);
+                    }
+                });
+
+                return monitor;
+            }
+
             it("allows touch events to be triggered without coordinate parameters", function () {
                 singlePointWithoutCoordinate(htmlElement.onSingleTouchStart, htmlElement.doSingleTouchStart);
                 singlePointWithoutCoordinate(htmlElement.onSingleTouchMove, htmlElement.doSingleTouchMove);
-                singlePointWithoutCoordinate(htmlElement.onSingleTouchCancel, htmlElement.doSingleTouchCancel);
-                singlePointWithoutCoordinate(htmlElement.onSingleTouchEnd, htmlElement.doSingleTouchEnd);
             });
 
             it("handled single touch events", function () {
                 singlePointWithCoordinate(htmlElement.onSingleTouchStart, htmlElement.doSingleTouchStart);
                 singlePointWithCoordinate(htmlElement.onSingleTouchMove, htmlElement.doSingleTouchMove);
-                singlePointWithCoordinate(htmlElement.onSingleTouchCancel, htmlElement.doSingleTouchCancel);
-                singlePointWithCoordinate(htmlElement.onSingleTouchEnd, htmlElement.doSingleTouchEnd);
             });
 
             it("handled multi touch events", function () {

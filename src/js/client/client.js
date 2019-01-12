@@ -58,8 +58,8 @@
     function singleTouchEvents() {
         drawingArea.onSingleTouchStart(startDrag);
         drawingArea.onSingleTouchMove(continueDrag);
-        drawingArea.onSingleTouchEnd(endDrag);
-        drawingArea.onSingleTouchCancel(endDrag);
+        drawingArea.onTouchEnd(endDrag);
+        drawingArea.onTouchCancel(endDrag);
     }
 
     function startDrag(pageOffset) {
@@ -78,10 +78,9 @@
         }
     }
 
-    function endDrag(pageOffset) {
+    function endDrag() {
         if (start !== null && !drawingLine) {
-            var point = drawingArea.relativeOffset(pageOffset);
-            svgCanvas.drawDot(point.x, point.y);
+            svgCanvas.drawDot(start.x, start.y);
         }
         start = null;
         drawingLine = false;

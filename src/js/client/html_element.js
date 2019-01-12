@@ -111,9 +111,17 @@
 
     HtmlElement.prototype.doSingleTouchMove = doSingleTouchFn("touchmove");
 
-    HtmlElement.prototype.doSingleTouchEnd = doSingleTouchFn("touchend");
+    // HtmlElement.prototype.doSingleTouchEnd = doSingleTouchFn("touchend");
 
-    HtmlElement.prototype.doSingleTouchCancel = doSingleTouchFn("touchcancel");
+    // HtmlElement.prototype.doSingleTouchCancel = doSingleTouchFn("touchcancel");
+
+    HtmlElement.prototype.triggerTouchEnd = function () {
+        doTouchEvent(this, "touchend", []);
+    };
+
+    HtmlElement.prototype.triggerTouchCancel = function () {
+        doTouchEvent(this, "touchcancel", []);
+    };
 
     function doSingleTouchFn(eventType) {
         return function (x, y) {
@@ -125,7 +133,6 @@
         var target = self._element[0];
         var touchList = createTouchList(self, points, target);
         var touchEvent = createTouchEvent(type, touchList);
-
         target.dispatchEvent(touchEvent);
     }
 
@@ -164,9 +171,17 @@
 
     HtmlElement.prototype.onSingleTouchMove = onSingleTouchFn("touchmove");
 
-    HtmlElement.prototype.onSingleTouchEnd = onSingleTouchFn("touchend");
+    HtmlElement.prototype.onTouchEnd = function (callback) {
+            this._element.on("touchend", function () {
+                callback();
+            });
+    };
 
-    HtmlElement.prototype.onSingleTouchCancel = onSingleTouchFn("touchcancel");
+    HtmlElement.prototype.onTouchCancel = function (callback) {
+        this._element.on("touchcancel", function () {
+            callback();
+        });
+    };
 
     function onSingleTouchFn(eventType) {
         return function (callback) {

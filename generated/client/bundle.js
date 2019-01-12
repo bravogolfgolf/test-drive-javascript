@@ -59,8 +59,8 @@ require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c=
     function singleTouchEvents() {
         drawingArea.onSingleTouchStart(startDrag);
         drawingArea.onSingleTouchMove(continueDrag);
-        drawingArea.onSingleTouchEnd(endDrag);
-        drawingArea.onSingleTouchCancel(endDrag);
+        drawingArea.onTouchEnd(endDrag);
+        drawingArea.onTouchCancel(endDrag);
     }
 
     function startDrag(pageOffset) {
@@ -79,10 +79,9 @@ require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c=
         }
     }
 
-    function endDrag(pageOffset) {
+    function endDrag() {
         if (start !== null && !drawingLine) {
-            var point = drawingArea.relativeOffset(pageOffset);
-            svgCanvas.drawDot(point.x, point.y);
+            svgCanvas.drawDot(start.x, start.y);
         }
         start = null;
         drawingLine = false;
@@ -203,9 +202,17 @@ require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c=
 
     HtmlElement.prototype.doSingleTouchMove = doSingleTouchFn("touchmove");
 
-    HtmlElement.prototype.doSingleTouchEnd = doSingleTouchFn("touchend");
+    // HtmlElement.prototype.doSingleTouchEnd = doSingleTouchFn("touchend");
 
-    HtmlElement.prototype.doSingleTouchCancel = doSingleTouchFn("touchcancel");
+    // HtmlElement.prototype.doSingleTouchCancel = doSingleTouchFn("touchcancel");
+
+    HtmlElement.prototype.triggerTouchEnd = function () {
+        doTouchEvent(this, "touchend", []);
+    };
+
+    HtmlElement.prototype.triggerTouchCancel = function () {
+        doTouchEvent(this, "touchcancel", []);
+    };
 
     function doSingleTouchFn(eventType) {
         return function (x, y) {
@@ -217,7 +224,6 @@ require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c=
         var target = self._element[0];
         var touchList = createTouchList(self, points, target);
         var touchEvent = createTouchEvent(type, touchList);
-
         target.dispatchEvent(touchEvent);
     }
 
@@ -256,9 +262,17 @@ require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c=
 
     HtmlElement.prototype.onSingleTouchMove = onSingleTouchFn("touchmove");
 
-    HtmlElement.prototype.onSingleTouchEnd = onSingleTouchFn("touchend");
+    HtmlElement.prototype.onTouchEnd = function (callback) {
+            this._element.on("touchend", function () {
+                callback();
+            });
+    };
 
-    HtmlElement.prototype.onSingleTouchCancel = onSingleTouchFn("touchcancel");
+    HtmlElement.prototype.onTouchCancel = function (callback) {
+        this._element.on("touchcancel", function () {
+            callback();
+        });
+    };
 
     function onSingleTouchFn(eventType) {
         return function (callback) {
