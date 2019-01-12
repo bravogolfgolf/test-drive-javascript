@@ -107,29 +107,25 @@
         };
     }
 
-    HtmlElement.prototype.doSingleTouchStart = doSingleTouchFn("touchstart");
+    HtmlElement.prototype.triggerSingleTouchStart = triggerSingleTouchFn("touchstart");
 
-    HtmlElement.prototype.doSingleTouchMove = doSingleTouchFn("touchmove");
-
-    // HtmlElement.prototype.doSingleTouchEnd = doSingleTouchFn("touchend");
-
-    // HtmlElement.prototype.doSingleTouchCancel = doSingleTouchFn("touchcancel");
+    HtmlElement.prototype.triggerSingleTouchMove = triggerSingleTouchFn("touchmove");
 
     HtmlElement.prototype.triggerTouchEnd = function () {
-        doTouchEvent(this, "touchend", []);
+        triggerTouchEvent(this, "touchend", []);
     };
 
     HtmlElement.prototype.triggerTouchCancel = function () {
-        doTouchEvent(this, "touchcancel", []);
+        triggerTouchEvent(this, "touchcancel", []);
     };
 
-    function doSingleTouchFn(eventType) {
+    function triggerSingleTouchFn(eventType) {
         return function (x, y) {
-            doTouchEvent(this, eventType, [{x: x, y: y}]);
+            triggerTouchEvent(this, eventType, [{x: x, y: y}]);
         };
     }
 
-    function doTouchEvent(self, type, points) {
+    function triggerTouchEvent(self, type, points) {
         var target = self._element[0];
         var touchList = createTouchList(self, points, target);
         var touchEvent = createTouchEvent(type, touchList);
@@ -197,8 +193,8 @@
         };
     }
 
-    HtmlElement.prototype.doMultiTouchStart = function (point1, point2) {
-        doTouchEvent(this, "touchstart", [point1, point2]);
+    HtmlElement.prototype.triggerMultiTouchStart = function (point1, point2) {
+        triggerTouchEvent(this, "touchstart", [point1, point2]);
     };
 
     HtmlElement.prototype.onMultiTouchStart = function (callback) {

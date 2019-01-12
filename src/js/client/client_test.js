@@ -245,35 +245,35 @@
             if (!browser.supportsTouchEvents()) return;
 
             it("draw a dot when screen is tapped", function() {
-                drawingArea.doSingleTouchStart(3, 42);
+                drawingArea.triggerSingleTouchStart(3, 42);
                 drawingArea.triggerTouchEnd();
 
                 assert.deepEqual(lineSegments(), [[3, 42]], "Paths of Raphael elements");
             });
 
             it("draw a line with a drag", function () {
-                drawingArea.doSingleTouchStart(20, 30);
-                drawingArea.doSingleTouchMove(50, 60);
+                drawingArea.triggerSingleTouchStart(20, 30);
+                drawingArea.triggerSingleTouchMove(50, 60);
                 drawingArea.triggerTouchEnd();
 
                 assert.deepEqual(lineSegments(), [[20, 30, 50, 60]], "Paths of Raphael elements");
             });
 
             it("draw multiple line segments when there are multiple drags", function () {
-                drawingArea.doSingleTouchStart(20, 30);
-                drawingArea.doSingleTouchMove(50, 60);
+                drawingArea.triggerSingleTouchStart(20, 30);
+                drawingArea.triggerSingleTouchMove(50, 60);
                 drawingArea.triggerTouchEnd();
 
-                drawingArea.doSingleTouchStart(70, 10);
-                drawingArea.doSingleTouchMove(120, 130);
+                drawingArea.triggerSingleTouchStart(70, 10);
+                drawingArea.triggerSingleTouchMove(120, 130);
                 drawingArea.triggerTouchEnd();
 
                 assert.deepEqual(lineSegments(), [[20, 30, 50, 60], [70, 10, 120, 130]], "Paths of Raphael elements");
             });
 
             it("stop drawing lines when touch is cancelled", function() {
-                drawingArea.doSingleTouchStart(10, 40);
-                drawingArea.doSingleTouchMove(5, 20);
+                drawingArea.triggerSingleTouchStart(10, 40);
+                drawingArea.triggerSingleTouchMove(5, 20);
                 drawingArea.triggerTouchCancel();
 
                 assert.deepEqual(lineSegments(), [[10, 40, 5, 20]], "Paths of Raphael elements");
@@ -283,14 +283,14 @@
                 drawingArea.onSingleTouchStart(function (point, event) {
                     assert.isOk(event.isDefaultPrevented(), "Prevent default event on pointer down in drawing area");
                 });
-                drawingArea.doSingleTouchStart(50, 50);
+                drawingArea.triggerSingleTouchStart(50, 50);
             });
 
             it("stop drawing line when multi-touches detected", function () {
-                drawingArea.doSingleTouchStart(20, 30);
-                drawingArea.doSingleTouchMove(50, 60);
-                drawingArea.doMultiTouchStart({x: 50, y: 60}, {x: 100, y: 110});
-                drawingArea.doSingleTouchMove(150, 160);
+                drawingArea.triggerSingleTouchStart(20, 30);
+                drawingArea.triggerSingleTouchMove(50, 60);
+                drawingArea.triggerMultiTouchStart({x: 50, y: 60}, {x: 100, y: 110});
+                drawingArea.triggerSingleTouchMove(150, 160);
 
                 assert.deepEqual(lineSegments(), [[20, 30, 50, 60]], "Paths of Raphael elements");
             });

@@ -151,17 +151,17 @@
             }
 
             it("allows touch events to be triggered without coordinate parameters", function () {
-                singlePointWithoutCoordinate(htmlElement.onSingleTouchStart, htmlElement.doSingleTouchStart);
-                singlePointWithoutCoordinate(htmlElement.onSingleTouchMove, htmlElement.doSingleTouchMove);
+                singlePointWithoutCoordinate(htmlElement.onSingleTouchStart, htmlElement.triggerSingleTouchStart);
+                singlePointWithoutCoordinate(htmlElement.onSingleTouchMove, htmlElement.triggerSingleTouchMove);
             });
 
             it("handled single touch events", function () {
-                singlePointWithCoordinate(htmlElement.onSingleTouchStart, htmlElement.doSingleTouchStart);
-                singlePointWithCoordinate(htmlElement.onSingleTouchMove, htmlElement.doSingleTouchMove);
+                singlePointWithCoordinate(htmlElement.onSingleTouchStart, htmlElement.triggerSingleTouchStart);
+                singlePointWithCoordinate(htmlElement.onSingleTouchMove, htmlElement.triggerSingleTouchMove);
             });
 
             it("handled multi touch events", function () {
-                multiPoint(htmlElement.onMultiTouchStart, htmlElement.doMultiTouchStart);
+                multiPoint(htmlElement.onMultiTouchStart, htmlElement.triggerMultiTouchStart);
             });
         });
 
