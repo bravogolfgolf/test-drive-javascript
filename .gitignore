@@ -5,7 +5,7 @@
 .idea/workspace.xml
 
 # npm
-node_modules/**/.bin/
+node_modules/
 
 # generated
 generated/test
